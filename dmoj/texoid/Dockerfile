@@ -1,5 +1,5 @@
 FROM python:3.11-slim-bookworm
-
+LABEL org.opencontainers.image.source="https://github.com/mcpt/wlmoj"
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         texlive-binaries texlive-latex-base texlive-latex-extra texlive-latex-recommended \

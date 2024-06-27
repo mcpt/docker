@@ -4,8 +4,11 @@ on:
   pull_request:
   schedule:
     - cron: '0 0 * * 1'
+
 jobs:
   build:
+    permissions:
+      packages: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,18 +27,20 @@ jobs:
           COMPOSE_EXEC_FLAGS="-T" ./scripts/migrate
           COMPOSE_EXEC_FLAGS="-T" ./scripts/manage.py loaddata language_small
         working-directory: dmoj
-      - name: Push images to Docker
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push images to GHCR
         if: (github.event_name == 'push' || github.event_name == 'schedule') && github.ref == 'refs/heads/master'
         run: |
-          echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
-          docker push ninjaclasher/dmoj-base:latest
-          docker push ninjaclasher/dmoj-texoid:latest
-          docker push ninjaclasher/dmoj-pdfoid:latest
-          docker push ninjaclasher/dmoj-mathoid:latest
-          docker push ninjaclasher/dmoj-site:latest
-          docker push ninjaclasher/dmoj-celery:latest
-          docker push ninjaclasher/dmoj-bridged:latest
-          docker push ninjaclasher/dmoj-wsevent:latest
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          docker push ghcr.io/mcpt/wlmoj-base:latest
+          docker push ghcr.io/mcpt/wlmoj-texoid:latest
+          docker push ghcr.io/mcpt/wlmoj-pdfoid:latest
+          docker push ghcr.io/mcpt/wlmoj-mathoid:latest
+          docker push ghcr.io/mcpt/wlmoj-site:latest
+          docker push ghcr.io/mcpt/wlmoj-celery:latest
+          docker push ghcr.io/mcpt/wlmoj-bridged:latest
+          docker push ghcr.io/mcpt/wlmoj-wsevent:latest

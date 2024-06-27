@@ -1,5 +1,5 @@
 FROM node:alpine
-
+LABEL org.opencontainers.image.source="https://github.com/mcpt/wlmoj"
 WORKDIR /app/
 RUN npm install qu ws simplesets
 

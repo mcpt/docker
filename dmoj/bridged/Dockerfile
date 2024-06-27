@@ -1,4 +1,4 @@
-FROM ninjaclasher/dmoj-base:latest
+FROM ghcr.io/mcpt/wlmoj-base:latest
 
 EXPOSE 9999
 EXPOSE 9998
