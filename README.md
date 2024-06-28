@@ -1,7 +1,7 @@
 DMOJ Docker [![Build Status](https://github.com/mcpt/docker/workflows/Build%20Docker%20Images/badge.svg)](https://github.com/mcpt/docker/actions/)
 =====
 
-This repository contains the Docker files to run a clone of the [DMOJ site](https://github.com/DMOJ/online-judge). It configures some additional services, such as mathoid, pdfoid, and texoid.
+This repository contains the Docker files to run the [WLMOJ site](https://github.com/mcpt/wlmoj). It configures some additional services, such as mathoid, pdfoid, and texoid.
 
 ## Installation
 
@@ -58,7 +58,7 @@ $ docker compose up -d
 ## Notes
 
 ### Migrating
-As the DMOJ site is a Django app, you may need to migrate whenever you update. Assuming the site container is running, running the following command should suffice:
+As WLMOJ is a Django app, you may need to migrate whenever you update. Assuming the site container is running, running the following command should suffice:
 ```sh
 $ ./scripts/migrate
 ```
