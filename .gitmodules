@@ -1,0 +1,4 @@
+[submodule "dmoj/repo"]
+	path = dmoj/repo
+	url = https://github.com/mcpt/wlmoj
+	branch = revamp
