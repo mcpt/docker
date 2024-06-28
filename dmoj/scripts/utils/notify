@@ -5,6 +5,7 @@ function notify() {
   local is_urgent="$2"  # Use "true" to trigger urgent notification
   local webhook_url="$DISCORD_WEBHOOK"
   local message_with_mention=""
+  local DISCORD_ROLE_OR_USER_ID="511724576674414600"       # todo replace with judge ID
 
   if [ -z "$webhook_url" ]; then
     echo "ERROR: DISCORD_WEBHOOK environment variable not set." >&2
@@ -13,7 +14,7 @@ function notify() {
 
   # Prepend "@judge" mention only if is_urgent is true
   if [ "$is_urgent" = "true" ]; then
-    message_with_mention="<@511724576674414600> $message"  # todo replace with judge ID
+    message_with_mention="<@$DISCORD_ROLE_OR_USER_ID>\n $message"
   else
     message_with_mention="$message"
   fi
