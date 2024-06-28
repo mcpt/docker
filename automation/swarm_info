@@ -25,34 +25,6 @@ get_replica_ips() {
   done
 }
 
-#fetch_inventory() {
-#
-#  # Get the service name (from command-line argument or default)
-#  service_name="${1:-your_service_name}" # Default to 'your_service_name' if no argument is provided
-#
-#  # Get IP addresses and format as Ansible inventory
-#  echo "{"
-#  echo "  \"_meta\": {"
-#  echo "    \"hostvars\": {}"
-#  echo "  },"
-#  echo "  \"all\": {"
-#  echo "    \"hosts\": ["
-#
-#  first_ip=true
-#  for ip in $(get_replica_ips "$service_name"); do
-#    if [ "$first_ip" = true ]; then
-#      first_ip=false
-#    else
-#      echo ","
-#    fi
-#    echo "      \"$ip\""
-#  done
-#
-#  echo "    ]"
-#  echo "  }"
-#  echo "}"
-#}
-
 fetch_inventory() {
   echo "[managers]" # todo: if we have multiple managers, we need to place general first
   get_manager_ips
