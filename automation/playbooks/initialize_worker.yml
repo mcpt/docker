@@ -29,11 +29,14 @@
         update_cache: true
 
 
-    - name: 'Install nfs & docker'
+    - name: 'Install nfs & docker + deps'
       apt:
+
         pkg:
           - nfs-common
           - python3-docker
+          - python3-requests
+          - python3-urllib3
 
     - name: 'Change timezone to Toronto time'
       run_once: true
