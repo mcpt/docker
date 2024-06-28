@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Function to get all ips of all nodes in the swarm
+get_node_ips() {
+  docker node ls --filter role=worker --format "{{.Hostname}}" | \
+  xargs docker node inspect --format '{{ .Status.Addr }}'
+}
+
+# Function to get IP addresses of running replicas for a given service
+get_replica_ips() {
+  local service_name="$1"
+
+  # Get node names of running tasks
+  nodes=$(docker service ps "$service_name" --format '{{.Node}}' | grep running) # TODO: TEST
+
+  for node in $nodes; do
+    # Get IP address of the node
+  data=$(docker node inspect --format '{{.Description.Hostname}} {{.Status.Addr}}' "$node")
+  echo "$data"
+
+  done
+}
+
+#fetch_inventory() {
+#
+#  # Get the service name (from command-line argument or default)
+#  service_name="${1:-your_service_name}" # Default to 'your_service_name' if no argument is provided
+#
+#  # Get IP addresses and format as Ansible inventory
+#  echo "{"
+#  echo "  \"_meta\": {"
+#  echo "    \"hostvars\": {}"
+#  echo "  },"
+#  echo "  \"all\": {"
+#  echo "    \"hosts\": ["
+#
+#  first_ip=true
+#  for ip in $(get_replica_ips "$service_name"); do
+#    if [ "$first_ip" = true ]; then
+#      first_ip=false
+#    else
+#      echo ","
+#    fi
+#    echo "      \"$ip\""
+#  done
+#
+#  echo "    ]"
+#  echo "  }"
+#  echo "}"
+#}
+
+fetch_inventory() {
+  echo "[nodes]"
+  get_node_ips
+}
