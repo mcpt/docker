@@ -1,8 +1,12 @@
 #!/bin/bash
 
 # Function to get all ips of all nodes in the swarm
-get_node_ips() {
+get_worker_ips() {
   docker node ls --filter role=worker --format "{{.Hostname}}" | \
+  xargs docker node inspect --format '{{ .Status.Addr }}'
+}
+get_manager_ips() {
+  docker node ls --filter role=manager --format "{{.Hostname}}" | \
   xargs docker node inspect --format '{{ .Status.Addr }}'
 }
 
@@ -50,6 +54,8 @@ get_replica_ips() {
 #}
 
 fetch_inventory() {
-  echo "[nodes]"
-  get_node_ips
+  echo "[managers]" # todo: if we have multiple managers, we need to place general first
+  get_manager_ips
+  echo "[workers]"
+  get_worker_ips
 }

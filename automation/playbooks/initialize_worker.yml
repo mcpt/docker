@@ -1,0 +1,86 @@
+- hosts: workers
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  vars:
+    # permissions on windows with wsl is not fun
+    ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    ansible_python_interpreter: /usr/bin/python3
+
+    docker_edition: 'ce'
+    docker_package_state: present
+
+  tasks:
+    - name: 'APT Upgrade'
+      apt:
+        upgrade: true
+        update_cache: true
+
+    - name: 'Install nfs'
+      apt:
+        pkg:
+          - nfs-common
+
+    - name: 'Change timezone to Toronto time'
+      shell: timedatectl set-timezone America/Toronto
+
+    - name: 'Installing docker'
+      include_role:
+        name: geerlingguy.docker
+
+    - name: Join Docker Swarm
+      hosts: all
+      become: yes
+      tasks:
+        - name: Get Swarm join token from manager
+          shell: docker swarm join-token worker
+          register: join_token
+          delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
+
+        - name: Join the Swarm as a worker
+          community.docker.docker_swarm:
+            state: join
+            join_token: "{{ join_token.stdout_lines[0] }}"
+            advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
+
+
+
+    - name: 'Mount problem data nfs share'
+      file:
+        path: /var/share
+        state: directory
+
+      mount:
+        path: /var/share
+        src: 10.137.0.5:/var/share
+        state: mounted
+        fstype: nfs4
+        opts: auto,nofail,noatime,nolock,intr,tcp,actimeo=1800,timeo=600
+
+    - name: 'Installing unattended-upgrades'
+      include_role:
+        name: jnv.unattended-upgrades
+
+    - name: 'Install UFW'
+      apt:
+        name: ufw
+
+    - name: 'UFW: internal network'
+      ufw:
+        rule: allow
+        src: '10.137.0.0/16'
+        dest: '10.137.0.0/16'
+
+
+    - name: 'UFW: enable and by default drop'
+      ufw:
+        state: enabled
+        policy: deny
+
+    - name: 'Disable password for root'
+      shell: passwd -d root
+
+    - name: 'Reboot server'
+      reboot:
+        reboot_timeout: 0
