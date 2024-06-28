@@ -28,18 +28,18 @@ droplet_id=$(doctl compute droplet create \
     --region tor1 \
     --enable-monitoring \
     --ssh-keys "$SSH_KEYS" \
-    "$1" --output json | jq -r '.droplet.id')
+    "$1" --output json | jq -r '.[0].id')
 
 
 
 # Wait for the droplet to be active
 echo "Waiting for droplet to be active..."
 while true; do
-    status=$(doctl compute droplet get "$droplet_id" --output json | jq -r '.droplet.status')
+    status=$(doctl compute droplet get "$droplet_id" --output json | jq -r '.[0].status')
     if [ "$status" = "active" ]; then
         break
     fi
-    sleep 5
+    sleep 2
 done
 
 # Get the public and private IP addresses, guaranteed to be at index zero as we limit names
