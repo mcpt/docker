@@ -21,7 +21,7 @@ HOST = os.environ.get('HOST', '')
 ALLOWED_HOSTS = [HOST]
 
 # Optional apps that DMOJ can make use of.
-INSTALLED_APPS += ("discord_integration")
+INSTALLED_APPS += ("discord_integration",)
 
 # Caching. You can use memcached or redis instead.
 # Documentation: <https://docs.djangoproject.com/en/1.11/topics/cache/>
