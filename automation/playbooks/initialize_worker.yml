@@ -11,15 +11,15 @@
     docker_edition: 'ce'
     docker_package_state: present
     docker_install_compose: true
-    pip_install_packages:
-      - name: docker
+#    pip_install_packages:
+#      - name: docker
 
 
 
 
   roles:
     - hifis.unattended_upgrades
-    - geerlingguy.pip
+#    - geerlingguy.pip
     - geerlingguy.docker
 
   tasks:
@@ -28,10 +28,12 @@
         upgrade: true
         update_cache: true
 
-    - name: 'Install nfs'
+
+    - name: 'Install nfs & docker'
       apt:
         pkg:
           - nfs-common
+          - python3-docker
 
     - name: 'Change timezone to Toronto time'
       run_once: true
@@ -87,6 +89,16 @@
     - name: 'Disable password for root'
       shell: passwd -d root
       run_once: true
+
+
+    - name: "Install common utils"
+      apt:
+        pkg:
+          - vim
+          - btop
+          - ncdu
+          - jq
+          - curl
 
     - name: 'Reboot server'
       reboot:
