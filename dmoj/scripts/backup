@@ -3,5 +3,5 @@ cd $(dirname $(dirname $0)) || exit
 #export NAME=/home/dmoj/backups/$(date +"%Y-%m-%d_%H-%M-%S.%N").tar.gz
 set -a
 .  environment/mysql.env
-docker compose exec $COMPOSE_EXEC_FLAGS db mariadb-backup --backup --ssl="FALSE" --compress --target-dir="/backups" --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" --host="db" --port="$MYSQL_PORT"
+docker compose exec $COMPOSE_EXEC_FLAGS db mariadb-backup --backup --ssl="FALSE" --compress --target-dir="/backups" --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" --host="db"
 set +a
