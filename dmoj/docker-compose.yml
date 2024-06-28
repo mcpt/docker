@@ -115,7 +115,8 @@ services:
     image: mariadb
     restart: always
     volumes:
-      - database:/var/lib/mysql/
+      - ./database/:/var/lib/mysql/
+      - ./scripts/mariadb:/docker-entrypoint-initdb.d/
     env_file: [ environment/mysql.env, environment/mysql-admin.env ]
     networks: [ db ]
     deploy:
@@ -155,9 +156,3 @@ networks:
   site:
   db:
   nginx:
-
-
-
-
-volumes:
-  database:
