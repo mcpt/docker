@@ -155,6 +155,8 @@ services:
     volumes:
       - /user/wlmoj/database/:/var/lib/mysql/
       - ./scripts/mariadb:/docker-entrypoint-initdb.d/
+      - /etc/localtime:/etc/localtime:ro
+      - /user/wlmoj/backups:/backups
     env_file: [ environment/mysql.env, environment/mysql-admin.env ]
     networks: [ db ]
     deploy:
