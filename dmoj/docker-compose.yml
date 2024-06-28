@@ -153,7 +153,7 @@ services:
     image: mariadb
     restart: always
     volumes:
-      - /home/wlmoj/database/:/var/lib/mysql/
+      - /home/wlmoj/database/:/var/lib/mysql:Z
       - ./scripts/mariadb:/docker-entrypoint-initdb.d/
       - /etc/localtime:/etc/localtime:ro
       - /home/wlmoj/backups:/backups
