@@ -32,7 +32,7 @@
         name: geerlingguy.docker
 
     - name: 'Change timezone to Toronto time'
-      ruy_once: true
+      run_once: true
       shell: timedatectl set-timezone America/Toronto
 
     - name: 'Get Swarm join token from manager'
