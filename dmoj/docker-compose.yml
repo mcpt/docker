@@ -159,7 +159,7 @@ services:
       - /user/wlmoj/backups:/backups
     env_file: [ environment/mysql.env, environment/mysql-admin.env ]
     environment:
-      TZ: "America\Toronto"
+      TZ: "America/Toronto"
     networks: [ db ]
     deploy:
       replicas: 1
