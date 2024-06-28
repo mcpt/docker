@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -e  # Exit on error
 cd "$(dirname "$0")"
+[ `whoami` = root ] || { sudo "$0" "$@"; exit $?; } # enforce root as the ansible ssh key is installed under root
 
 . ../dmoj/scripts/utils/notify
+. ./swarm_info
 
 if [ -z "$1" ]; then
     echo "Usage: $0 <droplet_name>"
@@ -49,7 +51,7 @@ echo "Droplet is active!, public IP: $droplet_pub_ipv4, private IP: $droplet_pri
 notify "Droplet $1 is active at $droplet_pub_ipv4"
 # Wait for SSH to become available
 echo "Waiting for SSH to be available..."
-while ! ssh -o StrictHostKeyChecking=no -q root@"$droplet_priv_ipv4" exit; do # todo: add ssh key of general to DO
+while ! ssh -o StrictHostKeyChecking=no -q root@"$droplet_priv_ipv4" exit; do
     sleep 5
 done
 
@@ -58,7 +60,7 @@ echo "SSH is available!"
 
 # Run the Ansible playbook once SSH is up
 echo "Running Ansible playbook..."
-ansible-playbook -i inventory/initalize_droplet.yml playbooks/initalize_droplet.yml --extra-vars "droplet_name=$1 ansible_host=$droplet_priv_ipv4 public_ipv4=$droplet_pub_ipv4 ansible_user=root"
+fetch_inventory | ansible-playbook -i /dev/stdin playbooks/initalize_droplet.yml --extra-vars "droplet_name=$1 ansible_host=$droplet_priv_ipv4 public_ipv4=$droplet_pub_ipv4 ansible_user=root"
 
 
 notify "Droplet $1 is provisioned and configured!"
