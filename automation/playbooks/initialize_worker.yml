@@ -43,16 +43,13 @@
 
 
     - name: 'Mount nfs share'
-      file:
-        path: /var/share
-        state: directory
-
-      mount:
+      ansible.posix.mount:
         path: /var/share
         src: 10.137.0.5:/var/share
         state: mounted
         fstype: nfs4
-        opts: auto,nofail,noatime,nolock,intr,tcp,actimeo=1800,timeo=600
+        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800'
+
 
     - name: 'Installing unattended-upgrades'
       include_role:
