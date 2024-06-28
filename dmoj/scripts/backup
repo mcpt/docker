@@ -2,5 +2,5 @@
 cd $(dirname $(dirname $0)) || exit
 #export NAME=/home/dmoj/backups/$(date +"%Y-%m-%d_%H-%M-%S.%N").tar.gz
 
-docker compose exec $COMPOSE_EXEC_FLAGS db mariadb-backup --backup --compress --target-dir="/backup" --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" --host="db" --port="$MYSQL_PORT"
+docker compose exec $COMPOSE_EXEC_FLAGS db mariadb-backup --backup --compress --target-dir="/backups" --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" --host="db" --port="$MYSQL_PORT"
 #mysqldump --all-databases -u "$MYSQL_USER" -pdmoj | gzip > $NAME && curl -X POST -F "file=@$NAME" http://10.10.10.1:8008/
