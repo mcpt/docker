@@ -1,0 +1,38 @@
+#!/bin/bash
+
+function notify() {
+  local message="$1"
+  local is_urgent="$2"  # Use "true" to trigger urgent notification
+  local webhook_url="$DISCORD_WEBHOOK"
+  local message_with_mention=""
+
+  if [ -z "$webhook_url" ]; then
+    echo "ERROR: DISCORD_WEBHOOK environment variable not set." >&2
+    return 1
+  fi
+
+  # Prepend "@judge" mention only if is_urgent is true
+  if [ "$is_urgent" = "true" ]; then
+    message_with_mention="<@511724576674414600> $message"  # todo replace with judge ID
+  else
+    message_with_mention="$message"
+  fi
+
+  local payload='{"content": "'"${message_with_mention}"'"}'
+
+  curl -s -o /dev/null -w "%{http_code}" -i -H "Accept: application/json" -H "Content-Type: application/json" --data "$payload" "$webhook_url" |
+    if read -r status_code; then
+      if [ "$status_code" != "204" ]; then
+        echo "Failed to send notification to Discord (status code: $status_code)" >&2
+        return 1
+      fi
+    else
+      echo "Failed to send notification to Discord (curl error)" >&2
+      return 1
+    fi
+}
+
+
+# Example usage:
+# notify "Regular notification content"         # No mention
+# notify "Urgent notification content" "true"   # @judge mention included

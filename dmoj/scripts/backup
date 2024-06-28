@@ -1,7 +1,11 @@
 #!/bin/bash
 
+cd $(dirname $0) || exit
+
 # Set the backup directory (ideally from an environment variable)
 BACKUP_DIR=${BACKUP_DIR:-"/home/wlmoj/backups"} # Default to /home/wlmoj/backups if BACKUP_DIR is not set
+
+. ./utils/notify
 
 if [ -z "$1" ]; then
   FILE_PREFIX="dump"
@@ -22,6 +26,7 @@ set +a
 # Check the exit status of mariadb-dump
 if ! docker compose exec db mariadb-dump --all-databases --single-transaction --ssl="FALSE" --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" | gzip > "$BACKUP_FILE"; then
     echo "ERROR: mariadb-dump failed. Check logs for details."
+    notify "Backup Failed" "true"
     exit 1
 fi
 

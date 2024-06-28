@@ -1,6 +1,6 @@
 #!/bin/bash
 cd $(dirname $(dirname $0)) || exit
-
+. ./scripts/utils/notify
 if [ -z "$1" ]; then
     echo "Usage: restore <filename.sql.gz>"
     echo "Example: restore 2024-06-28_15-25-00.sql.gz"
@@ -15,6 +15,8 @@ if [ ! -f "$BACKUP_FILE" ]; then
     exit 1  # Exit with an error code
 fi
 
+notify "Restore Started"
+
 set -a
 .  environment/mysql.env
 set +a
@@ -24,3 +26,4 @@ gzip -d "$NAME"
 docker compose exec db mariadb --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" < "${BACKUP_FILE%.*}"
 
 echo "Restore completed successfully."
+notify "Restore Completed" "true"
