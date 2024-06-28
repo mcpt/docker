@@ -20,7 +20,7 @@
   roles:
     - hifis.unattended_upgrades
 #    - geerlingguy.pip
-    - geerlingguy.docker
+#    - geerlingguy.docker
 
   tasks:
     - name: 'APT Upgrade'
@@ -35,8 +35,6 @@
         pkg:
           - nfs-common
           - python3-docker
-          - python3-requests
-          - python3-urllib3
 
     - name: 'Change timezone to Toronto time'
       run_once: true
@@ -44,13 +42,13 @@
 
     - name: 'Get Swarm join token from manager'
       run_once: true
-      shell: 'docker swarm join-token worker'
+      shell: 'docker swarm join-token worker -q'
       register: join_token
       delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
 
     - name: 'Join the Swarm as a worker'
       run_once: true
-      community.docker.docker_swarm:
+      docker_swarm:
         state: join
         join_token: "{{ join_token.stdout_lines[0] }}"
         advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
