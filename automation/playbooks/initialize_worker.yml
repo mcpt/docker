@@ -11,10 +11,17 @@
     docker_edition: 'ce'
     docker_package_state: present
     docker_install_compose: true
+    pip_install_packages:
+      - name: docker
+
+
 
 
   roles:
-    - role: hifis.unattended_upgrades
+    - hifis.unattended_upgrades
+    - geerlingguy.pip
+    - geerlingguy.docker
+
   tasks:
     - name: 'APT Upgrade'
       apt:
@@ -25,11 +32,6 @@
       apt:
         pkg:
           - nfs-common
-
-    - name: 'Installing docker'
-      run_once: true
-      include_role:
-        name: geerlingguy.docker
 
     - name: 'Change timezone to Toronto time'
       run_once: true
