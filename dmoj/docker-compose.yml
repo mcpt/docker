@@ -45,7 +45,7 @@ services:
     init: true
     restart: unless-stopped
     volumes:
-      - /var/share/assets:/share/assets/
+      - /var/share/assets:/assets/
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
       - /var/share/cache/cache:/cache/
@@ -135,7 +135,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /var/share/assets:/share/assets/
+      - /var/share/assets:/assets/
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
       - /var/cache/cache:/cache/
