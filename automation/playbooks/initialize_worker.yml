@@ -10,6 +10,8 @@
 
     docker_edition: 'ce'
     docker_package_state: present
+    docker_install_compose: true
+
 
   tasks:
     - name: 'APT Upgrade'
