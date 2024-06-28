@@ -1,0 +1,26 @@
+#!/bin/bash
+cd $(dirname $(dirname $0)) || exit
+
+if [ -z "$1" ]; then
+    echo "Usage: restore <filename.sql.gz>"
+    echo "Example: restore 2024-06-28_15-25-00.sql.gz"
+    exit 1  # Exit with an error code
+fi
+
+BACKUP_FILE="$1"
+
+# Verify if the backup file exists
+if [ ! -f "$BACKUP_FILE" ]; then
+    echo "Error: Backup file '$BACKUP_FILE' not found."
+    exit 1  # Exit with an error code
+fi
+
+set -a
+.  environment/mysql.env
+set +a
+
+# todo: add pv? (pipe viewer) to show progress bar
+gzip -d "$NAME"
+docker compose exec db mariadb --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" < "${BACKUP_FILE%.*}"
+
+echo "Restore completed successfully."

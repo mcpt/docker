@@ -1,6 +1,6 @@
 #!/bin/bash
 cd $(dirname $(dirname $0)) || exit
-export NAME=/home/wlmoj/backups/$(date +"%Y-%m-%d_%H-%M-%S").tar.gz
+export NAME=/home/wlmoj/backups/$(date +"%Y-%m-%d_%H-%M-%S").sql.gz
 set -a
 .  environment/mysql.env
 docker compose exec db mariadb-dump --all-databases --single-transaction --ssl="FALSE" --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" |  gzip > "$NAME"
