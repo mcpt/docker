@@ -1,18 +1,5 @@
-version: '3.7'
+version: '3.8'
 services:
-  db:
-    container_name: dmoj_mysql
-    image: mariadb
-    restart: always
-    volumes:
-      - ./database/:/var/lib/mysql/
-    env_file: [environment/mysql.env, environment/mysql-admin.env]
-    networks: [db]
-  redis:
-    container_name: dmoj_redis
-    image: redis:alpine
-    restart: always
-    networks: [site]
   texoid:
     build:
       context: .
@@ -21,6 +8,7 @@ services:
     init: true
     restart: unless-stopped
     networks: [site]
+
   pdfoid:
     build:
       context: .
@@ -41,12 +29,14 @@ services:
     volumes:
       - ./mathoid/config.yaml:/node_modules/mathoid/config.yaml
     networks: [site]
+
   base:
     build:
       context: .
       dockerfile: ./base/Dockerfile
     image: ghcr.io/mcpt/wlmoj-base
     network_mode: none
+
   site:
     build:
       context: .
@@ -55,17 +45,23 @@ services:
     init: true
     restart: unless-stopped
     volumes:
-      - assets:/assets/
-      - pdfcache:/pdfcache/
-      - datacache:/datacache/
-      - cache:/cache/
-      - ./media/:/media/
-      - ./problems/:/problems/
+      - /var/share/assets:/share/assets/
+      - /var/share/cache/pdfcache:/pdfcache/
+      - /var/share/cache/datacache:/datacache/
+      - /var/cache/cache:/cache/
+      - /var/share/media/:/media/
+      - /var/share/problems/:/problems/
       - ./repo/:/site/
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, nginx, db]
     depends_on: [base, db, redis]
+    deploy:
+     update_config:
+         parallelism: 1
+         delay: 1m
+         failure_action: rollback
+
   celery:
     build:
       context: .
@@ -74,13 +70,14 @@ services:
     init: true
     restart: unless-stopped
     volumes:
-      - pdfcache:/pdfcache/
-      - datacache:/datacache/
+      - /var/share/cache/pdfcache:/pdfcache/
+      - /var/share/cache/datacache:/datacache/
       - ./repo/:/site/
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, db]
     depends_on: [base, db, redis]
+
   bridged:
     build:
       context: .
@@ -89,8 +86,8 @@ services:
     init: true
     restart: unless-stopped
     volumes:
-      - pdfcache:/pdfcache/
-      - ./problems/:/problems/
+      - /var/share/cache/pdfcache:/pdfcache/
+      - /var/share/problems/:/problems/
       - ./repo/:/site/
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
@@ -110,27 +107,54 @@ services:
     working_dir: /app/site
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, nginx]
+
+  db:
+    image: mariadb
+    restart: always
+    volumes:
+      - database:/var/lib/mysql/
+    env_file: [ environment/mysql.env, environment/mysql-admin.env ]
+    networks: [ db ]
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [ node.role == manager ]
+
+  redis:
+    image: redis:alpine
+    restart: always
+    networks: [ site ]
+
   nginx:
-    container_name: dmoj_nginx
     image: nginx:alpine
     restart: always
     ports:
       - "80:80"
     volumes:
-      - assets:/assets/
-      - pdfcache:/pdfcache/
-      - datacache:/datacache/
-      - cache:/cache/
-      - ./media/:/media/
+      - /var/share/assets:/share/assets/
+      - /var/share/cache/pdfcache:/pdfcache/
+      - /var/share/cache/datacache:/datacache/
+      - /var/cache/cache:/cache/
+      - /var/share/media/:/media/
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     networks: [nginx]
     depends_on: [site, wsevent]
+
+  judge:
+    container_name: dmoj_judge
+    image: ghcr.io/mcpt/wlmoj-judge
+    restart: always
+    deploy:
+      replicas: 1 # 1 by default but can be scaled up
+
+
 networks:
   site:
   db:
   nginx:
+
+
+
+
 volumes:
-  assets:
-  pdfcache:
-  datacache:
-  cache:
+  database:
