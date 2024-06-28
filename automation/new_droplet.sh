@@ -17,7 +17,7 @@ if doctl compute droplet list --format Name | grep -i "$1"; then
     exit 1
 fi
 
-notify "Provisioning new droplet $1"
+notify "## Provisioning new droplet **$1**"
 
 SSH_KEYS=$(doctl compute ssh-key list --no-header --format ID)
 
@@ -48,7 +48,7 @@ droplet_priv_ipv4=$(doctl compute droplet get "$droplet_id" --output json | jq -
 
 
 echo "Droplet is active!, public IP: $droplet_pub_ipv4, private IP: $droplet_priv_ipv4"
-notify "Droplet $1 is active at $droplet_pub_ipv4"
+notify "> Droplet **$1** is active at $droplet_pub_ipv4"
 # Wait for SSH to become available
 echo "Waiting for SSH to be available..."
 while ! ssh -o StrictHostKeyChecking=no -q root@"$droplet_priv_ipv4" exit; do
@@ -64,4 +64,4 @@ fetch_inventory | ansible-playbook -i /dev/stdin playbooks/initalize_worker.yml 
 
 
 notify "Droplet $1 is provisioned and configured!"
-echo "Droplet $1 is provisioned and configured!"
+echo "**Droplet $1 is provisioned and configured!**"
