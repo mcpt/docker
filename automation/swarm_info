@@ -26,6 +26,7 @@ get_replica_ips() {
 }
 
 fetch_inventory() {
+  echo "ansible_ssh_common_args=\"-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null\""
   echo "[managers]" # todo: if we have multiple managers, we need to place general first
   get_manager_ips
   echo "[workers]"
