@@ -51,6 +51,9 @@ services:
       dockerfile: ./base/Dockerfile
     image: ghcr.io/mcpt/wlmoj-base
     network_mode: none
+    deploy:
+      replicas: 0 # don't run this as a service, it is just used for the build process
+
 
   site:
     build:
