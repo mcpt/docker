@@ -18,6 +18,9 @@ if doctl compute droplet list --format Name | grep -i "$1"; then
     exit 1
 fi
 
+echo "Provisioning new droplet $1..."
+echo "SSH keys: $(doctl compute ssh-key list --no-header --format Name)"
+echo "Creating droplet..."
 notify "## Provisioning new droplet **$1**"
 
 SSH_KEYS=$(doctl compute ssh-key list --no-header --format ID)

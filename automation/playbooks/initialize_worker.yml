@@ -30,7 +30,6 @@
         name: geerlingguy.docker
 
     - name: Join Docker Swarm
-      hosts: all
       become: yes
       tasks:
         - name: Get Swarm join token from manager
