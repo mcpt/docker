@@ -27,9 +27,6 @@ function notify() {
         echo "Failed to send notification to Discord (status code: $status_code)" >&2
         return 1
       fi
-    else
-      echo "Failed to send notification to Discord (curl error)" >&2
-      return 1
     fi
 }
 
