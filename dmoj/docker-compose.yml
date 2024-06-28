@@ -48,9 +48,10 @@ services:
       - /var/share/assets:/share/assets/
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
-      - /var/cache/cache:/cache/
-      - /var/share/media/:/media/
-      - /var/share/problems/:/problems/
+      - /var/share/cache/cache:/cache/
+      - /var/share/media:/media/
+      - /var/share/problems:/problems/
+      - /var/share/logs:/logs/
       - ./repo/:/site/
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
@@ -140,12 +141,12 @@ services:
     networks: [nginx]
     depends_on: [site, wsevent]
 
-  judge:
-    container_name: dmoj_judge
-    image: ghcr.io/mcpt/wlmoj-judge
-    restart: always
-    deploy:
-      replicas: 1 # 1 by default but can be scaled up
+#  judge:
+#    container_name: dmoj_judge
+#    image: ghcr.io/mcpt/wlmoj-judge
+#    restart: always
+#    deploy:
+#      replicas: 1 # 1 by default but can be scaled up
 
 
 networks:
