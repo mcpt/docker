@@ -37,11 +37,11 @@
           register: join_token
           delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
 
-        - name: Join the Swarm as a worker
-          community.docker.docker_swarm:
-            state: join
-            join_token: "{{ join_token.stdout_lines[0] }}"
-            advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
+    - name: Join the Swarm as a worker
+      community.docker.docker_swarm:
+        state: join
+        join_token: "{{ join_token.stdout_lines[0] }}"
+        advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
 
 
 
