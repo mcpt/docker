@@ -22,22 +22,21 @@
         pkg:
           - nfs-common
 
-    - name: 'Change timezone to Toronto time'
-      shell: timedatectl set-timezone America/Toronto
-
     - name: 'Installing docker'
       include_role:
         name: geerlingguy.docker
 
-    - name: Join Docker Swarm
-      become: yes
+    - name: 'Change timezone to Toronto time'
+      shell: timedatectl set-timezone America/Toronto
+
+    - name: 'Get Swarm join token from manager'
       tasks:
         - name: Get Swarm join token from manager
           shell: docker swarm join-token worker
           register: join_token
           delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
 
-    - name: Join the Swarm as a worker
+    - name: 'Join the Swarm as a worker'
       community.docker.docker_swarm:
         state: join
         join_token: "{{ join_token.stdout_lines[0] }}"
@@ -45,7 +44,7 @@
 
 
 
-    - name: 'Mount problem data nfs share'
+    - name: 'Mount nfs share'
       file:
         path: /var/share
         state: directory
