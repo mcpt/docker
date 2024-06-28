@@ -30,11 +30,9 @@
       shell: timedatectl set-timezone America/Toronto
 
     - name: 'Get Swarm join token from manager'
-      tasks:
-        - name: Get Swarm join token from manager
-          shell: docker swarm join-token worker
-          register: join_token
-          delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
+      shell: 'docker swarm join-token worker'
+      register: join_token
+      delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
 
     - name: 'Join the Swarm as a worker'
       community.docker.docker_swarm:
