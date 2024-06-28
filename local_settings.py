@@ -72,24 +72,6 @@ COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
 STATICFILES_FINDERS += ('compressor.finders.CompressorFinder',)
 
 
-#########################################
-########## Email configuration ##########
-#########################################
-# See <https://docs.djangoproject.com/en/1.11/topics/email/#email-backends>
-# for more documentation. You should follow the information there to define 
-# your email settings.
-
-# Use this if you are just testing.
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# The following block is included for your convenience, if you want 
-# to use Gmail.
-#EMAIL_USE_TLS = True
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_HOST_USER = '<your account>@gmail.com'
-#EMAIL_HOST_PASSWORD = '<your password>'
-#EMAIL_PORT = 587
-
 # To use Mailgun, uncomment this block.
 # You will need to run `pip install django-mailgun` for to get `MailgunBackend`.
 #EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
@@ -103,12 +85,11 @@ STATICFILES_FINDERS += ('compressor.finders.CompressorFinder',)
 # The DMOJ site is able to notify administrators of errors via email,
 # if configured as shown below.
 
-# A tuple of (name, email) pairs that specifies those who will be mailed
-# when the server experiences an error when DEBUG = False.
-ADMINS = ()
+DEFAULT_FROM_EMAIL = 'judge@mcpt.ca'
+SERVER_EMAIL = 'judge@mcpt.ca'
 
-# The sender for the aforementioned emails.
-SERVER_EMAIL = 'DMOJ: Modern Online Judge <errors@dmoj.ca>'
+ADMINS = [("Jason Cameron", "mcpt@jasoncameron.dev")]
+
 
 
 ##################################################
@@ -116,8 +97,8 @@ SERVER_EMAIL = 'DMOJ: Modern Online Judge <errors@dmoj.ca>'
 ##################################################
 # See <https://docs.djangoproject.com/en/1.11/howto/static-files/>.
 
-# Change this to somewhere more permanent., especially if you are using a 
-# webserver to serve the static files. This is the directory where all the 
+# Change this to somewhere more permanent., especially if you are using a
+# webserver to serve the static files. This is the directory where all the
 # static files DMOJ uses will be collected to.
 # You must configure your webserver to serve this directory as /static/ in production.
 STATIC_ROOT = '/assets/static/'
@@ -133,14 +114,14 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesSto
 ############################################
 
 ## DMOJ site display settings.
-SITE_NAME = 'DMOJ'
-SITE_LONG_NAME = 'DMOJ: Modern Online Judge'
-SITE_ADMIN_EMAIL = 'admin@example.com'
-TERMS_OF_SERVICE_URL = None
+SITE_NAME = 'MCPT'
+SITE_LONG_NAME = 'MCPT: Mackenzie Competitive Programming Team'
+SITE_ADMIN_EMAIL = 'judge@mcpt.ca'
+TERMS_OF_SERVICE_URL = '//mcpt.ca/tos' # Use a flatpage.
 
 ## Bridge controls.
 # The judge connection address and port; where the judges will connect to the site.
-# You should change this to something your judges can actually connect to 
+# You should change this to something your judges can actually connect to
 # (e.g., a port that is unused and unblocked by a firewall).
 BRIDGED_JUDGE_ADDRESS = [('bridged', 9999)]
 
@@ -213,6 +194,8 @@ DMOJ_PDF_PROBLEM_CACHE = '/pdfcache'
 # Should be an internal location mapped to the above directory.
 DMOJ_PDF_PROBLEM_INTERNAL = '/pdfcache'
 
+# Enable Selenium PDF generation
+USE_SELENIUM = True
 
 DMOJ_USER_DATA_DOWNLOAD = True
 DMOJ_USER_DATA_CACHE = '/datacache'
@@ -255,16 +238,61 @@ LOGGING = {
         },
     },
     'handlers': {
+        'bridge': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/logs/bridge.log',
+            'maxBytes': 10 * 1024 * 1024,
+            'backupCount': 10,
+            'formatter': 'file',
+        },
+        'all': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': '/logs/all.log',
+            'maxBytes': 10 * 1024 * 1024,
+            'backupCount': 10,
+            'formatter': 'file',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'dmoj.throttle_mail.ThrottledEmailHandler',
+        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'file',
         },
+        'discord_integration': {
+            'level': 'ERROR',
+            'class': 'discord_integration.log.DiscordMessageHandler',
+        },
+        'discord_simple': {
+            'level': 'INFO',
+            'class': 'discord_integration.log.SimpleDiscordMessageHandler',
+        },
     },
     'loggers': {
+        # Site 500 error mails.
+        'django.request': {
+            'handlers': ['discord_integration'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        # Site tickets
+        'judge.ticket': {
+            'handlers': ['discord_simple'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        # Judging logs as received by bridged.
+        'judge.bridge': {
+            'handlers': ['bridge', 'discord_integration'],
+            'propagate': True,
+        },
+        # Catch all log to stderr.
         '': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
+            'handlers': ['console', 'all'],
         },
     },
 }
@@ -282,6 +310,24 @@ LOGGING = {
 #SOCIAL_AUTH_DROPBOX_OAUTH2_KEY = ''
 #SOCIAL_AUTH_DROPBOX_OAUTH2_SECRET = ''
 
+
+#########################################
+########## Email configuration ##########
+#########################################
+# See <https://docs.djangoproject.com/en/1.11/topics/email/#email-backends>
+# for more documentation. You should follow the information there to define
+# your email settings.
+
+# Use this if you are just testing.
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = os.environ.get('EMAIL_HOST', None)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', None)
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', None)
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+
 ## ======== Custom Configuration ========
 # You may add whatever django configuration you would like here.
 # Do try to keep it separate so you can quickly patch in new settings.
@@ -290,6 +336,8 @@ LOGGING = {
 # sent only with an HTTPS connection.
 #CSRF_COOKIE_SECURE = True
 #SESSION_COOKIE_SECURE = True
+
+MOSS_API_KEY = os.environ.get('MOSS_API_KEY', None)
 
 REGISTRATION_OPEN = False
 DMOJ_RATING_COLORS = True
@@ -304,3 +352,12 @@ DMOJ_RESOURCES = '/assets/resources/'
 
 MEDIA_ROOT = '/media/'
 MEDIA_URL = '/media/'
+
+DMOJ_ICS_REPORT_PERIODS = {
+    1: {"name": "Mr. Guglielmi", "email": "test-void@fluix.one"},
+    2: {"name": "Mrs. Krasteva", "email": "test-void@fluix.one"},
+}
+
+
+if DEBUG == True:
+	EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
