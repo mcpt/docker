@@ -13,6 +13,8 @@
     docker_install_compose: true
 
 
+  roles:
+    - role: hifis.unattended_upgrades
   tasks:
     - name: 'APT Upgrade'
       apt:
@@ -25,26 +27,29 @@
           - nfs-common
 
     - name: 'Installing docker'
+      run_once: true
       include_role:
         name: geerlingguy.docker
 
     - name: 'Change timezone to Toronto time'
+      ruy_once: true
       shell: timedatectl set-timezone America/Toronto
 
     - name: 'Get Swarm join token from manager'
+      run_once: true
       shell: 'docker swarm join-token worker'
       register: join_token
       delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
 
     - name: 'Join the Swarm as a worker'
+      run_once: true
       community.docker.docker_swarm:
         state: join
         join_token: "{{ join_token.stdout_lines[0] }}"
         advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
 
-
-
     - name: 'Mount nfs share'
+      run_once: true
       ansible.posix.mount:
         path: /var/share
         src: 10.137.0.5:/var/share
@@ -52,21 +57,24 @@
         fstype: nfs4
         opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800'
 
-
-    - name: 'Installing unattended-upgrades'
-      include_role:
-        name: jnv.unattended-upgrades
-
     - name: 'Install UFW'
+      run_once: true
       apt:
         name: ufw
 
+    - name: "UFW: allow ssh"
+      run_once: true
+      ufw:
+        rule: allow
+        port: 22
+        proto: tcp
+
     - name: 'UFW: internal network'
+      run_once: true
       ufw:
         rule: allow
         src: '10.137.0.0/16'
         dest: '10.137.0.0/16'
-
 
     - name: 'UFW: enable and by default drop'
       ufw:
@@ -75,6 +83,7 @@
 
     - name: 'Disable password for root'
       shell: passwd -d root
+      run_once: true
 
     - name: 'Reboot server'
       reboot:
