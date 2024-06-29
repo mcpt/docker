@@ -34,7 +34,7 @@ services:
     init: true
     restart: unless-stopped
     volumes:
-      - ./mathoid/config.yaml:/node_modules/mathoid/config.yaml
+      - /var/share/configs/mathoid/config.yaml:/node_modules/mathoid/config.yaml
     networks: [site]
 
     deploy:
@@ -70,7 +70,6 @@ services:
       - /var/share/media:/media/
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
-      - ./repo/:/site/
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, nginx, db]
@@ -95,7 +94,6 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
       - /var/share/logs:/logs/
-      - ./repo/:/site/
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, db]
@@ -120,7 +118,6 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/problems/:/problems/
       - /var/share/logs:/logs/
-      - ./repo/:/site/
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, nginx, db]
@@ -139,8 +136,6 @@ services:
     image: ghcr.io/mcpt/wlmoj-wsevent
     init: true
     restart: unless-stopped
-    volumes:
-      - ./repo/:/app/site/
     working_dir: /app/site
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, nginx]

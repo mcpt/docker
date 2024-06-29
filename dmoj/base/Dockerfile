@@ -15,5 +15,12 @@ RUN npm install -g sass postcss-cli postcss autoprefixer
 RUN pip3 install \
         pymysql mysqlclient websocket-client uwsgi django-redis redis django-discord-integration
 
-COPY repo/requirements.txt .
+
+WORKDIR /site
+
+RUN git clone https://github.com/mcpt/wlmoj . && \
+    git submodule update --init --recursive
+
 RUN pip3 install -r requirements.txt
+
+

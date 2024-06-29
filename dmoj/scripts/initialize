@@ -6,3 +6,7 @@ mkdir problems media
 mv ../config.js repo/websocket/
 mv ../local_settings.py repo/dmoj/
 mv ../uwsgi.ini repo/
+
+
+mv ./mathoid/config.yaml /var/share/configs/mathoid/config.yaml
+
