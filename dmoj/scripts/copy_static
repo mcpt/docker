@@ -2,6 +2,7 @@
 cd $(dirname $(dirname $0)) || exit
 
 docker compose $COMPOSE_FLAGS exec $COMPOSE_EXEC_FLAGS site /bin/bash -c "\
+    ls && \
     bash make_style.sh && \
     python3 manage.py collectstatic --noinput && \
     python3 manage.py compilemessages && \
