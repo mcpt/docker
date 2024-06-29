@@ -5,9 +5,9 @@ mkdir -p problems media
 
 
 mkdir -p /repo # only doesnt exist in CI
-mv ../config.js repo/websocket/
-mv ../local_settings.py repo/dmoj/
-mv ../uwsgi.ini repo/
+mv ../config.js /repo/websocket/
+mv ../local_settings.py /repo/dmoj/
+mv ../uwsgi.ini /repo/
 
 #if [[ -z "$CI" ]]; then # don't try to access /var/share in CI
 #    mv ./mathoid/config.yaml /var/share/configs/mathoid/config.yaml
