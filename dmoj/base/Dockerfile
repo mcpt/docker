@@ -18,7 +18,9 @@ RUN pip3 install \
 
 WORKDIR /site
 
-RUN git clone https://github.com/mcpt/wlmoj /site/repo && \
+# first line is a cache buster
+RUN date +%s > /dev/null && \
+    git clone https://github.com/mcpt/wlmoj /site/repo && \
     cd /site/repo && \
     git submodule update --init --recursive
 
