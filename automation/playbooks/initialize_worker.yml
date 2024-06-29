@@ -10,7 +10,6 @@
 
     docker_edition: 'ce'
     docker_package_state: present
-    docker_install_compose: true
 #    pip_install_packages:
 #      - name: docker==7.1.0
 
@@ -29,10 +28,11 @@
         update_cache: true
 
 
-    - name: 'Install nfs'
+    - name: 'Install nfs & pip'
       apt:
         pkg:
           - nfs-common
+          - python3-pip
 
     - name: 'Mount nfs share'
       run_once: true
