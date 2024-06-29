@@ -18,12 +18,14 @@ if doctl compute droplet list --format Name | grep -i "$1"; then
     exit 1
 fi
 
+
+SSH_KEYS=$(doctl compute ssh-key list --no-header --format ID)
+
 echo "Provisioning new droplet $1..."
-echo "SSH keys: $(doctl compute ssh-key list --no-header --format Name)"
+echo "SSH keys: $(doctl compute ssh-key list --no-header --format Name | tr '\n' ', ')"
 echo "Creating droplet..."
 notify "## Provisioning new droplet **$1**"
 
-SSH_KEYS=$(doctl compute ssh-key list --no-header --format ID)
 
 # Create the droplet
 droplet_id=$(doctl compute droplet create \
@@ -64,8 +66,8 @@ echo "SSH is available!"
 
 # Run the Ansible playbook once SSH is up
 echo "Running Ansible playbook..."
-fetch_inventory | ansible-playbook -i /dev/stdin ./playbooks/initialize_worker.yml --extra-vars "droplet_name=$1 ansible_host=$droplet_priv_ipv4 public_ipv4=$droplet_pub_ipv4 ansible_user=root"
-
+fetch_inventory > ./inventory.ini
+ansible-playbook -i ./inventory.ini ./playbooks/initialize_worker.yml --extra-vars "droplet_name=$1 ansible_host=$droplet_priv_ipv4 public_ipv4=$droplet_pub_ipv4 ansible_user=root"
 
 notify "Droplet $1 is provisioned and configured!"
 echo "**Droplet $1 is provisioned and configured!**"

@@ -1,4 +1,4 @@
-- hosts: workers
+- hosts:
   become: yes
   become_user: root
   become_method: sudo
@@ -12,7 +12,7 @@
     docker_package_state: present
     docker_install_compose: true
 #    pip_install_packages:
-#      - name: docker
+#      - name: docker==7.1.0
 
 
 
@@ -20,7 +20,7 @@
   roles:
     - hifis.unattended_upgrades
 #    - geerlingguy.pip
-#    - geerlingguy.docker
+    - geerlingguy.docker
 
   tasks:
     - name: 'APT Upgrade'
@@ -29,16 +29,29 @@
         update_cache: true
 
 
-    - name: 'Install nfs & docker + deps'
+    - name: 'Install nfs'
       apt:
-
         pkg:
           - nfs-common
-          - python3-docker
+
+    - name: 'Mount nfs share'
+      run_once: true
+      ansible.posix.mount:
+        path: /var/share
+        src: 10.137.0.5:/var/share
+        state: mounted
+        fstype: nfs4
+        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800'
 
     - name: 'Change timezone to Toronto time'
       run_once: true
       shell: timedatectl set-timezone America/Toronto
+
+    - name: "Install updated docker bindings"
+      pip:
+        name: docker>=7.1.0
+        extra_args: --break-system-packages
+
 
     - name: 'Get Swarm join token from manager'
       run_once: true
@@ -53,15 +66,6 @@
         join_token: "{{ join_token.stdout_lines[0] }}"
         advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
         remote_addrs: "{{ groups['managers'] }}"
-
-    - name: 'Mount nfs share'
-      run_once: true
-      ansible.posix.mount:
-        path: /var/share
-        src: 10.137.0.5:/var/share
-        state: mounted
-        fstype: nfs4
-        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800'
 
     - name: 'Install UFW'
       run_once: true
