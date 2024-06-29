@@ -18,7 +18,7 @@ RUN pip3 install \
 
 WORKDIR /site
 
-RUN git clone https://github.com/mcpt/wlmoj . && \
+RUN git clone https://github.com/mcpt/wlmoj /site/repo && \
     git submodule update --init --recursive
 
 RUN pip3 install -r requirements.txt
