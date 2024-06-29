@@ -23,9 +23,11 @@ jobs:
           ./scripts/initialize
           docker compose -f docker-build.yml up -d
           sleep 10
-          COMPOSE_EXEC_FLAGS="-T" ./scripts/copy_static
-          COMPOSE_EXEC_FLAGS="-T" ./scripts/migrate
-          COMPOSE_EXEC_FLAGS="-T" ./scripts/manage.py loaddata language_small
+          export COMPOSE_EXEC_FLAGS="-T"
+          export COMPOSE_FLAGS="-f docker-build.yml"
+          ./scripts/copy_static
+          ./scripts/migrate
+          ./scripts/manage loaddata language_small
         working-directory: dmoj
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
