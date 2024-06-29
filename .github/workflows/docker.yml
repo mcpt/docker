@@ -16,12 +16,12 @@ jobs:
         run: |
           git submodule update --init --recursive
       - name: Build images
-        run: docker compose build -f docker-build.yml
+        run: docker compose -f docker-build.yml build
         working-directory: dmoj
       - name: Test images
         run: |
           ./scripts/initialize
-          docker compose up -f docker-build.yml  -d
+          docker compose -f docker-build.yml up -d
           sleep 10
           COMPOSE_EXEC_FLAGS="-T" ./scripts/copy_static
           COMPOSE_EXEC_FLAGS="-T" ./scripts/migrate
