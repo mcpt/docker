@@ -1,16 +1,16 @@
 #!/bin/bash
 cd $(dirname $(dirname $0)) || exit
 
-mkdir -p problems media
 
-
-mkdir -p /repo # only doesnt exist in CI
-mv ../config.js /repo/websocket/
-mv ../local_settings.py /repo/dmoj/
-mv ../uwsgi.ini /repo/
-
-#if [[ -z "$CI" ]]; then # don't try to access /var/share in CI
-#    mv ./mathoid/config.yaml /var/share/configs/mathoid/config.yaml
-#fi
-#
-#
+if [ -z "$CI" ]; then  # Not running in CI
+      mkdir -p /var/share/problems /var/share/media
+      mv ../config.js /var/share/configs/websocket/
+      mv ../local_settings.py /var/share/configs/wlmoj/
+      mv ../uwsgi.ini /var/share/configs/wlmoj/
+      mv ./mathoid/config.yaml /var/share/configs/mathoid/
+      mv ../nginx/conf.d/ /var/share/configs/nginx/
+else
+  mv ../config.js repo/websocket/
+  mv ../local_settings.py repo/dmoj/
+  mv ../uwsgi.ini repo/
+fi

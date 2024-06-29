@@ -7,7 +7,7 @@ services:
     image: ghcr.io/mcpt/wlmoj-texoid
     init: true
     restart: unless-stopped
-    networks: [site]
+    networks: [ site ]
 
   pdfoid:
     build:
@@ -16,15 +16,9 @@ services:
     image: ghcr.io/mcpt/wlmoj-pdfoid
     init: true
     restart: unless-stopped
-    networks: [site]
+    networks: [ site ]
     cap_add:
       - SYS_ADMIN
-    deploy:
-        resources:
-            limits:
-              memory: 512M
-        placement:
-          constraints: [ node.role == worker ]
 
   mathoid:
     build:
@@ -33,14 +27,9 @@ services:
     image: ghcr.io/mcpt/wlmoj-mathoid
     init: true
     restart: unless-stopped
-    networks: [site]
-
-    deploy:
-        resources:
-            limits:
-              memory: 512M
-        placement:
-          constraints: [ node.role == worker ]
+    volumes:
+      - ./mathoid/config.yaml:/node_modules/mathoid/config.yaml
+    networks: [ site ]
 
 
   base:
@@ -49,9 +38,6 @@ services:
       dockerfile: ./base/Dockerfile
     image: ghcr.io/mcpt/wlmoj-base
     network_mode: none
-    deploy:
-      replicas: 0 # don't run this as a service, it is just used for the build process
-
 
   site:
     build:
@@ -68,18 +54,11 @@ services:
       - /var/share/media:/media/
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
+      - ./repo/:/site/
     working_dir: /site/
-    env_file: [environment/mysql.env, environment/site.env]
-    networks: [site, nginx, db]
-    depends_on: [base, db, redis]
-    deploy:
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-      update_config:
-         parallelism: 1
-         delay: 1m
-         failure_action: rollback
+    env_file: [ environment/mysql.env, environment/site.env ]
+    networks: [ site, nginx, db ]
+    depends_on: [ base, db, redis ]
 
   celery:
     build:
@@ -92,18 +71,11 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
       - /var/share/logs:/logs/
+      - ./repo/:/site/
     working_dir: /site/
-    env_file: [environment/mysql.env, environment/site.env]
-    networks: [site, db]
-    depends_on: [base, db, redis]
-    deploy:
-      replicas: 1
-      placement:
-        constraints: [node.role == worker]
-      update_config:
-         parallelism: 1
-         delay: 1m
-         failure_action: rollback
+    env_file: [ environment/mysql.env, environment/site.env ]
+    networks: [ site, db ]
+    depends_on: [ base, db, redis ]
 
   bridged:
     build:
@@ -116,16 +88,14 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/problems/:/problems/
       - /var/share/logs:/logs/
+      - ./repo/:/site/
     working_dir: /site/
-    env_file: [environment/mysql.env, environment/site.env]
-    networks: [site, nginx, db]
+    env_file: [ environment/mysql.env, environment/site.env ]
+    networks: [ site, nginx, db ]
     ports:
       - "9999:9999"
-    depends_on: [base, db, redis]
-    deploy:
-        replicas: 1
-        placement:
-            constraints: [node.role == manager]
+    depends_on: [ base, db, redis ]
+
 
   wsevent:
     build:
@@ -134,13 +104,11 @@ services:
     image: ghcr.io/mcpt/wlmoj-wsevent
     init: true
     restart: unless-stopped
+    volumes:
+      - ./repo/:/app/site/
     working_dir: /app/site
-    env_file: [environment/mysql.env, environment/site.env]
-    networks: [site, nginx]
-    deploy:
-        replicas: 1
-        placement:
-            constraints: [node.role == manager]
+    env_file: [ environment/mysql.env, environment/site.env ]
+    networks: [ site, nginx ]
 
   db:
     image: mariadb
@@ -154,17 +122,12 @@ services:
     environment:
       TZ: "America/Toronto"
     networks: [ db ]
-    deploy:
-      replicas: 1
-      placement:
-        constraints: [ node.role == manager ]
+
 
   redis:
     image: redis:alpine
     restart: always
     networks: [ site ]
-    deploy:
-      replicas: 1
 
   nginx:
     image: nginx:alpine
@@ -178,13 +141,8 @@ services:
       - /var/cache/cache:/cache/
       - /var/share/media/:/media/
       - ./nginx/conf.d/:/etc/nginx/conf.d/
-    networks: [nginx]
-    depends_on: [site, wsevent]
-    deploy:
-      replicas: 1
-      placement:
-        constraints: [node.hostname == general] # Only deploy on the general node as it's the entrypoint
-
+    networks: [ nginx ]
+    depends_on: [ site, wsevent ]
 #  judge:
 #    container_name: dmoj_judge
 #    image: ghcr.io/mcpt/wlmoj-judge
