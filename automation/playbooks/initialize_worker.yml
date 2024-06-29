@@ -13,9 +13,6 @@
 #    pip_install_packages:
 #      - name: docker==7.1.0
 
-
-
-
   roles:
     - hifis.unattended_upgrades
 #    - geerlingguy.pip
@@ -26,6 +23,7 @@
       apt:
         upgrade: true
         update_cache: true
+
 
 
     - name: 'Install nfs & pip'
@@ -44,13 +42,11 @@
         opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800'
 
     - name: 'Change timezone to Toronto time'
-      run_once: true
       shell: timedatectl set-timezone America/Toronto
 
     - name: "Install updated docker bindings"
       pip:
         name: docker>=7.1.0
-        extra_args: --break-system-packages
 
 
     - name: 'Get Swarm join token from manager'
