@@ -10,6 +10,7 @@ if [ -z "$CI" ]; then  # Not running in CI
       mv ./mathoid/config.yaml /var/share/configs/mathoid/
       mv ../nginx/conf.d/ /var/share/configs/nginx/
 else
+  mkdir -p repo repo/websocket repo/dmoj
   mv ../config.js repo/websocket/
   mv ../local_settings.py repo/dmoj/
   mv ../uwsgi.ini repo/
