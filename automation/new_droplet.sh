@@ -27,7 +27,7 @@ SSH_KEYS=$(doctl compute ssh-key list --no-header --format ID)
 
 # Create the droplet
 droplet_id=$(doctl compute droplet create \
-    --image ubuntu-24-04-x64 \
+    --image ubuntu-22-04-x64 \
     --size s-1vcpu-1gb \
     --region tor1 \
     --enable-monitoring \

@@ -48,7 +48,7 @@
 
     - name: 'Join the Swarm as a worker'
       run_once: true
-      docker_swarm:
+      community.docker.docker_swarm:
         state: join
         join_token: "{{ join_token.stdout_lines[0] }}"
         advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
