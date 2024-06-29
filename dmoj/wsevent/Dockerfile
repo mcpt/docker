@@ -1,5 +1,6 @@
 FROM node:alpine
 LABEL org.opencontainers.image.source="https://github.com/mcpt/wlmoj"
+RUN apk add --no-cache git
 WORKDIR /app/
 RUN npm install qu ws simplesets
 
