@@ -12,9 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Initialize submodules
-        run: |
-          git submodule update --init --recursive
       - name: Build images
         run: docker compose -f docker-build.yml build
         working-directory: dmoj
@@ -22,7 +19,7 @@ jobs:
         run: |
           ./scripts/initialize
           docker compose -f docker-build.yml up -d
-          sleep 10
+          sleep 15
           export COMPOSE_EXEC_FLAGS="-T"
           export COMPOSE_FLAGS="-f docker-build.yml"
           ./scripts/copy_static

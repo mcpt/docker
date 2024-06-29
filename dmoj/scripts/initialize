@@ -1,7 +1,6 @@
 #!/bin/bash
 cd $(dirname $(dirname $0)) || exit
 
-
 if [ -z "$CI" ]; then  # Not running in CI
       mkdir -p /var/share/problems /var/share/media
       mv ../config.js /var/share/configs/websocket/
