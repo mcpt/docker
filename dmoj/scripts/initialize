@@ -7,6 +7,8 @@ mv ../config.js repo/websocket/
 mv ../local_settings.py repo/dmoj/
 mv ../uwsgi.ini repo/
 
+if [[ -z "$CI" ]]; then # don't try to access /var/share in CI
+    mv ./mathoid/config.yaml /var/share/configs/mathoid/config.yaml
+fi
 
-mv ./mathoid/config.yaml /var/share/configs/mathoid/config.yaml
 
