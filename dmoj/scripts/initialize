@@ -3,14 +3,14 @@ cd $(dirname $(dirname $0)) || exit
 
 if [ -z "$CI" ]; then  # Not running in CI
       mkdir -p /var/share/problems /var/share/media
-      mv ../config.js /var/share/configs/websocket/
-      mv ../local_settings.py /var/share/configs/wlmoj/
-      mv ../uwsgi.ini /var/share/configs/wlmoj/
-      mv ./mathoid/config.yaml /var/share/configs/mathoid/
-      mv ../nginx/conf.d/ /var/share/configs/nginx/
+      cp ../config.js /var/share/configs/websocket/
+      cp ../local_settings.py /var/share/configs/wlmoj/
+      cp ../uwsgi.ini /var/share/configs/wlmoj/
+      cp ./mathoid/config.yaml /var/share/configs/mathoid/
+      cp -R ../nginx/conf.d/ /var/share/configs/nginx/
 else
   mkdir -p repo repo/websocket repo/dmoj
-  mv ../config.js repo/websocket/
-  mv ../local_settings.py repo/dmoj/
-  mv ../uwsgi.ini repo/
+  cp ../config.js repo/websocket/
+  cp ../local_settings.py repo/dmoj/
+  cp ../uwsgi.ini repo/
 fi
