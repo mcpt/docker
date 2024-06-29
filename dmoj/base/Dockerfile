@@ -22,6 +22,8 @@ RUN git clone https://github.com/mcpt/wlmoj /site/repo && \
     cd /site/repo && \
     git submodule update --init --recursive
 
-RUN pip3 install -r requirements.txt
+RUN ls -la
+
+RUN cd /site/repo && pip3 install -r requirements.txt
 
 
