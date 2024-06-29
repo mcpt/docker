@@ -6,4 +6,7 @@ RUN npm install mathoid && \
 
 EXPOSE 10044
 WORKDIR /node_modules/mathoid
+
+RUN wget -O "./config.yaml" "https://raw.githubusercontent.com/mcpt/docker/master/dmoj/mathoid/config.yaml"
+
 CMD /node_modules/mathoid/server.js
