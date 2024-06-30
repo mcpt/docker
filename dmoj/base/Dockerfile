@@ -17,5 +17,5 @@ RUN pip3 install \
 
 
 
-ADD --link https://raw.githubusercontent.com/mcpt/wlmoj/revamp/requirements.txt /tmp/requirements.txt
+ADD https://raw.githubusercontent.com/mcpt/wlmoj/revamp/requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt
