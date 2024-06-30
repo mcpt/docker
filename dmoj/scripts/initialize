@@ -12,7 +12,7 @@ else # in CI
   ls -l
   pwd
   mkdir -p websocket
-  cp ../local_settings.py ../repo/local_settings.py
-  cp ../config.js ..websocket/config.js
+  cp ../local_settings.py ./repo/local_settings.py
+  cp ../config.js ./repo/websocket/config.js
   cp ../uwsgi.ini ./uwsgi.ini
 fi
