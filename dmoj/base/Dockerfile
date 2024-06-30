@@ -16,5 +16,5 @@ RUN pip3 install \
         pymysql mysqlclient websocket-client uwsgi django-redis redis django-discord-integration
 
 
-COPY repo/requirements.txt .
+COPY ../repo/requirements.txt .
 RUN pip3 install -r requirements.txt
