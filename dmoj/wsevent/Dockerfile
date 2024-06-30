@@ -4,10 +4,8 @@ RUN apk add --no-cache git
 WORKDIR /app/
 RUN npm install qu ws simplesets
 
-RUN git clone https://github.com/mcpt/wlmoj wlmoj
-
 EXPOSE 15100
 EXPOSE 15101
 EXPOSE 15102
 
-ENTRYPOINT node ./wlmoj/websocket/daemon.js
+ENTRYPOINT node /app/site/websocket/daemon.js

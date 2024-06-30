@@ -54,7 +54,7 @@ services:
       - /var/share/media:/media/
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
-      - ./repo/:/site/
+      - /home/runner/work/repo/:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, nginx, db ]
@@ -71,7 +71,7 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
       - /var/share/logs:/logs/
-      - ./repo/:/site/
+      - /home/runner/work/repo:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, db ]
@@ -88,7 +88,7 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/problems/:/problems/
       - /var/share/logs:/logs/
-      - ./repo/:/site/
+      - /home/runner/work/repo/:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, nginx, db ]
@@ -105,7 +105,7 @@ services:
     init: true
     restart: unless-stopped
     volumes:
-      - ./repo/:/app/site/
+      - /home/runner/work/repo/:/app/site/
     working_dir: /app/site
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, nginx ]
@@ -114,10 +114,8 @@ services:
     image: mariadb
     restart: always
     volumes:
-      - /home/wlmoj/database/:/var/lib/mysql:Z
       - ./scripts/mariadb:/docker-entrypoint-initdb.d/
       - /etc/localtime:/etc/localtime:ro
-      - /home/wlmoj/backups:/backups
     env_file: [ environment/mysql.env, environment/mysql-admin.env ]
     environment:
       TZ: "America/Toronto"

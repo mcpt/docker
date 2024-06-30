@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: 'mcpt/wlmoj'
-          path: './repo'
+          path: '/home/runner/work/repo'
       - name: Build images
         run: docker compose -f docker-build.yml build
         working-directory: dmoj
