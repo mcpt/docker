@@ -9,8 +9,8 @@ if [ -z "$CI" ]; then  # Not running in CI
       cp ./mathoid/config.yaml /var/share/configs/mathoid/
       cp -R ../nginx/conf.d/ /var/share/configs/nginx/
 else
-  mkdir -p repo repo/websocket repo/dmoj
-  cp ../config.js repo/websocket/
-  cp ../local_settings.py repo/dmoj/
-  cp ../uwsgi.ini repo/
+  mkdir -p websocket websocket
+  cp ../config.js websocket/config.js
+  cp ../local_settings.py dmoj/local_settings.py
+  cp ../uwsgi.ini ./uwsgi.ini
 fi

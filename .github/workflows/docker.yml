@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: fetch repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'mcpt/wlmoj'
+          path: './repo'
       - name: Build images
         run: docker compose -f docker-build.yml build
         working-directory: dmoj

@@ -16,16 +16,5 @@ RUN pip3 install \
         pymysql mysqlclient websocket-client uwsgi django-redis redis django-discord-integration
 
 
-WORKDIR /site
-
-# first line is a cache buster
-RUN date +%s > /dev/null && \
-    git clone https://github.com/mcpt/wlmoj /site/repo && \
-    cd /site/repo && \
-    git submodule update --init --recursive
-
-RUN ls -la
-
-RUN cd /site/repo && pip3 install -r requirements.txt
-
-
+COPY repo/requirements.txt .
+RUN pip3 install -r requirements.txt
