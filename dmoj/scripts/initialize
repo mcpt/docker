@@ -1,6 +1,8 @@
 #!/bin/bash
 cd $(dirname $(dirname $0)) || exit
 
+git clone https://github.com/mcpt/wlmoj ../repo
+
 if [ -z "$CI" ]; then  # Not running in CI
       mkdir -p /var/share/problems /var/share/media
       cp ../config.js /var/share/configs/websocket/
@@ -8,11 +10,11 @@ if [ -z "$CI" ]; then  # Not running in CI
       cp ../uwsgi.ini /var/share/configs/wlmoj/
       cp ./mathoid/config.yaml /var/share/configs/mathoid/
       cp -R ../nginx/conf.d/ /var/share/configs/nginx/
-else
+else # in CI
   ls -l
   pwd
-  mkdir -p websocket websocket
-  cp ../config.js websocket/config.js
-  cp ../local_settings.py ./repo/dmoj/local_settings.py
+  mkdir -p websocket
+  cp ../local_settings.py ../repo/local_settings.py
+  cp ../config.js ..websocket/config.js
   cp ../uwsgi.ini ./uwsgi.ini
 fi
