@@ -55,7 +55,6 @@ services:
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
       - ${GITHUB_WORKSPACE}/wlmoj/:/site/
-      -
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, nginx, db ]
