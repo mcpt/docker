@@ -16,7 +16,7 @@ function select_droplet() {
     sleep 1
     # Combine name and ID into display format
     options=()
-    for (( i=0; i<${#droplet_data[@]}; i+=2 )); do
+    for (( i=2; i<${#droplet_data[@]}; i+=2 )); do
         options+=("${droplet_data[i]} (ID: ${droplet_data[i+1]})")
     done
 
