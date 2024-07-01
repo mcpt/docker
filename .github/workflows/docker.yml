@@ -19,6 +19,7 @@ jobs:
           path: 'dmoj/repo'
       - name: Setup submodules
         run: git submodule update --init --recursive
+        working-directory: dmoj/repo
       - name: Build images
         run: docker compose -f docker-build.yml build
         working-directory: dmoj
