@@ -17,6 +17,8 @@ jobs:
         with:
           repository: 'mcpt/wlmoj'
           path: 'dmoj/repo'
+      - name: Setup submodules
+        run: git submodule update --init --recursive
       - name: Build images
         run: docker compose -f docker-build.yml build
         working-directory: dmoj
