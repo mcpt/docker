@@ -54,7 +54,7 @@ services:
       - /var/share/media:/media/
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
-      - ${GITHUB_WORKSPACE}/wlmoj/:/site/
+      - ${GITHUB_WORKSPACE}/repo/:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, nginx, db ]
@@ -88,7 +88,7 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/problems/:/problems/
       - /var/share/logs:/logs/
-      - ${GITHUB_WORKSPACE}/dmoj/repo/:/site/
+      - ${GITHUB_WORKSPACE}/repo/:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, nginx, db ]
@@ -105,7 +105,7 @@ services:
     init: true
     restart: unless-stopped
     volumes:
-      - ${GITHUB_WORKSPACE}/dmoj/repo/:/app/site/
+      - ${GITHUB_WORKSPACE}/repo/:/app/site/
     working_dir: /app/site
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, nginx ]
