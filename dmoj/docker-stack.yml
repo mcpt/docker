@@ -3,13 +3,11 @@ services:
   texoid:
     image: ghcr.io/mcpt/wlmoj-texoid
     init: true
-    restart: unless-stopped
     networks: [site]
 
   pdfoid:
     image: ghcr.io/mcpt/wlmoj-pdfoid
     init: true
-    restart: unless-stopped
     networks: [site]
     cap_add:
       - SYS_ADMIN
@@ -23,7 +21,6 @@ services:
   mathoid:
     image: ghcr.io/mcpt/wlmoj-mathoid
     init: true
-    restart: unless-stopped
     networks: [site]
     deploy:
         resources:
@@ -35,7 +32,6 @@ services:
   site:
     image: ghcr.io/mcpt/wlmoj-site
     init: true
-    restart: unless-stopped
     volumes:
       - /var/share/assets:/assets/
       - /var/share/cache/pdfcache:/pdfcache/
@@ -61,7 +57,6 @@ services:
   celery:
     image: ghcr.io/mcpt/wlmoj-celery
     init: true
-    restart: unless-stopped
     volumes:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
@@ -83,7 +78,6 @@ services:
   bridged:
     image: ghcr.io/mcpt/wlmoj-bridged
     init: true
-    restart: unless-stopped
     volumes:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/problems/:/problems/
@@ -100,10 +94,8 @@ services:
             constraints: [node.role == manager]
 
   wsevent:
-
     image: ghcr.io/mcpt/wlmoj-wsevent
     init: true
-    restart: unless-stopped
     working_dir: /app/site
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, nginx]
@@ -114,7 +106,6 @@ services:
 
   db:
     image: mariadb
-    restart: always
     volumes:
       - /home/wlmoj/database/:/var/lib/mysql:Z
       - ./scripts/mariadb:/docker-entrypoint-initdb.d/
@@ -131,14 +122,12 @@ services:
 
   redis:
     image: redis:alpine
-    restart: always
     networks: [ site ]
     deploy:
       replicas: 1
 
   nginx:
     image: nginx:alpine
-    restart: always
     ports:
       - "80:80"
     volumes:
@@ -158,7 +147,6 @@ services:
 #  judge:
 #    container_name: dmoj_judge
 #    image: ghcr.io/mcpt/wlmoj-judge
-#    restart: always
 #    deploy:
 #      replicas: 1 # 1 by default but can be scaled up
 
