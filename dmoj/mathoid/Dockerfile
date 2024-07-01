@@ -7,4 +7,6 @@ RUN npm install mathoid && \
 EXPOSE 10044
 WORKDIR /node_modules/mathoid
 
+COPY ./mathoid/config.yaml ./config.yaml
+
 CMD /node_modules/mathoid/server.js
