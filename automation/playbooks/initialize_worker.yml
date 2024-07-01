@@ -50,7 +50,7 @@
 
     - name: 'Get WLMOJ Repo'
       ansible.builtin.git:
-        repo: 'mcpt/wlmoj'
+        repo: 'https://github.com/mcpt/wlmoj.git'
         clone: true
         recursive: true
         dest: '/site'

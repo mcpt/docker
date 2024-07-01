@@ -1,0 +1,25 @@
+- name: Update WLMOJ Repositories
+  hosts: all  # Target all hosts in your inventory
+  become: yes # Use privilege escalation (e.g., sudo)
+  gather_facts: false # Optional: Skip gathering facts to speed things up
+  tasks:
+
+
+    - name: Update each WLMOJ repository
+      ansible.builtin.git:
+        repo: 'https://github.com/mcpt/wlmoj.git'
+        dest: "{{ item.path }}"
+        update: yes
+        recursive: true
+        environment:
+          GIT_TERMINAL_PROMPT: 0
+    - name: Trigger Discord webhook on successful updates
+      uri:
+        url: "{{ vault_discord_webhook_url  }}"
+        method: POST
+        headers:
+          Content-Type: application/json
+        body: "{{ {'content': 'WLMOJ repositories updated successfully on ' + ansible_hostname + ':\n' + (wlmoj_repos.files | selectattr('is_directory', 'equalto', True) | map(attribute='path') | list | join('\n'))} | to_json }}"
+      when:
+        - wlmoj_repos.files | length > 0  # Only trigger if repositories were found and updated
+
