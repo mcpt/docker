@@ -10,23 +10,24 @@ echo "# DROPLET REMOVER 40000 :tm:"
 echo "----------------------------------------------"
 echo "Please select the number of the droplet you want to remove:"
 
-
-sleep 0.1 # let buffer update
 function select_droplet() {
     # Retrieve Droplet names and IDs
-    droplet_data=($(doctl compute droplet list --format "Name,ID"))
-    sleep 1
+    mapfile -t droplet_data < <(doctl compute droplet list --format "Name,ID")
+
     # Combine name and ID into display format
     options=()
-    for (( i=0; i<${#droplet_data[@]}; i+=2 )); do
-        options+=("${droplet_data[i]} (ID: ${droplet_data[i+1]})")
+    for ((i = 0; i < ${#droplet_data[@]}; i++)); do  # Iterate over each line, not pairs
+        name=$(cut -d ',' -f1 <<< "${droplet_data[i]}")
+        id=$(cut -d ',' -f2 <<< "${droplet_data[i]}")
+        options+=("$name (ID: $id)")
     done
 
-    printf "%s\n" "${options[@]}"
+    # Flush the output buffer to ensure menu options are displayed
+    stdbuf -o0 echo ""  # Force flush with a blank line
 
-
-    stdbuf -o0 echo "" # flush the buffer   # Force flush with a blank line
-
+    # Print menu options for debugging
+    #echo "Menu options:"
+    #printf "%s\n" "${options[@]}"
 
     select option in "${options[@]}" Exit; do
         if [[ "$option" == "Exit" ]]; then
@@ -35,7 +36,7 @@ function select_droplet() {
             # Extract name and ID from selected option
             droplet_name=$(echo "$option" | cut -d' ' -f1)
             # shellcheck disable=SC2116
-            droplet_id=$(echo "${option/.*(ID: \([^)]*\)).*/\1/\'}")
+            droplet_id=$(echo "${option/.*(ID: \([^)]*\)).*/\1/}")
             echo "Selected: $droplet_name (ID: $droplet_id)"
             break
         else
