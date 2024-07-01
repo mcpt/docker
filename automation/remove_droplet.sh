@@ -8,46 +8,37 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 
 echo "# DROPLET REMOVER 40000 :tm:"
 echo "----------------------------------------------"
-echo "Please select the number of the droplet you want to remove:"
-
+echo "Available Droplets:"
+sleep 0.1 # let buffer update
 function select_droplet() {
-    echo "Available Droplets:"
-
     # Retrieve Droplet names and IDs
-    mapfile -t droplet_data < <(doctl compute droplet list --format "Name,ID")
-
-    # Flush the output buffer to ensure menu options are displayed
-    stdbuf -o0 echo ""
-
-    # Display numbered menu options, each on a new line
-    for ((i = 0; i < ${#droplet_data[@]}; i++)); do
-        name=$(cut -d ',' -f1 <<< "${droplet_data[i]}")
-        id=$(cut -d ',' -f2 <<< "${droplet_data[i]}")
-        echo "$((i/2+1)). $name (ID: $id)"
+    droplet_data=($(doctl compute droplet list --format "Name,ID"))
+    sleep 1
+    # Combine name and ID into display format
+    options=()
+    for (( i=0; i<${#droplet_data[@]}; i+=2 )); do
+        options+=("${droplet_data[i]} (ID: ${droplet_data[i+1]})")
     done
-    echo "0. Exit"
 
-    # Read the user's choice
-    while true; do
-        read -r choice
-        if [[ $choice =~ ^[0-9]+$ ]]; then
-            index=$((choice * 2 - 2))
-            if ((index >= 0 && index < ${#droplet_data[@]})); then
-                droplet_name="${droplet_data[index]}"
-                droplet_id="${droplet_data[index+1]}"
-                echo "Selected: $droplet_name (ID: $droplet_id)"
-                break
-            elif [[ $choice == 0 ]]; then
-                exit 0
-            fi
+    printf "%s\n" "${options[@]}"
+    echo "eeep"
+
+    select option in "${options[@]}" Exit; do
+        if [[ "$option" == "Exit" ]]; then
+            exit 0
+        elif [[ -n "$option" ]]; then
+            # Extract name and ID from selected option
+            droplet_name=$(echo "$option" | cut -d' ' -f1)
+            # shellcheck disable=SC2116
+            droplet_id=$(echo "${option/.*(ID: \([^)]*\)).*/\1/\'}")
+            echo "Selected: $droplet_name (ID: $droplet_id)"
+            break
+        else
+            echo "Invalid selection."
         fi
-        echo "Invalid selection. Please enter a number from the menu."
     done
-
     echo "$droplet_name $droplet_id"  # Return both name and ID
 }
-
-
 
 droplet_name_and_id=($(select_droplet))  # Store both name and ID in an array
 droplet_name=${droplet_name_and_id[0]}  # Extract the name
