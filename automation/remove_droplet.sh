@@ -8,8 +8,9 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 
 echo "# DROPLET REMOVER 40000 :tm:"
 echo "----------------------------------------------"
+echo "Available Droplets:"
+sleep 0.1 # let buffer update
 function select_droplet() {
-    echo "Available Droplets:"
     # Retrieve Droplet names and IDs
     droplet_data=($(doctl compute droplet list --format "Name,ID"))
     sleep 1
