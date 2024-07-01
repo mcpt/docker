@@ -1,6 +1,10 @@
 name: Build Docker Images
 on:
   push:
+    branches:
+      - 'master'
+    paths:
+      - 'dmoj/**'
   pull_request:
   schedule:
     - cron: '0 0 * * *' # Every day at midnight
