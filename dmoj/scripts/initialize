@@ -3,7 +3,6 @@ cd $(dirname $(dirname $0)) || exit
 
 if [ -z "$CI" ]; then  # Not running in CI
       mkdir -p /var/share/problems /var/share/media
-      cp ../config.js /var/share/configs/websocket/
       cp ../local_settings.py /var/share/configs/wlmoj/
       cp ../uwsgi.ini /var/share/configs/wlmoj/
       cp ./mathoid/config.yaml /var/share/configs/mathoid/
@@ -14,5 +13,4 @@ else # in CI
   tree -a ${GITHUB_WORKSPACE}
   cp ../local_settings.py ${GITHUB_WORKSPACE}/repo/dmoj/local_settings.py
   cp ../uwsgi.ini ${GITHUB_WORKSPACE}/repo/uwsgi.ini
-  cp ../config.js ${GITHUB_WORKSPACE}/repo/websocket/config.js
 fi
