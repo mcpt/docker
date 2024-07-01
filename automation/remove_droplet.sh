@@ -6,31 +6,39 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 . ../dmoj/scripts/utils/notify
 . ./swarm_info
 
+echo "# DROPLET REMOVER 40000 :tm:\nPlease select the droplet you want to remove:"
 
 function select_droplet() {
     echo "Available Droplets:"
-    droplets=($(doctl compute droplet list --format Name))
-    select droplet in "${droplets[@]}" Exit; do
-        if [[ "$droplet" == "Exit" ]]; then
+    # Retrieve Droplet names and IDs
+    droplet_data=($(doctl compute droplet list --format "Name,ID"))
+
+    # Combine name and ID into display format
+    options=()
+    for (( i=0; i<${#droplet_data[@]}; i+=2 )); do
+        options+=("${droplet_data[i]} (ID: ${droplet_data[i+1]})")
+    done
+
+    select option in "${options[@]}" Exit; do
+        if [[ "$option" == "Exit" ]]; then
             exit 0
-        elif [[ -n "$droplet" ]]; then
-            echo "Selected: $droplet"
+        elif [[ -n "$option" ]]; then
+            # Extract name and ID from selected option
+            droplet_name=$(echo "$option" | cut -d' ' -f1)
+            droplet_id=$(echo "$option" | sed 's/.*(ID: \([^)]*\)).*/\1/')
+            echo "Selected: $droplet_name (ID: $droplet_id)"
             break
         else
             echo "Invalid selection."
         fi
     done
-    echo "$droplet"
+    echo "$droplet_name $droplet_id"  # Return both name and ID
 }
 
-droplet_name=$(select_droplet)
+droplet_name_and_id=($(select_droplet))  # Store both name and ID in an array
+droplet_name=${droplet_name_and_id[0]}  # Extract the name
+droplet_id=${droplet_name_and_id[1]}    # Extract the ID
 
-if ! doctl compute droplet list --format Name | grep -q "$droplet_name"; then
-    echo "Droplet $droplet_name does not exist!" >&2
-    exit 1
-fi
-
-droplet_id=$(doctl compute droplet list --no-header --format ID --filter "name=$droplet_name")
 echo "ID of the Droplet is: $droplet_id"
 
 # Force removal flag (default is false)
