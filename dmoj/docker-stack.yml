@@ -108,8 +108,6 @@ services:
     image: ghcr.io/mcpt/wlmoj-wsevent
     init: true
     restart: unless-stopped
-    volumes:
-      - /var/share/configs/websocket/config.js:/app/site/websocket/config.js:ro
     working_dir: /app/site
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, nginx]
