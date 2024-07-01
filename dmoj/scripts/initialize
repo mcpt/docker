@@ -11,9 +11,8 @@ if [ -z "$CI" ]; then  # Not running in CI
 else # in CI
   sudo apt-get install tree
   pwd
-  tree -a -f ${GITHUB_WORKSPACE}
-  mkdir -p websocket
-  cp ../local_settings.py ${GITHUB_WORKSPACE}/dmoj/repo/local_settings.py
-  cp ../config.js ${GITHUB_WORKSPACE}/dmoj/repo/websocket/config.js
-#  cp ../uwsgi.ini ${GITHUB_WORKSPACE}/uwsgi.ini
+  tree -a ${GITHUB_WORKSPACE}
+  cp ../local_settings.py ${GITHUB_WORKSPACE}/repo/dmoj/local_settings.py
+  cp ../uwsgi.ini ${GITHUB_WORKSPACE}/repo/uwsgi.ini
+  cp ../config.js ${GITHUB_WORKSPACE}/repo/websocket/config.js
 fi
