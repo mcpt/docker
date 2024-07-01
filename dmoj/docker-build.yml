@@ -27,8 +27,6 @@ services:
     image: ghcr.io/mcpt/wlmoj-mathoid
     init: true
     restart: unless-stopped
-#    volumes:
-#      - ./mathoid/config.yaml:/node_modules/mathoid/config.yaml
     networks: [ site ]
 
 
