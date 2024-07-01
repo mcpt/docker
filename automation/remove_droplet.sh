@@ -79,7 +79,7 @@ if docker node ls | grep -q "$droplet_name"; then
     fi
 fi
 
-read -r -p "Are you sure you want to delete Droplet '$droplet_name'? (y/n) " confirm
+read -r -p "Are you sure you want to delete Droplet \"$droplet_name?\" (y/n) " confirm
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
     echo "Deleting droplet $droplet_name..."
     notify "## Deleting Droplet: **$droplet_name**"
