@@ -4,16 +4,7 @@ cd $(dirname $(dirname $0)) || exit
 if [ -z "$CI" ]; then  # Not running in CI
       mkdir -p /var/share/problems /var/share/media
       cp ../local_settings.py /var/share/configs/wlmoj/
-      cp ../uwsgi.ini /var/share/configs/wlmoj/
       cp -R ../nginx/conf.d/ /var/share/configs/nginx/
 else # in CI
-  sudo apt-get install tree
-  echo "${GITHUB_WORKSPACE}"
-  echo "${RUNNER_WORKSPACE}"
-  ls -l "${GITHUB_WORKSPACE}"
-  ls -l "${GITHUB_WORKSPACE}/"
-  pwd
-#  tree -a "${GITHUB_WORKSPACE}"
   cp "$GITHUB_WORKSPACE"/local_settings.py ${GITHUB_WORKSPACE}/dmoj/repo/dmoj/local_settings.py
-  cp "$GITHUB_WORKSPACE"/uwsgi.ini "$GITHUB_WORKSPACE"/dmoj/repo/uwsgi.ini
 fi
