@@ -28,7 +28,8 @@ function select_droplet() {
         elif [[ -n "$option" ]]; then
             # Extract name and ID from selected option
             droplet_name=$(echo "$option" | cut -d' ' -f1)
-            droplet_id=$(echo "${option/.*(ID: \([^)]*\)).*/\1/'}")
+            # shellcheck disable=SC2116
+            droplet_id=$(echo "${option/.*(ID: \([^)]*\)).*/\1/\'}")
             echo "Selected: $droplet_name (ID: $droplet_id)"
             break
         else
