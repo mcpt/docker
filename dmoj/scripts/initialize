@@ -9,8 +9,10 @@ if [ -z "$CI" ]; then  # Not running in CI
       cp ./mathoid/config.yaml /var/share/configs/mathoid/
       cp -R ../nginx/conf.d/ /var/share/configs/nginx/
 else # in CI
+  sudo apt-get install tree
+  tree -a -f ./
   mkdir -p websocket
   cp ../local_settings.py ${GITHUB_WORKSPACE}/dmoj/repo/local_settings.py
   cp ../config.js ${GITHUB_WORKSPACE}/dmoj/repo/websocket/config.js
-  cp ../uwsgi.ini ${GITHUB_WORKSPACE}/uwsgi.ini
+#  cp ../uwsgi.ini ${GITHUB_WORKSPACE}/uwsgi.ini
 fi
