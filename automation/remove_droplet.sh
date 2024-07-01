@@ -8,7 +8,9 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 
 echo "# DROPLET REMOVER 40000 :tm:"
 echo "----------------------------------------------"
-echo "Available Droplets:"
+echo "Please select the number of the droplet you want to remove:"
+
+
 sleep 0.1 # let buffer update
 function select_droplet() {
     # Retrieve Droplet names and IDs
@@ -21,7 +23,10 @@ function select_droplet() {
     done
 
     printf "%s\n" "${options[@]}"
-    echo "eeep"
+
+
+    stdbuf -o0 echo "" # flush the buffer   # Force flush with a blank line
+
 
     select option in "${options[@]}" Exit; do
         if [[ "$option" == "Exit" ]]; then
