@@ -27,6 +27,7 @@ function select_droplet() {
         if [[ "$option" == "Exit" ]]; then
             exit 0
         elif [[ -n "$option" ]]; then
+          echo "THE USER Selected!!: $option"
             # Extract name and ID from selected option
             droplet_name=$(echo "$option" | cut -d' ' -f1)
             # shellcheck disable=SC2116
