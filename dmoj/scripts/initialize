@@ -4,7 +4,7 @@ cd $(dirname $(dirname $0)) || exit
 if [ -z "$CI" ]; then  # Not running in CI
       mkdir -p /var/share/problems /var/share/media
       cp ../local_settings.py /var/share/configs/wlmoj/
-      cp -R ../nginx/conf.d/ /var/share/configs/nginx/
+      cp -R ./nginx/conf.d/ /var/share/configs/nginx/
 else # in CI
   cp "$GITHUB_WORKSPACE"/local_settings.py ${GITHUB_WORKSPACE}/dmoj/repo/dmoj/local_settings.py
 fi
