@@ -8,8 +8,10 @@ if [ -z "$CI" ]; then  # Not running in CI
       cp -R ../nginx/conf.d/ /var/share/configs/nginx/
 else # in CI
   sudo apt-get install tree
+  echo "${GITHUB_WORKSPACE}"
+  echo "${RUNNER_WORKSPACE}"
   pwd
-  tree -a ${GITHUB_WORKSPACE}
+#  tree -a "${GITHUB_WORKSPACE}"
   cp ../local_settings.py ${GITHUB_WORKSPACE}/repo/dmoj/local_settings.py
   cp ../uwsgi.ini ${GITHUB_WORKSPACE}/repo/uwsgi.ini
 fi
