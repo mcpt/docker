@@ -8,4 +8,6 @@ EXPOSE 15100
 EXPOSE 15101
 EXPOSE 15102
 
+ADD https://github.com/mcpt/docker/blob/master/config.js /app/site/websocket/config.js
+
 ENTRYPOINT node /app/site/websocket/daemon.js

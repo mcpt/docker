@@ -25,9 +25,6 @@ services:
     init: true
     restart: unless-stopped
     networks: [site]
-    volumes:
-      - /var/share/configs/mathoid/config.yaml:/node_modules/mathoid/config.yaml:ro
-
     deploy:
         resources:
             limits:

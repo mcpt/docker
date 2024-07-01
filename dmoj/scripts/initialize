@@ -5,7 +5,6 @@ if [ -z "$CI" ]; then  # Not running in CI
       mkdir -p /var/share/problems /var/share/media
       cp ../local_settings.py /var/share/configs/wlmoj/
       cp ../uwsgi.ini /var/share/configs/wlmoj/
-      cp ./mathoid/config.yaml /var/share/configs/mathoid/
       cp -R ../nginx/conf.d/ /var/share/configs/nginx/
 else # in CI
   sudo apt-get install tree
