@@ -48,20 +48,19 @@
       pip:
         name: docker>=7.1.0
 
+    - name: 'Get WLMOJ Repo'
+      ansible.builtin.git:
+        repo: 'mcpt/wlmoj'
+        clone: true
+        recursive: true
+        dest: '/site'
+        environment:
+          GIT_TERMINAL_PROMPT: 0
 
-    - name: 'Get Swarm join token from manager'
-      run_once: true
-      shell: 'docker swarm join-token worker -q'
-      register: join_token
-      delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
-
-    - name: 'Join the Swarm as a worker'
-      run_once: true
-      community.docker.docker_swarm:
-        state: join
-        join_token: "{{ join_token.stdout_lines[0] }}"
-        advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
-        remote_addrs: "{{ groups['managers'] }}"
+#    - name: 'run submodules'
+#      shell: 'git submodule update --init --recursive'
+#      args:
+#        chdir: '/site'
 
     - name: 'Install UFW'
       run_once: true
@@ -81,6 +80,12 @@
         rule: allow
         src: '10.137.0.0/16'
         dest: '10.137.0.0/16'
+    - name: 'UFW: Allow overlay networking'
+      run_once: true
+      ufw:
+        rule: allow
+        port: 4789
+
 
     - name: 'UFW: enable and by default drop'
       ufw:
@@ -100,6 +105,19 @@
           - ncdu
           - jq
           - curl
+    - name: 'Get Swarm join token from manager'
+      run_once: true
+      shell: 'docker swarm join-token worker -q'
+      register: join_token
+      delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
+
+    - name: 'Join the Swarm as a worker'
+      run_once: true
+      community.docker.docker_swarm:
+        state: join
+        join_token: "{{ join_token.stdout_lines[0] }}"
+        advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
+        remote_addrs: "{{ groups['managers'] }}"
 
     - name: 'Reboot server'
       reboot:
