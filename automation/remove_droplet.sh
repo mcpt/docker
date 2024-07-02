@@ -78,11 +78,13 @@ if docker node ls | grep -q "$droplet_name"; then
 	else
 		echo "Draining node $droplet_name from Swarm..."
 		docker node update --availability drain "$droplet_name"
-		while docker node ls | grep -q "$droplet_name"; do
+		while docker node ps "$droplet_name" -q --filter "desired-state=Ready"; do
 			echo "Waiting for node to drain..."
 			sleep 5
 		done
-		echo "Removing node $droplet_name from Swarm..."
+		sleep 5 # Wait for the services to shutdown
+		echo "Droplet is fully drained
+		Removing node $droplet_name from Swarm..."
 		notify "## Removing Node: **$droplet_name** from Swarm"
 		docker node rm "$droplet_name"
 	fi
@@ -92,6 +94,8 @@ read -r -p "Are you sure you want to delete Droplet \"$droplet_name?\" (y/n) " c
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
 	echo "Deleting droplet $droplet_name..."
 	notify "## Deleting Droplet: **$droplet_name**"
+	ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$droplet_name" "docker swarm leave"
+	notify "> Droplet **$droplet_name** has left the Swarm!"
 	doctl compute droplet delete "$droplet_id" -f
 	notify "> Droplet **$droplet_name** is deleted!"
 else
