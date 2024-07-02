@@ -43,7 +43,7 @@ function select_droplet() {
 }
 
 droplet_name_and_id=($(select_droplet))  # Store both name and ID in an array
-echo "Selected Droplet: ${droplet_name_and_id]})"
+echo "Selected Droplet: ${droplet_name_and_id[0]} (ID: ${droplet_name_and_id[1]})"
 droplet_name=${droplet_name_and_id[0]}  # Extract the name
 droplet_id=${droplet_name_and_id[1]}    # Extract the ID
 
