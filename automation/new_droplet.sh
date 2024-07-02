@@ -54,7 +54,7 @@ droplet_priv_ipv4=$(doctl compute droplet get "$droplet_id" --output json | jq -
 
 
 echo "Droplet is active!, public IP: $droplet_pub_ipv4, private IP: $droplet_priv_ipv4"
-notify "> Droplet **$1** is active at $droplet_pub_ipv4"
+notify "> Droplet **$1** is active at __ $droplet_pub_ipv4 __"
 # Wait for SSH to become available
 echo "Waiting for SSH to be available..."
 while ! ssh -o StrictHostKeyChecking=no -q root@"$droplet_priv_ipv4" exit; do
@@ -69,5 +69,5 @@ echo "Running Ansible playbook..."
 update_inventory
 ansible-playbook ./playbooks/initialize_worker.yml -e  "{target: $droplet_priv_ipv4}" -i "$droplet_priv_ipv4", # Comma is needed to make it a list
 
-notify "Droplet $1 is provisioned and configured!"
+notify "Droplet ***$1*** is provisioned and configured!"
 echo "**Droplet $1 is provisioned and configured!**"
