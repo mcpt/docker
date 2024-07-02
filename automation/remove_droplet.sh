@@ -34,7 +34,7 @@ function select_droplet() {
 				# Extract name and ID from selected option
 				droplet_name=$(echo "$option" | cut -d' ' -f1)
 				# shellcheck disable=SC2116
-				droplet_id=$(echo "${option/.*(ID: \([^)]*\)).*/\1/\'}")
+				droplet_id=$(echo "$option" | grep -oP '(?<=ID: )\d+')
 				break
 			else
 				echo "Invalid selection."
@@ -48,6 +48,7 @@ function select_droplet() {
 }
 
 droplet_name_and_id=($(select_droplet)) # Store both name and ID in an array
+echo "RAW OUTPUT WAS ${droplet_name_and_id[@]}"
 echo "Selected Droplet: ${droplet_name_and_id[0]} (ID: ${droplet_name_and_id[1]})"
 droplet_name=${droplet_name_and_id[0]} # Extract the name
 droplet_id=${droplet_name_and_id[1]}   # Extract the ID
