@@ -9,7 +9,7 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 echo "# DROPLET REMOVER 40000 :tm:"
 echo "----------------------------------------------"
 echo "Available Droplets:"
-sleep 0.1 # let buffer update
+
 function select_droplet() {
     # Retrieve Droplet names and IDs
     droplet_data=($(doctl compute droplet list --format "Name,ID"))
@@ -21,7 +21,6 @@ function select_droplet() {
     done
 
     printf "%s\n" "${options[@]}"
-    echo "eeep"
 
     select option in "${options[@]}" Exit; do
         if [[ "$option" == "Exit" ]]; then
@@ -44,6 +43,7 @@ function select_droplet() {
 }
 
 droplet_name_and_id=($(select_droplet))  # Store both name and ID in an array
+echo "Selected Droplet: ${droplet_name_and_id]})"
 droplet_name=${droplet_name_and_id[0]}  # Extract the name
 droplet_id=${droplet_name_and_id[1]}    # Extract the ID
 
