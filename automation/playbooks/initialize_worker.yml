@@ -1,4 +1,4 @@
-- hosts: workers
+- hosts: "{{ target }}"
   become: yes
   become_user: root
   become_method: sudo
