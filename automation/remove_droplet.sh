@@ -48,7 +48,6 @@ function select_droplet() {
 }
 
 droplet_name_and_id=($(select_droplet)) # Store both name and ID in an array
-echo "RAW OUTPUT WAS ${droplet_name_and_id[@]}"
 echo "Selected Droplet: ${droplet_name_and_id[0]} (ID: ${droplet_name_and_id[1]})"
 droplet_name=${droplet_name_and_id[0]} # Extract the name
 droplet_id=${droplet_name_and_id[1]}   # Extract the ID
@@ -79,7 +78,7 @@ if docker node ls | grep -q "$droplet_name"; then
 	else
 		echo "Draining node $droplet_name from Swarm..."
 		docker node update --availability drain "$droplet_name"
-		while docker node ps "$droplet_name" -q --filter "desired-state=Ready"; do
+		while ! docker node ps "$droplet_name" -q --filter "desired-state=Ready"; do
 			echo "Waiting for node to drain..."
 			sleep 5
 		done
