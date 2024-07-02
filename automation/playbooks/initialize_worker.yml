@@ -15,10 +15,15 @@
 
   roles:
     - hifis.unattended_upgrades
-#    - geerlingguy.pip
-    - geerlingguy.docker
+#    - geerlingguy.docker
 
   tasks:
+    - name: Wait for APT Lock
+      shell: while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+
+    - name: Install Docker
+      include_role:
+        name: geerlingguy.docker
     - name: 'APT Upgrade'
       apt:
         upgrade: true
