@@ -22,7 +22,7 @@ function select_droplet() {
 	done < <(doctl compute droplet list --format "Name,ID" --no-header)
 
 	PS3="Choose an entry: "
-	select option in "${calculate_droplet_array[@]}" Exit; do
+	select option in "${options[@]}" Exit; do
 		case $option in
 		Exit)
 			echo "Exiting..."
@@ -30,8 +30,6 @@ function select_droplet() {
 			;;
 		*)
 			if [[ -n $option ]]; then # Check if a valid choice was made
-
-				echo "THE USER Selected: $option"
 				# Extract name and ID from selected option
 				droplet_name=$(echo "$option" | cut -d' ' -f1)
 				# shellcheck disable=SC2116
@@ -44,10 +42,6 @@ function select_droplet() {
 
 			fi
 			;;
-			#        else
-			#            echo "Invalid selection."
-			#            exit 1
-			#        fi
 		esac
 	done
 	echo "$droplet_name $droplet_id" # Return both name and ID
@@ -94,6 +88,7 @@ if docker node ls | grep -q "$droplet_name"; then
 	fi
 fi
 
+exit 0 # safety check
 read -r -p "Are you sure you want to delete Droplet \"$droplet_name?\" (y/n) " confirm
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
 	echo "Deleting droplet $droplet_name..."
