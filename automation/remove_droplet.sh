@@ -100,7 +100,7 @@ if [[ "$confirm" =~ ^[Yy]$ ]]; then
 	notify "> Droplet **$droplet_name** has been removed from the Swarm cluster. Deleting droplet..."
 	doctl compute droplet delete "$droplet_id" -f
 	notify "> Droplet **$droplet_name** is deleted!"
-#	update_inventory
+	update_inventory
 else
 	echo "Deletion cancelled."
 fi

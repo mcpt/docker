@@ -2,10 +2,17 @@
 
 # Function to get all ips of all nodes in the swarm
 get_worker_ips() {
+  # check if there are any workers
+  if [ "$(docker node ls --filter role=worker -q | wc -l)" -eq 0 ]; then
+    return
+  fi
   docker node ls --filter role=worker --format "{{.Hostname}}" | \
   xargs docker node inspect --format '{{ .Status.Addr }}'
 }
 get_manager_ips() {
+  if [ "$(docker node ls --filter role=manager -q | wc -l)" -eq 0 ]; then
+    return
+  fi
   docker node ls --filter role=manager --format "{{.Hostname}}" | \
   xargs docker node inspect --format '{{ .Status.Addr }}'
 }

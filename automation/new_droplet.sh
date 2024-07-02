@@ -66,7 +66,7 @@ echo "SSH is available!"
 
 # Run the Ansible playbook once SSH is up
 echo "Running Ansible playbook..."
-fetch_inventory > ./inventory.ini
+update_inventory
 ansible-playbook -i ./inventory.ini ./playbooks/initialize_worker.yml --extra-vars "droplet_name=$1 ansible_host=$droplet_priv_ipv4 public_ipv4=$droplet_pub_ipv4 ansible_user=root"
 
 notify "Droplet $1 is provisioned and configured!"
