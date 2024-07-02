@@ -22,6 +22,7 @@ function select_droplet() {
 	done < <(doctl compute droplet list --format "Name,ID" --no-header)
 
 	PS3="Choose an entry: "
+	COLUMNS=12
 	select option in "${options[@]}" Exit; do
 		case $option in
 		Exit)
@@ -88,7 +89,6 @@ if docker node ls | grep -q "$droplet_name"; then
 	fi
 fi
 
-exit 0 # safety check
 read -r -p "Are you sure you want to delete Droplet \"$droplet_name?\" (y/n) " confirm
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
 	echo "Deleting droplet $droplet_name..."
