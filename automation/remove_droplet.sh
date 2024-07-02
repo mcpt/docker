@@ -35,7 +35,6 @@ function select_droplet() {
 				droplet_name=$(echo "$option" | cut -d' ' -f1)
 				# shellcheck disable=SC2116
 				droplet_id=$(echo "${option/.*(ID: \([^)]*\)).*/\1/\'}")
-				echo "Selected: $droplet_name (ID: $droplet_id)"
 				break
 			else
 				echo "Invalid selection."
