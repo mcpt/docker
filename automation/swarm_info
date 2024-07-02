@@ -36,3 +36,8 @@ fetch_inventory() {
 update_inventory() {
   fetch_inventory > ./inventory.ini
 }
+
+get_ip_from_node() {
+  local node_name="$1"
+  docker node inspect --format '{{ .Status.Addr }}' "$node_name"
+}

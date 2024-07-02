@@ -86,7 +86,8 @@ if docker node ls | grep -q "$droplet_name"; then
 		echo "Droplet is fully drained
 		Removing node $droplet_name from Swarm..."
 		notify "## Removing Node: **$droplet_name** from Swarm"
-		ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$droplet_name" "docker swarm leave"
+		node_ip=$(get_ip_from_node "$droplet_name")
+		ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$node_ip" "docker swarm leave"
 		sleep 3
 		docker node rm "$droplet_name" --force
 	fi
