@@ -95,9 +95,10 @@ if [[ "$confirm" =~ ^[Yy]$ ]]; then
 	echo "Deleting droplet $droplet_name..."
 	notify "## Deleting Droplet: **$droplet_name**"
 	ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@"$droplet_name" "docker swarm leave"
-	notify "> Droplet **$droplet_name** has left the Swarm!"
+	notify "> Droplet **$droplet_name** has been removed from the Swarm cluster. Deleting droplet..."
 	doctl compute droplet delete "$droplet_id" -f
 	notify "> Droplet **$droplet_name** is deleted!"
+	update_inventory
 else
 	echo "Deletion cancelled."
 fi
