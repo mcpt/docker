@@ -13,9 +13,8 @@
 #    pip_install_packages:
 #      - name: docker==7.1.0
 
-  roles:
-    - hifis.unattended_upgrades
-#    - geerlingguy.docker
+#  roles:
+##    - geerlingguy.docker
 
   tasks:
     - name: Wait for APT Lock
@@ -126,3 +125,7 @@
 
     - name: 'Reboot server'
       reboot:
+
+    - name: 'Install Unattended Upgrades'
+      include_role:
+        name: hifis.unattended_upgrades
