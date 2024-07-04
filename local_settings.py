@@ -1,3 +1,4 @@
+from typing import Set
 
 #####################################
 ########## Django settings ##########
@@ -133,7 +134,7 @@ BRIDGED_DJANGO_ADDRESS = [('bridged', 9998)]
 ENABLE_FTS = True
 
 # Set of email providers to ban when a user registers, e.g., {'throwawaymail.com'}.
-BAD_MAIL_PROVIDERS = set()
+BAD_MAIL_PROVIDERS: Set[str] = set()
 
 ## Event server.
 # Uncomment to enable live updating.
