@@ -17,6 +17,10 @@
 ##    - geerlingguy.docker
 
   tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
     - name: Wait for APT Lock
       shell: while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
 
