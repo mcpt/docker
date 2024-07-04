@@ -2,7 +2,7 @@
 set -e  # Exit on error
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 
-[ `whoami` = root ] || { sudo "$0" "$@"; exit $?; } # enforce root as the ansible ssh key is installed under root
+[ "$(whoami)" = root ] || { sudo "$0" "$@"; exit $?; } # enforce root as the ansible ssh key is installed under root
 
 . ../dmoj/scripts/utils/notify
 . ./swarm_info
