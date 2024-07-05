@@ -34,8 +34,11 @@
     - name: Wait for APT Lock Release
       shell: while fuser /var/lib/apt/lock >/dev/null 2>&1; do sleep 3; done
 
-    - name: 'Remove apt lock'
-      shell: rm -f /var/lib/apt/lists/lock
+    - name: Wait for DPKG-Frontend Lock Release
+      shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 3; done
+
+    - name: 'Remove apt, DPKG, DKPG frontend lock'
+      shell: rm -f /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock
 
     - name: Install Docker
       run_once: true
