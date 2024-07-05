@@ -33,6 +33,7 @@ droplet_id=$(doctl compute droplet create \
     --size s-1vcpu-1gb \
     --region tor1 \
     --enable-monitoring \
+    --tag-names "worker" \
     --ssh-keys "$SSH_KEYS" \
     "$1" --output json | jq -r '.[0].id')
 
@@ -67,6 +68,7 @@ echo "SSH is available!"
 # Run the Ansible playbook once SSH is up
 echo "Running Ansible playbook..."
 update_inventory
+echo "$droplet_priv_ipv4" > ./inventory.ini
 ansible-playbook ./playbooks/initialize_worker.yml -e  "{target: $droplet_priv_ipv4}" -i "$droplet_priv_ipv4", # Comma is needed to make it a list
 
 notify "Droplet ***$1*** is provisioned and configured!"

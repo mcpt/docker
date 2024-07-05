@@ -3,14 +3,16 @@
 # Function to get all ips of all nodes in the swarm
 get_worker_ips() {
   # check if there are any workers
-  if [ "$(docker node ls --filter role=worker -q | wc -l)" -eq 0 ]; then
+  local workers
+  workers="$(doctl compute droplet list --format PrivateIPv4 --tag-name worker  --no-header )"
+
+  if [ -z "$workers" ]; then
     return
   fi
-  docker node ls --filter role=worker --format "{{.Hostname}}" | \
-  xargs docker node inspect --format '{{ .Status.Addr }}'
+  echo "$workers"
 }
 get_manager_ips() {
-  if [ "$(docker node ls --filter role=manager -q | wc -l)" -eq 0 ]; then
+    if [ "$(docker node ls --filter role=manager -q | wc -l)" -eq 0 ]; then
     return
   fi
   docker node ls --filter role=manager --format "{{.Hostname}}" | \
