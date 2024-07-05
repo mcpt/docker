@@ -31,14 +31,16 @@
       shell: passwd -d root
       run_once: true
 
-    - name: Wait for APT Lock Release
-      shell: while fuser /var/lib/apt/lock >/dev/null 2>&1; do sleep 3; done
-
-    - name: Wait for DPKG-Frontend Lock Release
-      shell: while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 3; done
-
-    - name: 'Remove apt, DPKG, DKPG frontend lock'
-      shell: rm -f /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock
+    - name: Ensure Locks Are Released
+      shell:
+        cmd: |
+          while fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock >/dev/null 2>&1; do
+            sleep 2
+          done
+      register: locks_released
+      until: locks_released.rc == 0
+      retries: 10
+      delay: 5
 
     - name: Install Docker
       run_once: true
