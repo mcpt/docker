@@ -10,8 +10,9 @@
 
 
   tasks:
-    - name: Update apt cache
+    - name: Update apt
       apt:
+        upgrade: yes
         update_cache: yes
 
     - name: 'Get WLMOJ Repo'
@@ -30,8 +31,12 @@
     - name: Wait for APT Lock Release
       shell: while fuser /var/lib/apt/lock >/dev/null 2>&1; do sleep 3; done
 
+    - name: 'Remove apt lock'
+      shell: rm -f /var/lib/apt/lists/lock
+
     - name: Install Docker
       run_once: true
+      become: true
       include_role:
         name: geerlingguy.docker
 
