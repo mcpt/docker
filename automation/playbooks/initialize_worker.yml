@@ -1,7 +1,4 @@
 - hosts: "{{ target }}"
-  become: yes
-  become_user: root
-  become_method: sudo
 
   vars:
     # permissions on windows with wsl is not fun
@@ -57,13 +54,14 @@
         name: docker>=7.1.0
 
     - name: 'Get WLMOJ Repo'
+      environment:
+        GIT_TERMINAL_PROMPT: 0
       ansible.builtin.git:
         repo: 'https://github.com/mcpt/wlmoj.git'
         clone: true
         recursive: true
         dest: '/site'
-        environment:
-          GIT_TERMINAL_PROMPT: 0
+
 
 #    - name: 'run submodules'
 #      shell: 'git submodule update --init --recursive'
