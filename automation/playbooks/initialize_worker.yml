@@ -1,4 +1,4 @@
-- hosts: "{{ target }}"
+- hosts: "workers"
 
   vars:
     # permissions on windows with wsl is not fun
