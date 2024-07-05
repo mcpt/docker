@@ -93,8 +93,8 @@ if docker node ls | grep -q "$droplet_name"; then
 	fi
 fi
 
-read -r -p "Are you sure you want to delete Droplet \"$droplet_name?\" (y/n) " confirm
-if [[ "$confirm" =~ ^[Yy]$ ]]; then
+read -r -p "Are you sure you want to delete Droplet \"$droplet_name?\" (please enter the droplet's name) " confirm_name
+if [ "$confirm_name" == "$droplet_name" ]; then
 	echo "Deleting droplet $droplet_name..."
 	notify "## Deleting Droplet: **$droplet_name**"
 	notify "> Droplet **$droplet_name** has been removed from the Swarm cluster. Deleting droplet..."
