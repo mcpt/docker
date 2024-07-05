@@ -7,19 +7,18 @@
 
     docker_edition: 'ce'
     docker_package_state: present
-#    pip_install_packages:
-#      - name: docker==7.1.0
 
-#  roles:
-##    - geerlingguy.docker
 
   tasks:
     - name: Update apt cache
       apt:
         update_cache: yes
 
-    - name: Wait for APT Lock
-      shell: while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+    - name: Wait for APT Lock Release
+      wait_for:
+        path: /var/lib/apt/lists/lock
+        state: absent
+        timeout: 120
 
     - name: Install Docker
       run_once: true
@@ -65,10 +64,10 @@
         dest: '/site'
 
 
-#    - name: 'run submodules'
-#      shell: 'git submodule update --init --recursive'
-#      args:
-#        chdir: '/site'
+    #    - name: 'run submodules'
+    #      shell: 'git submodule update --init --recursive'
+    #      args:
+    #        chdir: '/site'
 
     - name: 'Install UFW'
       run_once: true
