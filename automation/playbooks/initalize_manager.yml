@@ -1,0 +1,25 @@
+target: managers
+
+tasks:
+  - name: 'Change timezone to Toronto time'
+    shell: timedatectl set-timezone America/Toronto
+
+  - name: Ensure .ssh directory exists
+    ansible.builtin.file:
+      path: "{{ ansible_env.HOME }}/.ssh"
+      state: directory
+      mode: '0700'
+
+  - name: Ensure SSH config file exists
+    ansible.builtin.file:
+      path: "{{ ansible_env.HOME }}/.ssh/config"
+      state: touch
+      mode: '600'
+
+  - name: Add specific SSH config for Host 10.137.0.0/16
+    ansible.builtin.lineinfile:
+      mode: '400'
+      path: "{{ ansible_env.HOME }}/.ssh/config"
+      line: "Host 10.137.0.0/16\n    StrictHostKeyChecking no"
+      create: yes
+      insertafter: EOF
