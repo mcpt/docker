@@ -1,4 +1,7 @@
 - hosts: "workers"
+  become: true
+  become_user: root
+
 
   vars:
     # permissions on windows with wsl is not fun
@@ -36,7 +39,6 @@
 
     - name: Install Docker
       run_once: true
-      become: true
       include_role:
         name: geerlingguy.docker
 
