@@ -14,29 +14,36 @@
       apt:
         update_cache: yes
 
+    - name: 'Get WLMOJ Repo'
+      environment:
+        GIT_TERMINAL_PROMPT: 0
+      ansible.builtin.git:
+        repo: 'https://github.com/mcpt/wlmoj.git'
+        clone: true
+        recursive: true
+        dest: '/site'
+
+    - name: 'Disable password for root'
+      shell: passwd -d root
+      run_once: true
+
     - name: Wait for APT Lock Release
       wait_for:
         path: /var/lib/apt/lists/lock
         state: absent
-        timeout: 120
+        timeout: 300 # 5 minutes
 
     - name: Install Docker
       run_once: true
       include_role:
         name: geerlingguy.docker
 
-    - name: 'APT Upgrade'
-      apt:
-        upgrade: true
-        update_cache: true
-
-
-
-    - name: 'Install nfs & pip'
+    - name: 'Install nfs, pip & ufw'
       apt:
         pkg:
           - nfs-common
           - python3-pip
+          - ufw
 
     - name: 'Mount nfs share'
       run_once: true
@@ -54,25 +61,6 @@
       pip:
         name: docker>=7.1.0
 
-    - name: 'Get WLMOJ Repo'
-      environment:
-        GIT_TERMINAL_PROMPT: 0
-      ansible.builtin.git:
-        repo: 'https://github.com/mcpt/wlmoj.git'
-        clone: true
-        recursive: true
-        dest: '/site'
-
-
-    #    - name: 'run submodules'
-    #      shell: 'git submodule update --init --recursive'
-    #      args:
-    #        chdir: '/site'
-
-    - name: 'Install UFW'
-      run_once: true
-      apt:
-        name: ufw
 
     - name: "UFW: allow ssh"
       run_once: true
@@ -98,10 +86,6 @@
       ufw:
         state: enabled
         policy: deny
-
-    - name: 'Disable password for root'
-      shell: passwd -d root
-      run_once: true
 
 
     - name: "Install common utils"
