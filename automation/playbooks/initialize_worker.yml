@@ -1,6 +1,7 @@
 - hosts: "workers"
   become: true
   become_user: root
+  strategy: linear
 
 
   vars:
@@ -15,7 +16,6 @@
   tasks:
     - name: Update apt
       apt:
-        upgrade: yes
         update_cache: yes
 
     - name: 'Get WLMOJ Repo'
@@ -119,9 +119,31 @@
         advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
         remote_addrs: "{{ groups['managers'] }}"
 
-    - name: 'Reboot server'
-      reboot:
+    - name: Ensure Locks Are Released
+      shell:
+        cmd: |
+          while fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock >/dev/null 2>&1; do
+            sleep 2
+          done
+      register: locks_released
+      until: locks_released.rc == 0
+      retries: 10
+      delay: 5
 
     - name: 'Install Unattended Upgrades'
       include_role:
         name: hifis.unattended_upgrades
+
+
+    - name: Check if reboot required
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required_file
+
+    - name: 'Reboot server'
+      reboot:
+        when:
+          when: reboot_required_file.stat.exists == true
+
+
+
