@@ -144,8 +144,7 @@
 
     - name: 'Reboot server'
       reboot:
-        when:
-          when: reboot_required_file.stat.exists == true
+      when: reboot_required_file.stat.exists == true
 
 
 
