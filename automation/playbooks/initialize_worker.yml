@@ -105,12 +105,13 @@
           - ncdu
           - jq
           - curl
+
+
     - name: 'Get Swarm join token from manager'
       run_once: true
       shell: 'docker swarm join-token worker -q'
       register: join_token
-      delegate_to: "{{ groups['managers'] | random }}"  # Run on the first manager node
-
+      delegate_to: 10.137.0.5  # General
     - name: 'Join the Swarm as a worker'
       run_once: true
       community.docker.docker_swarm:
