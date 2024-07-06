@@ -111,7 +111,7 @@
       local_action:
         module: ansible.builtin.shell
         cmd: "docker swarm join-token worker -q"
-        register: join_token  # Store the output
+      register: join_token  # Store the output
 
     - name: 'Join the Swarm as a worker'
       run_once: true
