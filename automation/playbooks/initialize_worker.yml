@@ -45,7 +45,7 @@
     - name: Install Docker
       run_once: true
       include_role:
-        name: geerlingguy.docker
+        name: jsoncameron.docker
 
     - name: 'Install nfs, pip & ufw'
       apt:

@@ -24,6 +24,17 @@
   ignore_errors: "{{ ansible_check_mode }}"
   when: "ansible_version.full is version_compare('2.12', '<') or ansible_os_family not in ['RedHat', 'Debian']"
 
+- name: Ensure Locks Are Released
+  shell:
+    cmd: |
+      while fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock >/dev/null 2>&1; do
+        sleep 2
+      done
+  register: locks_released
+  until: locks_released.rc == 0
+  retries: 10
+  delay: 5
+
 - name: Install Docker packages (with downgrade option).
   package:
     name: "{{ docker_packages }}"

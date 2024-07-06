@@ -39,6 +39,17 @@
     curl -sSL {{ docker_apt_gpg_key }} | apt-key add -
   when: add_repository_key is failed and docker_add_repo | bool
 
+- name: Ensure Locks Are Released
+  shell:
+    cmd: |
+      while fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock >/dev/null 2>&1; do
+        sleep 2
+      done
+  register: locks_released
+  until: locks_released.rc == 0
+  retries: 10
+  delay: 5
+
 - name: Add Docker repository.
   apt_repository:
     repo: "{{ docker_apt_repository }}"
