@@ -41,7 +41,7 @@ services:
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
       - /site/:/site/
-      - /var/share/configs/wlmoj/local_settings.py:/site/wlmoj/local_settings.py:ro
+      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, nginx, db]
@@ -63,7 +63,7 @@ services:
       - /var/share/cache/datacache:/datacache/
       - /var/share/logs:/logs/
       - /site/:/site/
-      - /var/share/configs/wlmoj/local_settings.py:/site/wlmoj/local_settings.py:ro
+      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks: [site, db]
