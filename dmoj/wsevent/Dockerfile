@@ -11,4 +11,6 @@ EXPOSE 15102
 
 ADD https://github.com/mcpt/docker/blob/master/config.js /app/site/websocket/config.js
 
+RUN chmod +x /app/site/websocket/config.js
+
 ENTRYPOINT ["node", "/app/site/websocket/daemon.js"]
