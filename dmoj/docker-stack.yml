@@ -91,6 +91,7 @@ services:
     networks: [site, nginx, db]
     ports:
       - "9999:9999"
+      - "9998:9998"
     depends_on: [base, db, redis]
     deploy:
         replicas: 1
