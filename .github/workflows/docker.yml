@@ -37,7 +37,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build images
-        run: docker buildx bake --file docker-build.yml --file docker-build-cache.json
+        run: docker buildx bake --file docker-build.yml --file ../docker-build-cache.json
         working-directory: dmoj
 
       - name: Test images
