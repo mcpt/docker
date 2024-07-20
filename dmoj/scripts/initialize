@@ -8,6 +8,8 @@ if [ -z "$CI" ]; then  # Not running in CI
 else # in CI
   echo "LOGGING['handlers']['bridge']['filename'] = '/dev/null'
 LOGGING['handlers']['all']['filename'] = '/dev/null'
-STATIC_ROOT = './static/'" >>"$GITHUB_WORKSPACE"/local_settings.py
+STATIC_ROOT = './static/'
+DMOJ_RESOURCES = './resources/'
+MEDIA_ROOT = './media/'" >>"$GITHUB_WORKSPACE"/local_settings.py
   cp "$GITHUB_WORKSPACE"/local_settings.py "${GITHUB_WORKSPACE}"/dmoj/repo/dmoj/local_settings.py
 fi
