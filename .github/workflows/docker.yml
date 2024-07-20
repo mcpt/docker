@@ -36,12 +36,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-
-
       - name: Build images
-        run: docker buildx bake --file docker-compose.yml --file docker-compose-cache.json
-
+        run: docker buildx bake --file docker-build.yml --file docker-build-cache.json
         working-directory: dmoj
+
       - name: Test images
         id: test
         run: |
