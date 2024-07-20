@@ -5,7 +5,7 @@ RUN apt-get update && \
         git gcc g++ make curl gettext wget \
         libxml2-dev libxslt1-dev zlib1g-dev \
         mariadb-client libmariadb-dev \
-        libjpeg-dev debconf-utils pkg-config && \
+        libjpeg-dev debconf-utils pkg-config \
         uwsgi-core uwsgi-plugin-python3 && \
     curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs && \
