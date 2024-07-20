@@ -6,5 +6,5 @@ if [ -z "$CI" ]; then  # Not running in CI
       cp ../local_settings.py /var/share/configs/wlmoj/
       cp -R ./nginx/conf.d/ /var/share/configs/nginx/
 else # in CI
-  cp "$GITHUB_WORKSPACE"/local_settings.py ${GITHUB_WORKSPACE}/dmoj/repo/dmoj/local_settings.py
+  cp "$GITHUB_WORKSPACE"/build_local_settings.py ${GITHUB_WORKSPACE}/dmoj/repo/dmoj/local_settings.py
 fi

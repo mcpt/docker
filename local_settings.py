@@ -299,10 +299,6 @@ LOGGING = {
     },
 }
 
-if "CI" in os.environ:
-    LOGGING['handlers']['bridge']['filename'] = '/dev/null'
-    LOGGING['handlers']['all']['filename'] = '/dev/null'
-
 ## ======== Integration Settings ========
 ## Python Social Auth
 # Documentation: https://python-social-auth.readthedocs.io/en/latest/
@@ -364,6 +360,5 @@ DMOJ_ICS_REPORT_PERIODS = {
     2: {"name": "Mrs. Krasteva", "email": "test-void@fluix.one"},
 }
 
-
-if DEBUG == True:
+if DEBUG:
 	EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
