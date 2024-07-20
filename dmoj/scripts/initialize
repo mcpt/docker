@@ -7,6 +7,7 @@ if [ -z "$CI" ]; then  # Not running in CI
       cp -R ./nginx/conf.d/ /var/share/configs/nginx/
 else # in CI
   echo "LOGGING['handlers']['bridge']['filename'] = '/dev/null'
-LOGGING['handlers']['all']['filename'] = '/dev/null'" >>"$GITHUB_WORKSPACE"/local_settings.py
+LOGGING['handlers']['all']['filename'] = '/dev/null'
+STATIC_ROOT = './static/'" >>"$GITHUB_WORKSPACE"/local_settings.py
   cp "$GITHUB_WORKSPACE"/local_settings.py "${GITHUB_WORKSPACE}"/dmoj/repo/dmoj/local_settings.py
 fi
