@@ -66,9 +66,9 @@ services:
     init: true
     restart: unless-stopped
     volumes:
-      - /var/share/cache/pdfcache:/pdfcache/
-      - /var/share/cache/datacache:/datacache/
-      - /var/share/logs:/logs/
+      - /pdfcache:/pdfcache/
+      - /datacache:/datacache/
+      - /logs/:/logs/
       - ${GITHUB_WORKSPACE}/dmoj/repo:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
@@ -83,9 +83,9 @@ services:
     init: true
     restart: unless-stopped
     volumes:
-      - /var/share/cache/pdfcache:/pdfcache/
-      - /var/share/problems/:/problems/
-      - /var/share/logs:/logs/
+      - /pdfcache:/pdfcache/
+      - /problems/:/problems/
+      - /logs:/logs/
       - ${GITHUB_WORKSPACE}/dmoj/repo/:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
@@ -133,11 +133,11 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /var/share/assets:/assets/
-      - /var/share/cache/pdfcache:/pdfcache/
-      - /var/share/cache/datacache:/datacache/
-      - /var/cache/cache:/cache/
-      - /var/share/media/:/media/
+      - /assets:/assets/
+      - /pdfcache:/pdfcache/
+      - /datacache:/datacache/
+      - /cache:/cache/
+      - /media/:/media/
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     networks: [ nginx ]
     depends_on: [ site, wsevent ]
