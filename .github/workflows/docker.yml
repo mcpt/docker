@@ -44,6 +44,7 @@ jobs:
       - name: Log Failures
         if: ${{ failure() && steps.test.conclusion == 'failure' }}
         run: docker compose -f docker-build.yml logs
+        working-directory: dmoj
 
 
 
