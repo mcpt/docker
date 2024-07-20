@@ -5,6 +5,6 @@ USER uwsgi
 
 EXPOSE 8000
 
-ADD https://raw.githubusercontent.com/mcpt/docker/master/uwsgi.ini /uwsgi.ini
+ADD --chown=uwsgi:uwsgi https://raw.githubusercontent.com/mcpt/docker/master/uwsgi.ini /uwsgi.ini
 
 ENTRYPOINT ["uwsgi", "--ini", "/uwsgi.ini"]
