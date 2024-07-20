@@ -1,6 +1,6 @@
 FROM ghcr.io/mcpt/wlmoj-base:latest
 
-RUN useradd -rm -s /bin/bash -g root -G uwsgi -u 1001 uwsgi
+RUN groupadd uwsgi && useradd -rm -s /bin/bash -g root -G uwsgi -u 1001 uwsgi
 USER uwsgi
 
 EXPOSE 8000
