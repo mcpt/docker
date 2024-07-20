@@ -28,9 +28,10 @@ jobs:
         run: docker compose -f docker-build.yml build
         working-directory: dmoj
       - name: Test images
+        id: test
         run: |
           ./scripts/initialize
-          docker compose -f docker-build.yml up -d
+          docker compose -f docker-build.yml up -d 
           docker ps -a 
           sleep 15
           export COMPOSE_EXEC_FLAGS="-T"
@@ -39,6 +40,14 @@ jobs:
           ./scripts/migrate
           ./scripts/manage loaddata language_small
         working-directory: dmoj
+
+      - name: Log Failures
+        if: ${{ failure() && steps.test.conclusion == 'failure' }}
+        run: docker compose -f docker-build.yml logs
+
+
+
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
