@@ -69,7 +69,7 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
       - /var/share/logs:/logs/
-      - ${GITHUB_WORKSPACE}/repo:/site/
+      - ${GITHUB_WORKSPACE}/dmoj/repo:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, db ]
@@ -104,7 +104,7 @@ services:
     restart: unless-stopped
     volumes:
       - ${GITHUB_WORKSPACE}/dmoj/repo/:/app/site/
-      - ./config.js:/app/site/websocket/config.js:ro
+      - ../config.js:/app/site/websocket/config.js:ro
 
     working_dir: /app/site
     env_file: [ environment/mysql.env, environment/site.env ]
