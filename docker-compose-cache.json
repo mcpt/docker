@@ -1,0 +1,92 @@
+{
+  "target": {
+	"texoid": {
+	  "cache-from": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-texoid:cache"
+	  ],
+	  "cache-to": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-texoid:cache"
+	  ],
+	  "output": [
+		"type=docker"
+	  ]
+	},
+	"pdfoid": {
+	  "cache-from": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-pdfoid:cache"
+	  ],
+	  "cache-to": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-pdfoid:cache"
+	  ],
+	  "output": [
+		"type=docker"
+	  ]
+	},
+	"mathoid": {
+	  "cache-from": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-mathoid:cache"
+	  ],
+	  "cache-to": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-mathoid:cache"
+	  ],
+	  "output": [
+		"type=docker"
+	  ]
+	},
+	"base": {
+	  "cache-from": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-base:cache"
+	  ],
+	  "cache-to": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-base:cache"
+	  ],
+	  "output": [
+		"type=docker"
+	  ]
+	},
+	"site": {
+	  "cache-from": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-site:cache"
+	  ],
+	  "cache-to": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-site:cache"
+	  ],
+	  "output": [
+		"type=docker"
+	  ]
+	},
+	"celery": {
+	  "cache-from": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-celery:cache"
+	  ],
+	  "cache-to": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-celery:cache"
+	  ],
+	  "output": [
+		"type=docker"
+	  ]
+	},
+	"bridged": {
+	  "cache-from": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-bridged:cache"
+	  ],
+	  "cache-to": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-bridged:cache"
+	  ],
+	  "output": [
+		"type=docker"
+	  ]
+	},
+	"wsevent": {
+	  "cache-from": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-wsevent:cache"
+	  ],
+	  "cache-to": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-wsevent:cache"
+	  ],
+	  "output": [
+		"type=docker"
+	  ]
+	}
+  }
+}
