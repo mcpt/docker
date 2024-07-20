@@ -23,3 +23,11 @@ tasks:
       line: "Host 10.137.0.0/16\n    StrictHostKeyChecking no"
       create: yes
       insertafter: EOF
+
+
+
+#  root@general /h/w/d/dmoj (master) [1]# sudo ufw allow proto tcp from 10.137.0.0/16 to 10.137.0.0/16 port 2377
+#  Rule added
+#  root@general /h/w/d/dmoj (master)# sudo ufw allow proto any from 10.137.0.0/16 to 10.137.0.0/16 port 7947
+#  Rule added
+#  root@general /h/w/d/dmoj (master)# sudo ufw allow proto udp from 10.137.0.0/16 to 10.137.0.0/16 port 4789
