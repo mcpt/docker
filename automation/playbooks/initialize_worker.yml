@@ -54,23 +54,6 @@
           - python3-pip
           - ufw
 
-    - name: 'Mount nfs share'
-      run_once: true
-      ansible.posix.mount:
-        path: /var/share
-        src: 10.137.0.5:/var/share
-        state: mounted
-        fstype: nfs4
-        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800'
-
-    - name: 'Change timezone to Toronto time'
-      shell: timedatectl set-timezone America/Toronto
-
-    - name: "Install updated docker bindings"
-      pip:
-        name: docker>=7.1.0
-
-
     - name: "UFW: allow ssh"
       run_once: true
       ufw:
@@ -97,6 +80,22 @@
         policy: deny
 
 
+    - name: 'Mount nfs share'
+      run_once: true
+      ansible.posix.mount:
+        path: /var/share
+        src: 10.137.0.5:/var/share
+        state: mounted
+        fstype: nfs4
+        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800'
+
+    - name: 'Change timezone to Toronto time'
+      shell: timedatectl set-timezone America/Toronto
+
+    - name: "Install updated docker bindings"
+      pip:
+        name: docker>=7.1.0
+
     - name: "Install common utils"
       apt:
         pkg:
@@ -105,7 +104,6 @@
           - ncdu
           - jq
           - curl
-
 
     - name: Get Swarm join token from manager (current host)
       local_action:
