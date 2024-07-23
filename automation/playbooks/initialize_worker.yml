@@ -19,7 +19,7 @@
         update_cache: yes
 
     - name: 'Add Judge Users'
-      import_playbook: add_judge.yml
+      ansible.builtin.import_playbook: add_judge.yml
 
     - name: 'Get WLMOJ Repo'
       environment:
