@@ -1,7 +1,5 @@
-- name: Add Judge user
-  hosts: all  # Target all hosts in your inventory
+- hosts: all  # Target all hosts in your inventory
   become: yes # Use privilege escalation (e.g., sudo)
-  gather_facts: false # Optional: Skip gathering facts to speed things up
   tasks:
     - name: Add judge user
       user:
