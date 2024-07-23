@@ -5,6 +5,17 @@
     name: "{{ docker_obsolete_packages }}"
     state: absent
 
+- name: Ensure Locks Are Released
+  shell:
+    cmd: |
+      while fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock >/dev/null 2>&1; do
+        sleep 2
+      done
+  register: locks_released
+  until: locks_released.rc == 0
+  retries: 10
+  delay: 5
+
 - name: Ensure dependencies are installed.
   apt:
     name:
