@@ -1,6 +1,4 @@
-- hosts: all  # Target all hosts in your inventory
-  become: yes # Use privilege escalation (e.g., sudo)
-  tasks:
+- tasks:
     - name: Add judge user
       user:
         name: judge
