@@ -12,11 +12,14 @@ get_worker_ips() {
   echo "$workers"
 }
 get_manager_ips() {
-    if [ "$(docker node ls --filter role=manager -q | wc -l)" -eq 0 ]; then
+  # check if there are any workers
+  local managers
+  managers="$(doctl compute droplet list --format PrivateIPv4 --tag-name manager  --no-header )"
+
+  if [ -z "$managers" ]; then
     return
   fi
-  docker node ls --filter role=manager --format "{{.Hostname}}" | \
-  xargs docker node inspect --format '{{ .Status.Addr }}'
+  echo "$managers"
 }
 
 # Function to get IP addresses of running replicas for a given service

@@ -10,6 +10,7 @@
       - sudo
       - docker
     append: yes
+    shell: /bin/bash
     password: "$6$lM0.82iYD1grZyfV$GEjJtEY8csAy2m4SRhxH1QRXuKvvT.iSvPnRyPL16HBsvHaB8ZFLhIUrI8oeMEhd0IGXiPbTAbSilM0uvx2zw/" # Please Contact Judge Lead For Password
 
 

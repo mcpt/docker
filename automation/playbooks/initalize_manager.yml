@@ -31,3 +31,6 @@ tasks:
 #  root@general /h/w/d/dmoj (master)# sudo ufw allow proto any from 10.137.0.0/16 to 10.137.0.0/16 port 7947
 #  Rule added
 #  root@general /h/w/d/dmoj (master)# sudo ufw allow proto udp from 10.137.0.0/16 to 10.137.0.0/16 port 4789
+
+# sudo ufw allow from 10.137.0.0/16 to any port nfs
+
