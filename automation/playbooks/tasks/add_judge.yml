@@ -1,3 +1,8 @@
+- name: Create docker group
+  group:
+    name: docker
+    state: present
+
 - name: Add judge user
   user:
     name: judge
