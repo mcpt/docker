@@ -3,8 +3,8 @@
     containers: true
     images: true
     containers_filters:
+      until: 6h
     # only consider containers created more than 6 hours ago
-    until: 6h
     networks: true
     volumes: true
     builder_cache: true
