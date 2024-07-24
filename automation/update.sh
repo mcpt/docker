@@ -3,4 +3,4 @@
 set -e
 
 
-ansible-playbook -i inventory/hosts playbooks/update.yml
+ansible-playbook -i inventory.ini playbooks/update.yml

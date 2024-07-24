@@ -6,7 +6,7 @@
     - name: Update each WLMOJ repository
       ansible.builtin.git:
         repo: 'https://github.com/mcpt/wlmoj.git'
-        dest: "{{ item.path }}"
+        dest: "/site/"
         update: yes
         recursive: true
         environment:
