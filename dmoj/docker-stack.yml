@@ -161,5 +161,10 @@ services:
 
 networks:
   site:
+    driver: overlay
   db:
+    driver: overlay
+    driver_opts:
+      encrypted: true
   nginx:
+    driver: overlay
