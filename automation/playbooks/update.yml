@@ -1,5 +1,5 @@
 - name: Update WLMOJ Repositories
-  hosts: all  # Target all hosts in your inventory
+  hosts: all!local  # Target all hosts in your and not localhost as it's specified there
   become: yes # Use privilege escalation (e.g., sudo)
   gather_facts: true
   tasks:
@@ -29,7 +29,7 @@
     - name: Update docker stack
       docker_stack:
         state: present
-        stack_name: wlmoj
+        name: wlmoj
         compose:
           - ../../dmoj/docker-stack.yml
       when: ansible_hostname == "general"
