@@ -1,5 +1,5 @@
 - name: Update WLMOJ Repositories
-  hosts: all!local  # Target all hosts in your and not localhost as it's specified there
+  hosts: all  # Target all hosts in your inventory
   become: yes # Use privilege escalation (e.g., sudo)
   gather_facts: true
   tasks:
