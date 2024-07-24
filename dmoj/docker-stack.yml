@@ -165,6 +165,6 @@ networks:
   db:
     driver: overlay
     driver_opts:
-      encrypted: true
+      encrypted: 1
   nginx:
     driver: overlay
