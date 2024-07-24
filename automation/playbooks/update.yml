@@ -19,7 +19,7 @@
 
     - name: Trigger Discord webhook on successful updates
       uri:
-        url: "{{ vault_discord_webhook_url  }}"
+        url: "https://discord.com/api/webhooks/1265698136480022741/6UGB0mwC1LJ51csq9UqLjX38wz-vYxnFZ1_nFK1nwzZG3OkLElpRBTmf-NinhpTpvmY8"
         method: POST
         headers:
           Content-Type: application/json
