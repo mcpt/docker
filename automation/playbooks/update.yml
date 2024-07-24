@@ -4,13 +4,13 @@
   gather_facts: false # Optional: Skip gathering facts to speed things up
   tasks:
     - name: Update each WLMOJ repository
+      environment:
+        GIT_TERMINAL_PROMPT: 0
       ansible.builtin.git:
         repo: 'https://github.com/mcpt/wlmoj.git'
         dest: "/site/"
         update: yes
         recursive: true
-        environment:
-          GIT_TERMINAL_PROMPT: 0
     - name: Trigger Discord webhook on successful updates
       uri:
         url: "{{ vault_discord_webhook_url  }}"
