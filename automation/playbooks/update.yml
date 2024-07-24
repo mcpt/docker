@@ -21,7 +21,7 @@
       community.general.discord:
         webhook_id: 1265698136480022741
         webhook_token: "6UGB0mwC1LJ51csq9UqLjX38wz-vYxnFZ1_nFK1nwzZG3OkLElpRBTmf-NinhpTpvmY8"
-        content: '-# WLMOJ repositories updated successfully on ** + ansible_hostname + **'
+        content: '-# WLMOJ repositories updated successfully on **{{ ansible_hostname }}**'
 
     - name: Remove outdated docker artifacts
       ansible.builtin.include_tasks: "tasks/cleanup.yml"
