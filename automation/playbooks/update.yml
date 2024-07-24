@@ -1,7 +1,7 @@
 - name: Update WLMOJ Repositories
   hosts: all  # Target all hosts in your inventory
   become: yes # Use privilege escalation (e.g., sudo)
-  gather_facts: false # Optional: Skip gathering facts to speed things up
+  gather_facts: true
   tasks:
     - name: Update each WLMOJ repository
       environment:
