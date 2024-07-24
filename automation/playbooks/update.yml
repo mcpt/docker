@@ -12,10 +12,10 @@
         update: yes
         force: true
         recursive: true
-        register: repo_clone
-        failed_when:
-          - repo_clone.failed
-          - not 'Local modifications exist in repository' in repo_clone.msg
+      register: repo_clone
+      failed_when:
+        - repo_clone.failed
+        - not 'Local modifications exist in repository' in repo_clone.msg
 
     - name: Trigger Discord webhook on successful updates
       uri:
