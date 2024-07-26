@@ -31,7 +31,7 @@ services:
     # per-service config
     conf:
       port: 10044
-      interface: mathoid
+      interface: 0.0.0.0
       # more per-service config settings
       # the location of the spec, defaults to spec.yaml if not specified
       # spec: ./spec.template.yaml
