@@ -1,4 +1,4 @@
-- hosts: "workers"
+- hosts: "workers" # todo: change to only passed in IP
   become: true
   become_user: root
   strategy: linear
