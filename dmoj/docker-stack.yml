@@ -44,7 +44,7 @@ services:
       - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
-    networks: [site, nginx, db]
+    networks: [site, db]
     deploy:
       replicas: 1
       placement:
@@ -86,7 +86,7 @@ services:
       - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
-    networks: [site, nginx, db]
+    networks: [site, db]
     ports:
       - "9999:9999"
       - "9998:9998"
@@ -142,7 +142,8 @@ services:
       - /var/cache/cache:/cache/
       - /var/share/media/:/media/
       - /var/share/configs/nginx/:/etc/nginx/conf.d/
-    networks: [nginx, site]
+    networks:
+        - site
     deploy:
       replicas: 1
       placement:
@@ -162,5 +163,3 @@ networks:
     driver: overlay
     driver_opts:
       encrypted: 1
-  nginx:
-    driver: overlay
