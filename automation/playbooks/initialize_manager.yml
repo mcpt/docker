@@ -44,3 +44,8 @@ tasks:
 # sudo ufw allow from 10.137.0.0/16 to any port nfs
 
 
+
+
+
+# docker network create --driver overlay --ingress --subnet=10.137.0.0/16 --gateway=10.137.0.5 --opt com.do
+#cker.network.driver.mtu=1200 ingress ||||| where 0.5 is general's iIP
