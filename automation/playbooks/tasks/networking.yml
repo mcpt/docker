@@ -30,7 +30,9 @@
 - name: Allow IP protocol 50 (IPSec ESP) for encrypted overlay networks (optional)
   ufw:
     rule: allow
-    proto: 50  # This is the protocol number for ESP
+    proto: esp  # This is the protocol name for proto 50 (IPSec ESP)
+    to: '10.137.0.0/16'
+    from: '10.137.0.0/16'
 
 
 #- name: 'UFW: internal network'
