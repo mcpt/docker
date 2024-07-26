@@ -1,0 +1,48 @@
+- name: Allow TCP port 22 (SSH)
+  ufw:
+    rule: allow
+    port: 22
+    proto: tcp
+- name: Allow TCP port 2377 (Docker Swarm manager communication)
+  ufw:
+    rule: allow
+    port: 2377
+    proto: tcp
+
+- name: Allow TCP/UDP port 7946 (Overlay network discovery)
+  ufw:
+    rule: allow
+    port: 7946
+    proto: tcp
+
+- name: Allow UDP port 7946 (Overlay network discovery)
+  ufw:
+    rule: allow
+    port: 7946
+    proto: udp
+
+- name: Allow UDP port 4789 (Overlay network traffic)
+  ufw:
+    rule: allow
+    port: 4789
+    proto: udp
+
+- name: Allow IP protocol 50 (IPSec ESP) for encrypted overlay networks (optional)
+  ufw:
+    rule: allow
+    proto: 50  # This is the protocol number for ESP
+
+
+#- name: 'UFW: internal network'
+#  run_once: true
+#  ufw:
+#    rule: allow
+#    src: '10.137.0.0/16'
+#    dest: '10.137.0.0/16'
+
+
+- name: 'UFW: enable and by default drop'
+  ufw:
+    state: enabled
+    policy: deny
+

@@ -173,5 +173,3 @@ networks:
     driver: overlay
   db:
     driver: overlay
-    driver_opts:
-      encrypted: 1
