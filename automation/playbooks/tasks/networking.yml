@@ -26,6 +26,8 @@
     rule: allow
     port: 4789
     proto: udp
+    to: '10.137.0.0/16'
+    from: '10.137.0.0/16'
 
 - name: Allow IP protocol 50 (IPSec ESP) for encrypted overlay networks (optional)
   ufw:
