@@ -103,7 +103,7 @@ services:
       - /var/share/configs/wsevent/config.js:/app/site/websocket/config.js:ro
     working_dir: /app/site
     env_file: [environment/mysql.env, environment/site.env]
-    networks: [site, nginx]
+    networks: [site]
     deploy:
         replicas: 1
         placement:
@@ -142,7 +142,7 @@ services:
       - /var/cache/cache:/cache/
       - /var/share/media/:/media/
       - /var/share/configs/nginx/:/etc/nginx/conf.d/
-    networks: [nginx]
+    networks: [nginx, site]
     deploy:
       replicas: 1
       placement:
