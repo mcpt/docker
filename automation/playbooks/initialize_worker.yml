@@ -14,6 +14,10 @@
 
 
   tasks:
+    - name: Run basic tasks (perms)
+      ansible.builtin.include_tasks: "tasks/universal_tasks.yml"
+
+
     - name: Update apt
       apt:
         update_cache: yes

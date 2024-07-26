@@ -1,0 +1,12 @@
+- name: create the homeshare group
+  group:
+    name: homeshare
+    state: present
+    system: yes
+    gid: 9889
+
+- name: add root to the homeshare group
+  user:
+    name: root
+    groups: homeshare
+    append: yes
