@@ -153,7 +153,7 @@ services:
       - /var/share/cache/datacache:/datacache/
       - /var/cache/cache:/cache/
       - /var/share/media/:/media/
-      - /var/share/configs/nginx/:/etc/nginx/
+      - /var/share/configs/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
         - site
     deploy:
