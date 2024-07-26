@@ -11,4 +11,4 @@ WORKDIR /texoid/
 RUN pip3 install -e .
 
 EXPOSE 8888
-ENTRYPOINT ["texoid", "--address=texoid", "--port=8888"]
+ENTRYPOINT ["texoid", "--address=0.0.0.0", "--port=8888"]
