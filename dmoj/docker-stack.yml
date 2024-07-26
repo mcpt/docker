@@ -157,9 +157,9 @@ services:
     networks:
         - site
     deploy:
+      restart_policy:
+        condition: on-failure
       replicas: 1
-      placement:
-        constraints: [node.hostname == general] # Only deploy on the general node as it's the entrypoint
 
 #  judge:
 #    container_name: dmoj_judge
@@ -171,5 +171,7 @@ services:
 networks:
   site:
     driver: overlay
+    external: true
   db:
     driver: overlay
+    external: true
