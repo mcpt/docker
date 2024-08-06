@@ -34,6 +34,29 @@ tasks:
       insertafter: EOF
 
 
+  - name: "Run network tasks"
+    ansible.builtin.include_tasks: "tasks/networking.yml"
+
+  - name: Install Docker
+    run_once: true
+    include_role:
+      name: jsoncameron.docker
+
+  - name: Ensure /etc/docker directory exists
+    file:
+      path: /etc/docker
+      state: directory
+      mode: '0755'
+
+  - name: Configure Docker daemon
+    copy:
+      content: |
+        {
+          "dns": ["8.8.8.8", "8.8.4.4"]
+        }
+      dest: /etc/docker/daemon.json
+    register: daemon_config
+
 
 #  root@general /h/w/d/dmoj (master) [1]# sudo ufw allow proto tcp from 10.137.0.0/16 to 10.137.0.0/16 port 2377
 #  Rule added

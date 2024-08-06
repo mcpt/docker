@@ -54,6 +54,21 @@
       include_role:
         name: jsoncameron.docker
 
+    - name: Ensure /etc/docker directory exists
+      file:
+        path: /etc/docker
+        state: directory
+        mode: '0755'
+
+    - name: Configure Docker daemon
+      copy:
+        content: |
+          {
+            "dns": ["8.8.8.8", "8.8.4.4"]
+          }
+        dest: /etc/docker/daemon.json
+      register: daemon_config
+
     - name: 'Install nfs, pip & ufw'
       apt:
         pkg:
