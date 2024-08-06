@@ -33,3 +33,9 @@
         compose:
           - /home/wlmoj/docker/dmoj/docker-stack.yml
       when: ansible_hostname == "general"
+
+    - name: Update packages
+      apt:
+        upgrade: dist
+        update_cache: yes
+
