@@ -3,20 +3,15 @@
   become_user: root
   strategy: linear
 
-
   vars:
-    # permissions on windows with wsl is not fun
     ansible_ssh_private_key_file: ~/.ssh/id_ed25519
     ansible_python_interpreter: /usr/bin/python3
-
     docker_edition: 'ce'
     docker_package_state: present
-
 
   tasks:
     - name: Run basic tasks (perms)
       ansible.builtin.include_tasks: "tasks/universal_tasks.yml"
-
 
     - name: Update apt
       apt:
@@ -54,21 +49,6 @@
       include_role:
         name: jsoncameron.docker
 
-    - name: Ensure /etc/docker directory exists
-      file:
-        path: /etc/docker
-        state: directory
-        mode: '0755'
-
-    - name: Configure Docker daemon
-      copy:
-        content: |
-          {
-            "dns": ["8.8.8.8", "8.8.4.4"]
-          }
-        dest: /etc/docker/daemon.json
-      register: daemon_config
-
     - name: 'Install nfs, pip & ufw'
       apt:
         pkg:
@@ -86,7 +66,40 @@
         src: 10.137.0.5:/var/share
         state: mounted
         fstype: nfs4
-        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800'
+        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800,nfsvers=4.1,rw'
+
+    - name: Ensure /var/share and its subdirectories exist with correct permissions
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: wlmoj
+        group: homeshare
+        mode: '2770'  # This is equivalent to rwxrws---
+      loop:
+        - /var/share
+        - /var/share/assets
+        - /var/share/cache
+        - /var/share/configs
+        - /var/share/logs
+        - /var/share/media
+        - /var/share/problems
+
+    - name: Set permissions on files in /var/share
+      shell: |
+        find /var/share -type f -exec chmod 660 {} \;
+      args:
+        warn: false
+
+    - name: Ensure Docker group exists
+      group:
+        name: docker
+        state: present
+
+    - name: Add wlmoj user to Docker group
+      user:
+        name: wlmoj
+        groups: docker
+        append: yes
 
     - name: 'Change timezone to Toronto time'
       shell: timedatectl set-timezone America/Toronto
@@ -104,19 +117,50 @@
           - jq
           - curl
 
+    - name: Ensure /etc/docker directory exists
+      file:
+        path: /etc/docker
+        state: directory
+        mode: '0755'
+
+    - name: Configure Docker daemon
+      copy:
+        content: |
+          {
+            "dns": ["8.8.8.8", "8.8.4.4"]
+          }
+        dest: /etc/docker/daemon.json
+      register: daemon_config
+
+    - name: Restart Docker service
+      systemd:
+        name: docker
+        state: restarted
+      when: daemon_config.changed
+
     - name: Get Swarm join token from manager (current host)
       local_action:
         module: ansible.builtin.shell
         cmd: "docker swarm join-token worker -q"
-      register: join_token  # Store the output
+      register: join_token
 
     - name: 'Join the Swarm as a worker'
       run_once: true
       community.docker.docker_swarm:
         state: join
         join_token: "{{ join_token.stdout }}"
-        advertise_addr: "{{ groups['managers'][0] }}"  # Use Docker factP
+        advertise_addr: "{{ groups['managers'][0] }}"
         remote_addrs: "{{ groups['managers'] }}"
+
+#    - name: Create overlay networks
+#      community.docker.docker_network:
+#        name: "{{ item }}"
+#        driver: overlay
+#        scope: swarm
+#      loop:
+#        - site
+#        - db
+#      when: inventory_hostname in groups['managers']
 
     - name: Ensure Locks Are Released
       shell:
@@ -133,7 +177,6 @@
       include_role:
         name: hifis.unattended_upgrades
 
-
     - name: Check if reboot required
       stat:
         path: /var/run/reboot-required
@@ -142,6 +185,3 @@
     - name: 'Reboot server'
       reboot:
       when: reboot_required_file.stat.exists == true
-
-
-
