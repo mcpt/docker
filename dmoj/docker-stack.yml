@@ -160,6 +160,8 @@ services:
       restart_policy:
         condition: on-failure
       replicas: 1
+      placement:
+        constraints: [ node.hostname == general ]
 
 #  judge:
 #    container_name: dmoj_judge
