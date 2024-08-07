@@ -1,6 +1,7 @@
 #!/bin/bash
 cd $(dirname $(dirname $0)) || exit
 . ./utils/notify
+set -e
 if [ -z "$1" ]; then
     echo "Usage: restore <filename.sql>"
     echo "Example: restore 2024-06-28_15-25-00.sql"
@@ -23,7 +24,7 @@ set +a
 
 # todo: add pv? (pipe viewer) to show progress bar
 # gunzip -c "${BACKUP_FILE}" | docker exec -i DOCKER_ID mariadb --user="$MYSQL_USER
-docker exec DOCKER_ID mariadb --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" < "${BACKUP_FILE}"
+docker exec "$DOCKER_ID" mariadb --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" < "${BACKUP_FILE}"
 
 echo "Restore completed successfully."
 notify "Restore Completed" "true"
