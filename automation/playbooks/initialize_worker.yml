@@ -87,8 +87,6 @@
     - name: Set permissions on files in /var/share
       shell: |
         find /var/share -type f -exec chmod 660 {} \;
-      args:
-        warn: false
 
     - name: Ensure Docker group exists
       group:
