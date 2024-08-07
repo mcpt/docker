@@ -153,14 +153,14 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /var/share/assets:/assets/
-      - /var/share/cache/pdfcache:/pdfcache/
-      - /var/share/cache/datacache:/datacache/
+      - /var/share/assets/:/assets/
+      - /var/share/cache/pdfcache/:/pdfcache/
+      - /var/share/cache/datacache/:/datacache/
       - /var/cache/cache:/cache/
       - /var/share/media/:/media/
       - /var/share/configs/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
-        - site
+      - site
     deploy:
       restart_policy:
         condition: on-failure
