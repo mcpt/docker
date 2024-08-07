@@ -19,7 +19,7 @@ fi
 notify "Restore Started"
 
 set -a
-.  environment/mysql.env
+.  ../environment/mysql.env
 set +a
 
 # todo: add pv? (pipe viewer) to show progress bar
