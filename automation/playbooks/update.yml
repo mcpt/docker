@@ -41,14 +41,16 @@
 
     # Restart required?
     - name: check if reboot is needed
-      stat: path=/var/run/reboot-required
+      stat:
+        path: /var/run/reboot-required
       register: check_reboot
+
     - meta: end_host
       when: not check_reboot.stat.exists
 
     - name: reboot system
       reboot:
-      msg: "Reboot initiated by Ansible due to system updates"
-      pre_reboot_delay: 3600
-      post_reboot_delay: 300
-      reboot_timeout: 5400
+        msg: "Reboot initiated by Ansible due to system updates"
+        pre_reboot_delay: 3600
+        post_reboot_delay: 300
+        reboot_timeout: 5400
