@@ -126,10 +126,10 @@ services:
   db:
     image: mariadb
     volumes:
-      - /home/wlmoj/database/:/var/lib/mysql:Z
+      - /home/judge/database/:/var/lib/mysql:Z
       - ./scripts/mariadb:/docker-entrypoint-initdb.d/
       - /etc/localtime:/etc/localtime:ro
-      - /home/wlmoj/backups:/backups
+      - /home/judge/backups:/backups
     env_file: [ environment/mysql.env, environment/mysql-admin.env ]
     environment:
       TZ: "America/Toronto"

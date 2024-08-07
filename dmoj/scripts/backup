@@ -3,7 +3,7 @@
 cd $(dirname $0) || exit
 
 # Set the backup directory (ideally from an environment variable)
-BACKUP_DIR=${BACKUP_DIR:-"/home/wlmoj/backups"} # Default to /home/wlmoj/backups if BACKUP_DIR is not set
+BACKUP_DIR=${BACKUP_DIR:-"/home/judge/backups"} # Default to /home/judge/backups if BACKUP_DIR is not set
 
 . ./utils/notify
 

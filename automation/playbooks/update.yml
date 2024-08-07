@@ -31,7 +31,7 @@
         state: present
         name: wlmoj
         compose:
-          - /home/wlmoj/docker/dmoj/docker-stack.yml
+          - /home/judge/docker/dmoj/docker-stack.yml
       when: ansible_hostname == "general"
 
     - name: Update packages
