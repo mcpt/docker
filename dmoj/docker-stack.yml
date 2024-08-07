@@ -4,13 +4,13 @@ services:
     image: ghcr.io/mcpt/wlmoj-texoid
     init: true
     networks:
-        - wlmoj_site
+        - site
 
   pdfoid:
     image: ghcr.io/mcpt/wlmoj-pdfoid
     init: true
     networks:
-        - wlmoj_site
+        - site
     cap_add:
       - SYS_ADMIN
     deploy:
@@ -24,7 +24,7 @@ services:
     image: ghcr.io/mcpt/wlmoj-mathoid
     init: true
     networks:
-        - wlmoj_site
+        - site
     deploy:
         resources:
             limits:
@@ -49,8 +49,8 @@ services:
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks:
-      - wlmoj_site
-      - wlmoj_db
+      - site
+      - db
     deploy:
       replicas: 1
       placement:
@@ -73,8 +73,8 @@ services:
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks:
-        - wlmoj_site
-        - wlmoj_db
+        - site
+        - db
     deploy:
       replicas: 1
       placement:
@@ -97,8 +97,8 @@ services:
     working_dir: /site/
     env_file: [environment/mysql.env, environment/site.env]
     networks:
-        - wlmoj_site
-        - wlmoj_db
+        - site
+        - db
     ports:
       - "9999:9999"
       - "9998:9998"
@@ -117,7 +117,7 @@ services:
     working_dir: /app/site
     env_file: [environment/mysql.env, environment/site.env]
     networks:
-        - wlmoj_site
+        - site
     deploy:
         replicas: 1
         placement:
@@ -134,7 +134,7 @@ services:
     environment:
       TZ: "America/Toronto"
     networks:
-        - wlmoj_db
+        - db
     deploy:
       replicas: 1
       placement:
@@ -143,7 +143,7 @@ services:
   redis:
     image: redis:alpine
     networks:
-      - wlmoj_site
+      - site
     deploy:
       replicas: 1
 
@@ -160,7 +160,7 @@ services:
       - /var/share/media/:/media/
       - /var/share/configs/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
-        - wlmoj_site
+        - site
     deploy:
       restart_policy:
         condition: on-failure
