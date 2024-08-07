@@ -35,6 +35,7 @@ services:
   site:
     image: ghcr.io/mcpt/wlmoj-site
     init: true
+    user: "root:9889"
     volumes:
       - /var/share/assets:/assets/
       - /var/share/cache/pdfcache:/pdfcache/
@@ -62,6 +63,7 @@ services:
   celery:
     image: ghcr.io/mcpt/wlmoj-celery
     init: true
+    user: "root:9889"
     volumes:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
@@ -85,6 +87,7 @@ services:
   bridged:
     image: ghcr.io/mcpt/wlmoj-bridged
     init: true
+    user: "root:9889"
     volumes:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/problems/:/problems/
@@ -107,6 +110,7 @@ services:
   wsevent:
     image: ghcr.io/mcpt/wlmoj-wsevent
     init: true
+    user: "root:9889"
     volumes:
       - /site/:/app/site/
       - /var/share/configs/wsevent/config.js:/app/site/websocket/config.js:ro
@@ -145,6 +149,7 @@ services:
 
   nginx:
     image: nginx:alpine
+    user: "root:9889"
     ports:
       - "80:80"
     volumes:
