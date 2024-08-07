@@ -1,5 +1,8 @@
 target: managers
-
+vars:
+  overlay_network_range: "10.137.0.0/16"
+# https://stackoverflow.com/a/63411562/18516611
+# Ensure that the swarm is created using the proper INTERFACE instead of ip
 tasks:
   - name: 'Change timezone to Toronto time'
     shell: timedatectl set-timezone America/Toronto

@@ -8,6 +8,7 @@
     ansible_python_interpreter: /usr/bin/python3
     docker_edition: 'ce'
     docker_package_state: present
+    overlay_network_range: "10.137.0.0/16"
 
   tasks:
     - name: Run basic tasks (perms)

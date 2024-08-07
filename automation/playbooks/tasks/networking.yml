@@ -3,50 +3,40 @@
     rule: allow
     port: 22
     proto: tcp
+- name: Allow TCP port 2376 (Docker Swarm manager communication)
+  ufw:
+    rule: allow
+    port: 2376
+    proto: tcp
 - name: Allow TCP port 2377 (Docker Swarm manager communication)
   ufw:
     rule: allow
     port: 2377
     proto: tcp
-
 - name: Allow TCP/UDP port 7946 (Overlay network discovery)
   ufw:
     rule: allow
     port: 7946
-    proto: tcp
-
-- name: Allow UDP port 7946 (Overlay network discovery)
-  ufw:
-    rule: allow
-    port: 7946
-    proto: udp
-
 - name: Allow UDP port 4789 (Overlay network traffic)
   ufw:
     rule: allow
     port: 4789
     proto: udp
-    to: '10.137.0.0/16'
-    from: '10.137.0.0/16'
-
+    to: '{{ overlay_network_range }}'  # Replace with your actual overlay network range
+    from: '{{ overlay_network_range }}'
 - name: Allow IP protocol 50 (IPSec ESP) for encrypted overlay networks (optional)
   ufw:
     rule: allow
-    proto: esp  # This is the protocol name for proto 50 (IPSec ESP)
-    to: '10.137.0.0/16'
-    from: '10.137.0.0/16'
-
-
-#- name: 'UFW: internal network'
-#  run_once: true
-#  ufw:
-#    rule: allow
-#    src: '10.137.0.0/16'
-#    dest: '10.137.0.0/16'
-
-
-- name: 'UFW: enable and by default drop'
+    proto: esp
+    to: '{{ overlay_network_range }}'
+    from: '{{ overlay_network_range }}'
+- name: Allow internal network communication (optional)
+  ufw:
+    rule: allow
+    to: '{{ overlay_network_range }}'
+    from: '{{ overlay_network_range }}'
+- name:
+    UFW: enable and by default drop
   ufw:
     state: enabled
     policy: deny
-
