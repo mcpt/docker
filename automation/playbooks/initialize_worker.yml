@@ -72,7 +72,7 @@
       file:
         path: "{{ item }}"
         state: directory
-        owner: wlmoj
+        owner: judge
         group: homeshare
         mode: '2770'  # This is equivalent to rwxrws---
       loop:
@@ -95,9 +95,9 @@
         name: docker
         state: present
 
-    - name: Add wlmoj user to Docker group
+    - name: Add judge user to Docker group
       user:
-        name: wlmoj
+        name: judge
         groups: docker
         append: yes
 
