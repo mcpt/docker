@@ -8,7 +8,7 @@ if [ -z "$1" ]; then
 fi
 
 BACKUP_FILE="$1"
-
+DOCKER_ID=$(docker ps -qf "name=db")
 # Verify if the backup file exists
 if [ ! -f "$BACKUP_FILE" ]; then
     echo "Error: Backup file '$BACKUP_FILE' not found."
@@ -22,8 +22,8 @@ set -a
 set +a
 
 # todo: add pv? (pipe viewer) to show progress bar
-gzip -d "$NAME"
-docker compose exec db mariadb --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" < "${BACKUP_FILE%.*}"
+#gunzip "$NAME"
+docker exec DOCKER_ID mariadb --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" < "${BACKUP_FILE%.*}"
 
 echo "Restore completed successfully."
 notify "Restore Completed" "true"
