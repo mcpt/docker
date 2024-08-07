@@ -69,24 +69,10 @@
         opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800,nfsvers=4.1,rw'
 
     - name: Ensure /var/share and its subdirectories exist with correct permissions
-      file:
-        path: "{{ item }}"
-        state: directory
-        owner: judge
-        group: homeshare
-        mode: '2770'  # This is equivalent to rwxrws---
-      loop:
-        - /var/share
-        - /var/share/assets
-        - /var/share/cache
-        - /var/share/configs
-        - /var/share/logs
-        - /var/share/media
-        - /var/share/problems
-
-    - name: Set permissions on files in /var/share
       shell: |
-        find /var/share -type f -exec chmod 660 {} \;
+        sudo chown -R judge:homeshare /var/share 
+        sudo chmod -R 2770 /var/share
+    # This is equivalent to rwxrws---, which is the same as 2770
 
     - name: Ensure Docker group exists
       group:
@@ -150,15 +136,15 @@
         advertise_addr: "{{ groups['managers'][0] }}"
         remote_addrs: "{{ groups['managers'] }}"
 
-#    - name: Create overlay networks
-#      community.docker.docker_network:
-#        name: "{{ item }}"
-#        driver: overlay
-#        scope: swarm
-#      loop:
-#        - site
-#        - db
-#      when: inventory_hostname in groups['managers']
+    #    - name: Create overlay networks
+    #      community.docker.docker_network:
+    #        name: "{{ item }}"
+    #        driver: overlay
+    #        scope: swarm
+    #      loop:
+    #        - site
+    #        - db
+    #      when: inventory_hostname in groups['managers']
 
     - name: Ensure Locks Are Released
       shell:
