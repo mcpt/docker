@@ -20,11 +20,15 @@ notify "Restore Started"
 
 set -a
 .  ../environment/mysql.env
+.  ../environment/mysql-admin.env
+
 set +a
 
 # todo: add pv? (pipe viewer) to show progress bar
 # gunzip -c "${BACKUP_FILE}" | docker exec -i DOCKER_ID mariadb --user="$MYSQL_USER
-docker exec "$DOCKER_ID" mariadb --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" < "${BACKUP_FILE}"
+# drop dmoj database
+docker exec "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" -e "DROP DATABASE IF EXISTS $MYSQL_DATABASE;"
+docker exec "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" < "${BACKUP_FILE}"
 
 echo "Restore completed successfully."
 notify "Restore Completed" "true"
