@@ -1,6 +1,8 @@
 #!/bin/bash
 cd $(dirname $(dirname $0)) || exit
 . ./utils/notify
+
+
 set -e
 if [ -z "$1" ]; then
     echo "Usage: restore <filename.sql>"
@@ -16,6 +18,17 @@ if [ ! -f "$BACKUP_FILE" ]; then
     exit 1  # Exit with an error code
 fi
 
+read -rp "Are you sure you want to restore the database from '$BACKUP_FILE'? This will overwrite the current database. [y/N]: " confirmation
+if [[ ! "$confirmation" =~ ^[Yy]$ ]]; then
+    echo "Restore operation cancelled."
+    exit 0
+fi
+
+# Delay before starting the restore
+echo "Starting restore in 10 seconds... (Press Ctrl+C to cancel)"
+sleep 10
+
+
 notify "Restore Started"
 
 set -a
@@ -28,7 +41,9 @@ set +a
 # gunzip -c "${BACKUP_FILE}" | docker exec -i DOCKER_ID mariadb --user="$MYSQL_USER
 # drop dmoj database
 docker exec "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" -e "DROP DATABASE IF EXISTS $MYSQL_DATABASE;"
-docker exec "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" < "${BACKUP_FILE}"
+notify "Dropped database $MYSQL_DATABASE" "true"
+notify "Restoring database $MYSQL_DATABASE...."
+docker -i exec "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" < "${BACKUP_FILE}"
 
 echo "Restore completed successfully."
 notify "Restore Completed" "true"
