@@ -30,6 +30,7 @@ sleep 10
 
 
 notify "Restore Started"
+echo "Restoring database from $BACKUP_FILE..."
 
 set -a
 .  ../environment/mysql.env
