@@ -43,7 +43,7 @@ set +a
 docker exec "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" -e "DROP DATABASE IF EXISTS $MYSQL_DATABASE;"
 notify "Dropped database $MYSQL_DATABASE" "true"
 notify "Restoring database $MYSQL_DATABASE...."
-docker -i exec "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" < "${BACKUP_FILE}"
+docker exec -i "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" < "${BACKUP_FILE}"
 
 echo "Restore completed successfully."
 notify "Restore Completed" "true"
