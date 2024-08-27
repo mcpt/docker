@@ -27,31 +27,31 @@ INSTALLED_APPS += ("discord_integration",)
 # Caching. You can use memcached or redis instead.
 # Documentation: <https://docs.djangoproject.com/en/1.11/topics/cache/>
 CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis:6379/1',
-    }
+	'default': {
+		'BACKEND': 'django_redis.cache.RedisCache',
+		'LOCATION': 'redis://redis:6379/1',
+	}
 }
 
 # Your database credentials. Only MySQL is supported by DMOJ.
 # Documentation: <https://docs.djangoproject.com/en/1.11/ref/databases/>
 DATABASES = {
-     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('MYSQL_DATABASE', ''),
-        'USER': os.environ.get('MYSQL_USER', ''),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD', ''),
-        'HOST': os.environ.get('MYSQL_HOST', 'db'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'sql_mode': 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION',
-        },
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': os.environ.get('MYSQL_DATABASE', ''),
+		'USER': os.environ.get('MYSQL_USER', ''),
+		'PASSWORD': os.environ.get('MYSQL_PASSWORD', ''),
+		'HOST': os.environ.get('MYSQL_HOST', 'db'),
+		'OPTIONS': {
+			'charset': 'utf8mb4',
+			'sql_mode': 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION',
+		},
+	}
 }
 
 # Sessions.
 # Documentation: <https://docs.djangoproject.com/en/1.11/topics/http/sessions/>
-#SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+# SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 # Internationalization.
 # Documentation: <https://docs.djangoproject.com/en/1.11/topics/i18n/>
@@ -66,23 +66,29 @@ USE_TZ = True
 COMPRESS_ROOT = 'cache'
 COMPRESS_OUTPUT_DIR = 'cache'
 COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.cssmin.CSSMinFilter',
+	'compressor.filters.css_default.CssAbsoluteFilter',
+	'compressor.filters.cssmin.CSSMinFilter',
 ]
 COMPRESS_JS_FILTERS = ['compressor.filters.jsmin.JSMinFilter']
 COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
 STATICFILES_FINDERS += ('compressor.finders.CompressorFinder',)
 
+PASSWORD_HASHERS = [
+	'django.contrib.auth.hashers.Argon2PasswordHasher',
+	'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+	'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+	'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+]
 
 # To use Mailgun, uncomment this block.
 # You will need to run `pip install django-mailgun` for to get `MailgunBackend`.
-#EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
-#MAILGUN_ACCESS_KEY = '<your Mailgun access key>'
-#MAILGUN_SERVER_NAME = '<your Mailgun domain>'
+# EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+# MAILGUN_ACCESS_KEY = '<your Mailgun access key>'
+# MAILGUN_SERVER_NAME = '<your Mailgun domain>'
 
 # You can also use Sendgrid, with `pip install sendgrid-django`.
-#EMAIL_BACKEND = 'sgbackend.SendGridBackend'
-#SENDGRID_API_KEY = '<Your SendGrid API Key>'
+# EMAIL_BACKEND = 'sgbackend.SendGridBackend'
+# SENDGRID_API_KEY = '<Your SendGrid API Key>'
 
 # The DMOJ site is able to notify administrators of errors via email,
 # if configured as shown below.
@@ -91,8 +97,6 @@ DEFAULT_FROM_EMAIL = 'judge@mcpt.ca'
 SERVER_EMAIL = 'judge@mcpt.ca'
 
 ADMINS = [("Jason Cameron", "mcpt@jasoncameron.dev")]
-
-
 
 ##################################################
 ########### Static files configuration. ##########
@@ -119,7 +123,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesSto
 SITE_NAME = 'MCPT'
 SITE_LONG_NAME = 'MCPT: Mackenzie Competitive Programming Team'
 SITE_ADMIN_EMAIL = 'judge@mcpt.ca'
-TERMS_OF_SERVICE_URL = '//mcpt.ca/tos' # Use a flatpage.
+TERMS_OF_SERVICE_URL = '//mcpt.ca/tos'  # Use a flatpage.
 
 ## Bridge controls.
 # The judge connection address and port; where the judges will connect to the site.
@@ -142,7 +146,7 @@ BAD_MAIL_PROVIDERS: Set[str] = set()
 EVENT_DAEMON_USE = True
 
 # Uncomment this section to use websocket/daemon.js included in the site.
-#EVENT_DAEMON_POST = '<ws:// URL to post to>'
+# EVENT_DAEMON_POST = '<ws:// URL to post to>'
 
 # If you are using the defaults from the guide, it is this:
 EVENT_DAEMON_POST = 'ws://wsevent:15101/'
@@ -156,8 +160,8 @@ EVENT_DAEMON_POLL = '/channels/'
 # If you would like to use the AMQP-based event server from <https://github.com/DMOJ/event-server>,
 # uncomment this section instead. This is more involved, and recommended to be done
 # only after you have a working event server.
-#EVENT_DAEMON_AMQP = '<amqp:// URL to connect to, including username and password>'
-#EVENT_DAEMON_AMQP_EXCHANGE = '<AMQP exchange to use>'
+# EVENT_DAEMON_AMQP = '<amqp:// URL to connect to, including username and password>'
+# EVENT_DAEMON_AMQP_EXCHANGE = '<AMQP exchange to use>'
 
 ## CDN control.
 # Base URL for a copy of ace editor.
@@ -172,21 +176,21 @@ SELECT2_CSS_URL = '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.mi
 TIMEZONE_MAP = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Blue_Marble_2002.png/1024px-Blue_Marble_2002.png'
 
 ## Camo (https://github.com/atmos/camo) usage.
-#DMOJ_CAMO_URL = "<URL to your camo install>"
-#DMOJ_CAMO_KEY = "<The CAMO_KEY environmental variable you used>"
+# DMOJ_CAMO_URL = "<URL to your camo install>"
+# DMOJ_CAMO_KEY = "<The CAMO_KEY environmental variable you used>"
 
 # Domains to exclude from being camo'd.
-#DMOJ_CAMO_EXCLUDE = ("https://dmoj.ml", "https://dmoj.ca")
+# DMOJ_CAMO_EXCLUDE = ("https://dmoj.ml", "https://dmoj.ca")
 
 # Set to True to use https when dealing with protocol-relative URLs.
 # See <http://www.paulirish.com/2010/the-protocol-relative-url/> for what they are.
-#DMOJ_CAMO_HTTPS = False
+# DMOJ_CAMO_HTTPS = False
 
 # HTTPS level. Affects <link rel='canonical'> elements generated.
 # Set to 0 to make http URLs canonical.
 # Set to 1 to make the currently used protocol canonical.
 # Set to 2 to make https URLs canonical.
-#DMOJ_HTTPS = 0
+# DMOJ_HTTPS = 0
 
 ## PDF rendering settings.
 # Directory to cache the PDF.
@@ -229,88 +233,88 @@ TEXOID_CACHE_URL = '//{host}/texoid/'.format(host=HOST)
 # Documentation: https://docs.djangoproject.com/en/1.9/ref/settings/#logging
 #                https://docs.python.org/2/library/logging.config.html#logging-config-dictschema
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'file': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s',
-        },
-    },
-    'handlers': {
-        'bridge': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/logs/bridge.log',
-            'maxBytes': 10 * 1024 * 1024,
-            'backupCount': 10,
-            'formatter': 'file',
-        },
-        'all': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/logs/all.log',
-            'maxBytes': 10 * 1024 * 1024,
-            'backupCount': 10,
-            'formatter': 'file',
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'dmoj.throttle_mail.ThrottledEmailHandler',
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'file',
-        },
-        'discord_integration': {
-            'level': 'ERROR',
-            'class': 'discord_integration.log.DiscordMessageHandler',
-        },
-        'discord_simple': {
-            'level': 'INFO',
-            'class': 'discord_integration.log.SimpleDiscordMessageHandler',
-        },
-    },
-    'loggers': {
-        # Site 500 error mails.
-        'django.request': {
-            'handlers': ['discord_integration'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-        # Site tickets
-        'judge.ticket': {
-            'handlers': ['discord_simple'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        # Judging logs as received by bridged.
-        'judge.bridge': {
-            'handlers': ['bridge', 'discord_integration'],
-            'propagate': True,
-        },
-        # Catch all log to stderr.
-        '': {
-            'handlers': ['console', 'all'],
-        },
-    },
+	'version': 1,
+	'disable_existing_loggers': False,
+	'formatters': {
+		'file': {
+			'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
+		},
+		'simple': {
+			'format': '%(levelname)s %(message)s',
+		},
+	},
+	'handlers': {
+		'bridge': {
+			'level': 'INFO',
+			'class': 'logging.handlers.RotatingFileHandler',
+			'filename': '/logs/bridge.log',
+			'maxBytes': 10 * 1024 * 1024,
+			'backupCount': 10,
+			'formatter': 'file',
+		},
+		'all': {
+			'level': 'INFO',
+			'class': 'logging.handlers.RotatingFileHandler',
+			'filename': '/logs/all.log',
+			'maxBytes': 10 * 1024 * 1024,
+			'backupCount': 10,
+			'formatter': 'file',
+		},
+		'mail_admins': {
+			'level': 'ERROR',
+			'class': 'dmoj.throttle_mail.ThrottledEmailHandler',
+		},
+		'console': {
+			'level': 'DEBUG',
+			'class': 'logging.StreamHandler',
+			'formatter': 'file',
+		},
+		'discord_integration': {
+			'level': 'ERROR',
+			'class': 'discord_integration.log.DiscordMessageHandler',
+		},
+		'discord_simple': {
+			'level': 'INFO',
+			'class': 'discord_integration.log.SimpleDiscordMessageHandler',
+		},
+	},
+	'loggers': {
+		# Site 500 error mails.
+		'django.request': {
+			'handlers': ['discord_integration'],
+			'level': 'ERROR',
+			'propagate': True,
+		},
+		# Site tickets
+		'judge.ticket': {
+			'handlers': ['discord_simple'],
+			'level': 'INFO',
+			'propagate': False,
+		},
+		# Judging logs as received by bridged.
+		'judge.bridge': {
+			'handlers': ['bridge', 'discord_integration'],
+			'propagate': True,
+		},
+		# Catch all log to stderr.
+		'': {
+			'handlers': ['console', 'all'],
+		},
+	},
 }
 
 ## ======== Integration Settings ========
 ## Python Social Auth
 # Documentation: https://python-social-auth.readthedocs.io/en/latest/
 # You can define these to enable authentication through the following services.
-#SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
-#SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
-#SOCIAL_AUTH_FACEBOOK_KEY = ''
-#SOCIAL_AUTH_FACEBOOK_SECRET = ''
-#SOCIAL_AUTH_GITHUB_SECURE_KEY = ''
-#SOCIAL_AUTH_GITHUB_SECURE_SECRET = ''
-#SOCIAL_AUTH_DROPBOX_OAUTH2_KEY = ''
-#SOCIAL_AUTH_DROPBOX_OAUTH2_SECRET = ''
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
+# SOCIAL_AUTH_FACEBOOK_KEY = ''
+# SOCIAL_AUTH_FACEBOOK_SECRET = ''
+# SOCIAL_AUTH_GITHUB_SECURE_KEY = ''
+# SOCIAL_AUTH_GITHUB_SECURE_SECRET = ''
+# SOCIAL_AUTH_DROPBOX_OAUTH2_KEY = ''
+# SOCIAL_AUTH_DROPBOX_OAUTH2_SECRET = ''
 
 
 #########################################
@@ -322,7 +326,6 @@ LOGGING = {
 
 # Use this if you are just testing.
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = os.environ.get('EMAIL_HOST', None)
@@ -336,8 +339,8 @@ EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
 
 # Uncomment if you're using HTTPS to ensure CSRF and session cookies are
 # sent only with an HTTPS connection.
-#CSRF_COOKIE_SECURE = True
-#SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 
 MOSS_API_KEY = os.environ.get('MOSS_API_KEY', None)
 
@@ -356,8 +359,8 @@ MEDIA_ROOT = '/media/'
 MEDIA_URL = '/media/'
 
 DMOJ_ICS_REPORT_PERIODS = {
-    1: {"name": "Mr. Guglielmi", "email": "test-void@fluix.one"},
-    2: {"name": "Mrs. Krasteva", "email": "test-void@fluix.one"},
+	1: {"name": "Mr. Guglielmi", "email": "test-void@fluix.one"},
+	2: {"name": "Mrs. Krasteva", "email": "test-void@fluix.one"},
 }
 
 if DEBUG:
