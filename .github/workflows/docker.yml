@@ -5,6 +5,8 @@ on:
       - 'master'
     paths:
       - 'dmoj/**'
+      - 'config.js'
+      - 'uwsgi.ini'
   pull_request:
   workflow_dispatch:
   schedule:
