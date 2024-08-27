@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   texoid:
     image: ghcr.io/mcpt/wlmoj-texoid
