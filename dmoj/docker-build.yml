@@ -19,7 +19,7 @@ services:
 
   mathoid:
     build:
-      dockerfile: ./mathoid/Dockerfile
+      dockerfile: ./Dockerfile
       context: ./mathoid/
     image: ghcr.io/mcpt/wlmoj-mathoid
     init: true
