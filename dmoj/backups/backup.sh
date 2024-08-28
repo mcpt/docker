@@ -61,7 +61,7 @@ copy_s3 () {
   fi
 
   echo "Uploading ${DEST_FILE} to S3..."
-  if ! aws "$AWS_ARGS" s3 cp "$SRC_FILE" "s3://"$S3_BUCKET"/"$S3_PREFIX"/"$DEST_FILE"; then
+  if ! aws "$AWS_ARGS" s3 cp "$SRC_FILE" s3://"$S3_BUCKET"/"$S3_PREFIX"/"$DEST_FILE"; then
     echo "Error uploading ${DEST_FILE} to S3" >&2
   fi
 
