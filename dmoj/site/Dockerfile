@@ -5,6 +5,6 @@ USER uwsgi
 
 EXPOSE 8000
 
-COPY --chown=uwsgi:uwsgi ../../uwsgi.ini /
+COPY --chown=uwsgi:uwsgi ./uwsgi.ini /
 
 ENTRYPOINT ["uwsgi", "--ini", "/uwsgi.ini"]
