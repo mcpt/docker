@@ -1,7 +1,7 @@
 services:
   texoid:
     build:
-      dockerfile: ./texoid/Dockerfile
+      context: ./texoid/
     image: ghcr.io/mcpt/wlmoj-texoid
     init: true
     restart: unless-stopped
@@ -9,7 +9,7 @@ services:
 
   pdfoid:
     build:
-      dockerfile: ./pdfoid/Dockerfile
+      context: ./pdfoid/
     image: ghcr.io/mcpt/wlmoj-pdfoid
     init: true
     restart: unless-stopped
@@ -19,7 +19,6 @@ services:
 
   mathoid:
     build:
-      dockerfile: ./Dockerfile
       context: ./mathoid/
     image: ghcr.io/mcpt/wlmoj-mathoid
     init: true
@@ -29,13 +28,12 @@ services:
 
   base:
     build:
-      dockerfile: ./base/Dockerfile
+      context: ./base/
     image: ghcr.io/mcpt/wlmoj-base
     network_mode: none
 
   site:
     build:
-      dockerfile: ./site/Dockerfile
       context: ./site/
     image: ghcr.io/mcpt/wlmoj-site
     init: true
@@ -56,7 +54,7 @@ services:
 
   celery:
     build:
-      dockerfile: ./celery/Dockerfile
+      context: ./celery/
     image: ghcr.io/mcpt/wlmoj-celery
     init: true
     restart: unless-stopped
@@ -72,7 +70,7 @@ services:
 
   bridged:
     build:
-      dockerfile: ./bridged/Dockerfile
+      context: ./bridged/
     image: ghcr.io/mcpt/wlmoj-bridged
     init: true
     restart: unless-stopped
@@ -91,7 +89,7 @@ services:
 
   wsevent:
     build:
-      dockerfile: ./wsevent/Dockerfile
+      context: ./wsevent/
     image: ghcr.io/mcpt/wlmoj-wsevent
     init: true
     restart: unless-stopped
@@ -116,7 +114,6 @@ services:
 
   backups:
     build:
-      dockerfile: ./backups/Dockerfile
       context: ./backups/
     image: ghcr.io/mcpt/wlmoj-backups
     restart: always
@@ -131,7 +128,6 @@ services:
 
   nginx:
     build:
-      dockerfile: ./nginx/Dockerfile
       context: ./nginx/
     image: ghcr.io/mcpt/wlmoj-nginx
     init: true
