@@ -31,8 +31,7 @@ ENV MULTI_FILES no
 ENV SCHEDULE '' # Set to empty string
 
 # Copy scripts to the image
-COPY run.sh /run.sh
-COPY backup.sh /backup.sh
+COPY run.sh backup.sh /
 
 # Make scripts executable
 RUN chmod +x /run.sh /backup.sh
