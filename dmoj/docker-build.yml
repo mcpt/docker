@@ -113,6 +113,8 @@ services:
     networks: [ db ]
 
   backups:
+    build:
+      dockerfile: ./backups/Dockerfile
     image: ghcr.io/mcpt/wlmoj-backups
     restart: always
     env_file: [ environment/mysql.env, environment/mysql-admin.env, environment/backups.env ]
