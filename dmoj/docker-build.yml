@@ -2,7 +2,7 @@ services:
   texoid:
     build:
       dockerfile: ./texoid/Dockerfile
-      image: ghcr.io/mcpt/wlmoj-texoid
+    image: ghcr.io/mcpt/wlmoj-texoid
     init: true
     restart: unless-stopped
     networks: [ site ]
