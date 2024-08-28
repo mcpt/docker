@@ -98,6 +98,17 @@
 	  "output": [
 		"type=docker"
 	  ]
+	},
+	"backups": {
+	  "cache-from": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-backups:cache"
+	  ],
+	  "cache-to": [
+		"type=registry,ref=ghcr.io/mcpt/wlmoj-backups:cache"
+	  ],
+	  "output": [
+		"type=docker"
+	  ]
 	}
   }
 }

@@ -141,6 +141,14 @@ services:
       placement:
         constraints: [ node.hostname == general ]
 
+  backups:
+    image: ghcr.io/mcpt/wlmoj-backups
+    env_file: [ environment/mysql.env, environment/mysql-admin.env, environment/backups.env ]
+    networks:
+        - db
+    deploy:
+        replicas: 1
+
   redis:
     image: redis:alpine
     networks:
@@ -160,24 +168,27 @@ services:
       - /var/share/cache/datacache/:/datacache/
       - /var/cache/cache:/cache/
       - /var/share/media/:/media/
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - site
     deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        failure_action: rollback
+        delay: 10s
       restart_policy:
         condition: on-failure
-      replicas: 1
       placement:
         constraints: [ node.role == manager ]
 
   certbot:
-    image: certbot/certbot
+    image: certbot/dns-cloudflare
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
-      - /var/share/assets/:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email admin@mcpt.ca --agree-tos --no-eff-email --staging -d test.mcpt.ca -d mcpt.ca
+      - /var/share/configs/certbot/cloudflare.ini:/root/.secrets/certbot/cloudflare.ini:ro
+    command: certonly --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --email dns@mcpt.ca --agree-tos --no-eff-email --staging -d test.mcpt.ca -d mcpt.ca
     deploy:
       replicas: 1
       placement:
