@@ -1,8 +1,10 @@
 FROM alpine:latest
 LABEL org.opencontainers.image.source="https://github.com/mcpt/docker"
 
-ADD install.sh install.sh
-RUN sh install.sh && rm install.sh
+RUN apk update --no-cache && \
+    apk add mysql-client mariadb-connector-c python3 py3-pip && \
+    pip install awscli && \
+    rm -rf /var/cache/apk/*
 
 ENV MYSQLDUMP_OPTIONS --quote-names --quick --add-drop-table --add-locks --allow-keywords --disable-keys --extended-insert --single-transaction --create-options --comments --net_buffer_length=16384
 ENV MYSQLDUMP_EXTRA_OPTIONS ''
