@@ -95,8 +95,6 @@ services:
     restart: unless-stopped
     volumes:
       - ${GITHUB_WORKSPACE}/dmoj/repo/:/app/site/
-      - ../config.js:/app/site/websocket/config.js:ro
-
     working_dir: /app/site
     env_file: [ environment/mysql.env, environment/site.env ]
     networks: [ site, nginx ]

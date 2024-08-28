@@ -112,7 +112,6 @@ services:
     user: "root:9889"
     volumes:
       - /site/:/app/site/
-      - /var/share/configs/wsevent/config.js:/app/site/websocket/config.js:ro
     working_dir: /app/site
     env_file: [environment/mysql.env, environment/site.env]
     networks:
