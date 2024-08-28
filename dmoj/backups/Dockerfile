@@ -5,9 +5,7 @@ LABEL org.opencontainers.image.source="https://github.com/mcpt/docker"
 RUN apk add --no-cache \
     mysql-client \
     mariadb-connector-c \
-    python3 \
-    py3-pip \
-  && pip install awscli
+    aws-cli
 # Set default environment variables
 ENV MYSQLDUMP_OPTIONS="--quote-names --quick --add-drop-table --add-locks --allow-keywords --disable-keys --extended-insert --single-transaction --create-options --comments --net_buffer_length=16384"
 ENV MYSQLDUMP_EXTRA_OPTIONS=''
