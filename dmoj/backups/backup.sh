@@ -1,81 +1,77 @@
 #!/bin/sh
 
-# shellcheck disable=SC3040
 set -eo pipefail
 
-if [ "${S3_ACCESS_KEY_ID}" == "**None**" ]; then
-  echo "Warning: You did not set the S3_ACCESS_KEY_ID environment variable."
+# Check for required environment variables
+if [ -z "${S3_ACCESS_KEY_ID}" ]; then
+  echo "Warning: S3_ACCESS_KEY_ID is not set."
 fi
 
-if [ "${S3_SECRET_ACCESS_KEY}" == "**None**" ]; then
-  echo "Warning: You did not set the S3_SECRET_ACCESS_KEY environment variable."
+if [ -z "${S3_SECRET_ACCESS_KEY}" ]; then
+  echo "Warning: S3_SECRET_ACCESS_KEY is not set."
 fi
 
-if [ "${S3_BUCKET}" == "**None**" ]; then
-  echo "You need to set the S3_BUCKET environment variable."
+if [ -z "${S3_BUCKET}" ]; then
+  echo "Error: S3_BUCKET is required."
   exit 1
 fi
 
-if [ "${MYSQL_HOST}" == "**None**" ]; then
-  echo "You need to set the MYSQL_HOST environment variable."
+if [ -z "${MYSQL_HOST}" ]; then
+  echo "Error: MYSQL_HOST is required."
   exit 1
 fi
 
-if [ "${MYSQL_USER}" == "**None**" ]; then
-  echo "You need to set the MYSQL_USER environment variable."
+if [ -z "${MYSQL_USER}" ]; then
+  echo "Error: MYSQL_USER is required."
   exit 1
 fi
 
-if [ "${MYSQL_PASSWORD}" == "**None**" ]; then
-  echo "You need to set the MYSQL_PASSWORD environment variable or link to a container named MYSQL."
+if [ -z "${MYSQL_PASSWORD}" ]; then
+  echo "Error: MYSQL_PASSWORD is required or link to a MYSQL container."
   exit 1
 fi
 
+# Set AWS credentials if not using IAM role
 if [ "${S3_IAMROLE}" != "true" ]; then
-  # env vars needed for aws tools - only if an IAM role is not used
   export AWS_ACCESS_KEY_ID="$S3_ACCESS_KEY_ID"
   export AWS_SECRET_ACCESS_KEY="$S3_SECRET_ACCESS_KEY"
   export AWS_DEFAULT_REGION="$S3_REGION"
 fi
 
+# MySQL connection options
 MYSQL_HOST_OPTS="-h $MYSQL_HOST -P $MYSQL_PORT -u$MYSQL_USER -p$MYSQL_PASSWORD"
 DUMP_START_TIME=$(date +"%Y-%m-%dT%H%M%SZ")
 
+# Function to copy file to S3
 copy_s3 () {
-  SRC_FILE=$1
-  DEST_FILE=$2
+  local SRC_FILE=$1
+  local DEST_FILE=$2
+  local AWS_ARGS=""
 
-  if [ "${S3_ENDPOINT}" == "**None**" ]; then
-    AWS_ARGS=""
-  else
+  if [ -n "${S3_ENDPOINT}" ]; then
     AWS_ARGS="--endpoint-url ${S3_ENDPOINT}"
   fi
 
   if [ "${S3_ENSURE_BUCKET_EXISTS}" != "no" ]; then
     echo "Ensuring S3 bucket $S3_BUCKET exists"
-    EXISTS_ERR=`aws "$AWS_ARGS" s3api head-bucket --bucket "$S3_BUCKET" 2>&1 || true`
-    if [[ ! -z "$EXISTS_ERR" ]]; then
-      echo "Bucket $S3_BUCKET not found (or owned by someone else), attempting to create"
+    if ! aws "$AWS_ARGS" s3api head-bucket --bucket "$S3_BUCKET" >/dev/null 2>&1; then
+      echo "Creating bucket $S3_BUCKET"
       aws "$AWS_ARGS" s3api create-bucket --bucket "$S3_BUCKET"
     fi
   fi
 
-  echo "Uploading ${DEST_FILE} on S3..."
-
-
-  if ! aws "$AWS_ARGS" s3 cp - s3://"$S3_BUCKET"/"$S3_PREFIX"/"$DEST_FILE" < "$SRC_FILE"; then
-    >&2 echo "Error uploading ${DEST_FILE} on S3"
+  echo "Uploading ${DEST_FILE} to S3..."
+  if ! aws "$AWS_ARGS" s3 cp "$SRC_FILE" "s3://"$S3_BUCKET"/"$S3_PREFIX"/"$DEST_FILE"; then
+    echo "Error uploading ${DEST_FILE} to S3" >&2
   fi
 
   rm "$SRC_FILE"
 }
 
-# mysqldump extra options
-if [ ! -z "${MYSQLDUMP_EXTRA_OPTIONS}" ]; then
-  MYSQLDUMP_OPTIONS="${MYSQLDUMP_OPTIONS} ${MYSQLDUMP_EXTRA_OPTIONS}"
-fi
+# Add extra mysqldump options if provided
+MYSQLDUMP_OPTIONS="${MYSQLDUMP_OPTIONS} ${MYSQLDUMP_EXTRA_OPTIONS}"
 
-# Multi file: yes
+# Multi-file dumps
 if [ ! -z "$(echo "$MULTI_FILES" | grep -i -E "(yes|true|1)")" ]; then
   if [ "${MYSQLDUMP_DATABASE}" == "--all-databases" ]; then
     DATABASES=$(mysql "$MYSQL_HOST_OPTS" -e "SHOW DATABASES;" | grep -Ev "(Database|information_schema|performance_schema|mysql|sys|innodb)")
@@ -84,41 +80,30 @@ if [ ! -z "$(echo "$MULTI_FILES" | grep -i -E "(yes|true|1)")" ]; then
   fi
 
   for DB in $DATABASES; do
-    echo "Creating individual dump of ${DB} from ${MYSQL_HOST}..."
-
+    echo "Dumping ${DB} from ${MYSQL_HOST}..."
     DUMP_FILE="/tmp/${DB}.sql.gz"
 
     mysqldump "$MYSQL_HOST_OPTS" "$MYSQLDUMP_OPTIONS" --databases "$DB" | gzip > "$DUMP_FILE"
 
-    if [ $? == 0 ]; then
-      if [ "${S3_FILENAME}" == "**None**" ]; then
-        S3_FILE="${DUMP_START_TIME}.${DB}.sql.gz"
-      else
-        S3_FILE="${S3_FILENAME}.${DB}.sql.gz"
-      fi
-
+    if [ $? -eq 0 ]; then
+      S3_FILE="${S3_FILENAME:-$DUMP_START_TIME}.${DB}.sql.gz"
       copy_s3 "$DUMP_FILE" "$S3_FILE"
     else
-      >&2 echo "Error creating dump of ${DB}"
+      echo "Error dumping ${DB}" >&2
     fi
   done
-# Multi file: no
-else
-  echo "Creating dump for ${MYSQLDUMP_DATABASE} from ${MYSQL_HOST}..."
 
+# Single-file dump
+else
+  echo "Dumping ${MYSQLDUMP_DATABASE} from ${MYSQL_HOST}..."
   DUMP_FILE="/tmp/dump.sql.gz"
   mysqldump "$MYSQL_HOST_OPTS" "$MYSQLDUMP_OPTIONS" "$MYSQLDUMP_DATABASE" | gzip > "$DUMP_FILE"
 
-  if [ $? == 0 ]; then
-    if [ "${S3_FILENAME}" == "**None**" ]; then
-      S3_FILE="${DUMP_START_TIME}.dump.sql.gz"
-    else
-      S3_FILE="${S3_FILENAME}.sql.gz"
-    fi
-
-    copy_s3 $DUMP_FILE "$S3_FILE"
+  if [ $? -eq 0 ]; then
+    S3_FILE="${S3_FILENAME:-$DUMP_START_TIME}.dump.sql.gz"
+    copy_s3 "$DUMP_FILE" "$S3_FILE"
   else
-    >&2 echo "Error creating dump of all databases"
+    echo "Error creating dump" >&2
   fi
 fi
 
