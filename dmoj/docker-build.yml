@@ -20,6 +20,7 @@ services:
   mathoid:
     build:
       dockerfile: ./mathoid/Dockerfile
+      context: ./mathoid/
     image: ghcr.io/mcpt/wlmoj-mathoid
     init: true
     restart: unless-stopped
@@ -35,6 +36,7 @@ services:
   site:
     build:
       dockerfile: ./site/Dockerfile
+      context: ./site/
     image: ghcr.io/mcpt/wlmoj-site
     init: true
     restart: unless-stopped
@@ -115,6 +117,7 @@ services:
   backups:
     build:
       dockerfile: ./backups/Dockerfile
+      context: ./backups/
     image: ghcr.io/mcpt/wlmoj-backups
     restart: always
     env_file: [ environment/mysql.env, environment/mysql-admin.env, environment/backups.env ]
@@ -129,6 +132,7 @@ services:
   nginx:
     build:
       dockerfile: ./nginx/Dockerfile
+      context: ./nginx/
     image: ghcr.io/mcpt/wlmoj-nginx
     init: true
     restart: always
