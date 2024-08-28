@@ -29,7 +29,7 @@ ENV MULTI_FILES=no
 ENV SCHEDULE='' 
 
 # Copy scripts to the image
-COPY --chmod 770 run.sh backup.sh /
+COPY --chmod=770 run.sh backup.sh /
 
 # Set the entrypoint
 CMD ["sh", "/run.sh"]
