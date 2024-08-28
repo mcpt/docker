@@ -60,6 +60,36 @@ tasks:
       dest: /etc/docker/daemon.json
     register: daemon_config
 
+  - name: Ensure certbot is installed
+    apt:
+      name: certbot
+      state: present
+
+  - name: Create directory for SSL certificates
+    file:
+      path: /etc/letsencrypt
+      state: directory
+
+  - name: Obtain SSL certificate
+    command: >
+      certbot certonly --standalone
+      -d test.mcpt.ca
+      --email admin@mcpt.ca
+      --agree-tos
+      --non-interactive
+      --expand
+    args:
+      creates: /etc/letsencrypt/live/test.mcpt.ca/fullchain.pem
+
+  - name: Set up automatic renewal
+    cron:
+      name: "Renew Let's Encrypt certificates"
+      job: "/usr/bin/certbot renew --quiet --deploy-hook 'docker service update --force wlmoj_nginx'"
+      minute: "0"
+      hour: "0"
+      day: "1"
+      month: "*"
+
 
 #  root@general /h/w/d/dmoj (master) [1]# sudo ufw allow proto tcp from 10.137.0.0/16 to 10.137.0.0/16 port 2377
 #  Rule added
