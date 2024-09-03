@@ -193,7 +193,7 @@ services:
       placement:
         constraints: [ node.role == manager ]
       restart_policy:
-        delay: 1h
+        delay: 24h
 
 #  judge:
 #    container_name: dmoj_judge

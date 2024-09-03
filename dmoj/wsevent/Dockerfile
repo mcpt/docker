@@ -9,6 +9,6 @@ EXPOSE 15100
 EXPOSE 15101
 EXPOSE 15102
 
-COPY --chmod="770" ./config.js /app/site/websocket/
+COPY --chmod="770" ./config.js /config.js
 
-ENTRYPOINT ["node", "/app/site/websocket/daemon.js"]
+ENTRYPOINT ["cp", "/config.js", "/app/site/websocket/config.js", "&&", "node", "/app/site/websocket/daemon.js"]
