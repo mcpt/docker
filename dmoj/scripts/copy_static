@@ -2,8 +2,8 @@
 cd $(dirname $(dirname $0)) || exit
 
 if [ -z "$CI" ]; then  # Not running in CI
-     docker compose $COMPOSE_FLAGS exec $COMPOSE_EXEC_FLAGS site /bin/bash -c "\
          bash make_style.sh && \
+         cd /site && \
          python3 manage.py collectstatic --noinput && \
          python3 manage.py compilemessages && \
          python3 manage.py compilejsi18n && \
@@ -13,7 +13,7 @@ if [ -z "$CI" ]; then  # Not running in CI
          rm -r sass_processed && \
          cp 502.html /assets/ && \
          cp logo.png /assets/ && \
-         cp robots.txt /assets/"
+         cp robots.txt /assets/
 
 else # in CI
   docker compose $COMPOSE_FLAGS exec $COMPOSE_EXEC_FLAGS site /bin/bash -c "\
