@@ -34,7 +34,7 @@ services:
 
   site:
     build:
-      context: ./site/
+      context: .
     image: ghcr.io/mcpt/wlmoj-site
     init: true
     restart: unless-stopped
