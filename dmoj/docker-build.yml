@@ -34,7 +34,8 @@ services:
 
   site:
     build:
-      context: .
+      context: . # so we can grab scripts on build
+      dockerfile: ./site/Dockerfile
     image: ghcr.io/mcpt/wlmoj-site
     init: true
     restart: unless-stopped
