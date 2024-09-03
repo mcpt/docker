@@ -187,7 +187,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
       - /var/share/configs/certbot/cloudflare.ini:/root/.secrets/certbot/cloudflare.ini:ro
-    command: certonly --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --email dns@mcpt.ca --agree-tos --no-eff-email --staging -d test.mcpt.ca -d mcpt.ca
+    command: certonly -v --non-interactive --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --email dns@mcpt.ca --agree-tos --no-eff-email --staging -d test.mcpt.ca -d mcpt.ca
     deploy:
       mode: global
 
