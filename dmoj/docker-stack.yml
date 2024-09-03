@@ -189,7 +189,10 @@ services:
       - /var/share/configs/certbot/cloudflare.ini:/root/.secrets/certbot/cloudflare.ini:ro
     command: certonly -v --non-interactive --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --email dns@mcpt.ca --agree-tos --no-eff-email --staging -d test.mcpt.ca -d mcpt.ca
     deploy:
-      mode: global
+      placement:
+        constraints: [ node.role == manager ]
+      restart_policy:
+        delay: 1h
 
 #  judge:
 #    container_name: dmoj_judge
