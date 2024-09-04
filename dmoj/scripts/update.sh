@@ -2,6 +2,13 @@
 
 # A simple script to update --detach the docker swarm. This script is meant to be run on the manager node (general) and will update --detach the stack.
 
+# check the hostname is general as this script is meant to be run on the general node and not on the other nodes.
+if [ "$(hostname)" != "general" ]; then
+  echo "This script is meant to be run on the general node. Exiting..."
+  exit 1
+fi
+
+
 # check if /home/judge/docker exists
 has_param() {
   local term="$1"
@@ -67,6 +74,8 @@ if ! has_param '-sd' "$@" || ! has_param '--skip-deploy' "$@"; then
   # Don't update nginx automatically, as it will cause downtime. Update it manually. via passing the nginx flag to this script.
   fi
 fi
+
+cp /home/judge/docker/local_settings.py /var/share/configs/wlmoj/local_settings.py
 
 
 echo "Done updating services."
