@@ -28,5 +28,5 @@ ENV EXIFTOOL_PATH=/usr/bin/exiftool
 
 EXPOSE 8888
 USER pdfoid
-ENTRYPOINT ["pdfoid", "--address=localhost", "--port=8888"]
+ENTRYPOINT ["pdfoid", "--address=0.0.0.0", "--port=8888"]
 
