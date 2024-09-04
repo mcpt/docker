@@ -49,7 +49,7 @@ if ! has_param '-sd' "$@" || ! has_param '--skip-deploy' "$@"; then
   # check if the user called the script with any specific service, if so update only that service
   if [ "$1" != "" ]; then
     echo "Updating only $1..."
-    docker service update wlmoj_"$1" --image ghcr.io/mcpt/wlmoj-"$1"
+    docker service update --force wlmoj_"$1" --image ghcr.io/mcpt/wlmoj-"$1":latest
     exit 0
   else
     echo "Updating all services..."

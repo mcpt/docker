@@ -63,8 +63,9 @@ USE_TZ = True
 
 ## django-compressor settings, for speeding up page load times by minifying CSS and JavaScript files.
 # Documentation: https://django-compressor.readthedocs.io/en/latest/
-COMPRESS_ROOT = '/cache/'
-COMPRESS_OUTPUT_DIR = '/cache/'
+
+# COMPRESS_ROOT = 'cache'
+# COMPRESS_OUTPUT_DIR = 'cache'
 
 COMPRESS_CSS_FILTERS = [
 	'compressor.filters.css_default.CssAbsoluteFilter',
