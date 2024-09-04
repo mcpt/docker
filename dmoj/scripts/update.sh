@@ -22,7 +22,7 @@ has_param() {
 }
 
 # ------ Help Command ------
-if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+if has_param '-h' "$@" || has_param '--help' "$@"; then
   echo "Usage: $0 [OPTION]"
   echo "Update the docker swarm services."
   echo "If you want to update only a specific service, pass the service name as an argument. (e.g. ./update.sh site)"
