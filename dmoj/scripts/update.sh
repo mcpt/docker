@@ -55,22 +55,8 @@ fi
 
 echo "Done updating services."
 
-# check if the --no-static or -ns flag is passed, if so don't update the static files
-if ! has_param '-ns' "$@" || ! has_param '--no-static' "$@"; then
-  # ask the user if they want to update the static files
-  read -r -p "Do you want to update the static files? [y/N] " response
-  if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
-    echo "Updating static files..."
-    # ask for root perms
-    sudo -v || exit 1
-    update_static
 
-  else
-    echo "Skipping static files update..."
-
-  fi
-
-fi
+# --------- Static files update ---------
 
 function update_static() {
   # find out which node site is running on
@@ -93,3 +79,21 @@ EOF
 
   ls
 }
+
+
+# check if the --no-static or -ns flag is passed, if so don't update the static files
+if ! has_param '-ns' "$@" || ! has_param '--no-static' "$@"; then
+  # ask the user if they want to update the static files
+  read -r -p "Do you want to update the static files? [y/N] " response
+  if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
+    echo "Updating static files..."
+    # ask for root perms
+    sudo -v || exit 1
+    update_static
+
+  else
+    echo "Skipping static files update..."
+
+  fi
+
+fi
