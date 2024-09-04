@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# A simple script to update --deteach the docker swarm. This script is meant to be run on the manager node (general) and will update --deteach the stack.
+# A simple script to update --detach the docker swarm. This script is meant to be run on the manager node (general) and will update --detach the stack.
 
 # check if /home/judge/docker exists
 has_param() {
@@ -34,21 +34,21 @@ else
   echo "Updating all services..."
   # Don't use docker stack deploy as that would also update the services that are not changed.
   # texoid
-  docker service update --deteach wlmoj_textoid --image ghcr.io/mcpt/wlmoj-texoid
+  docker service update --detach wlmoj_textoid --image ghcr.io/mcpt/wlmoj-texoid
   # pdfoid
-  docker service update --deteach wlmoj_pdfoid --image ghcr.io/mcpt/wlmoj-pdfoid
+  docker service update --detach wlmoj_pdfoid --image ghcr.io/mcpt/wlmoj-pdfoid
   # mathoid
-  docker service update --deteach wlmoj_mathoid --image ghcr.io/mcpt/wlmoj-mathoid
+  docker service update --detach wlmoj_mathoid --image ghcr.io/mcpt/wlmoj-mathoid
   # site
-  docker service update --deteach wlmoj_site --image ghcr.io/mcpt/wlmoj-site
+  docker service update --detach wlmoj_site --image ghcr.io/mcpt/wlmoj-site
   # celery
-  docker service update --deteach wlmoj_celery --image ghcr.io/mcpt/wlmoj-celery
+  docker service update --detach wlmoj_celery --image ghcr.io/mcpt/wlmoj-celery
   # bridged
-  docker service update --deteach wlmoj_bridged --image ghcr.io/mcpt/wlmoj-bridged
+  docker service update --detach wlmoj_bridged --image ghcr.io/mcpt/wlmoj-bridged
   # wsevent
-  docker service update --deteach wlmoj_wsevent --image ghcr.io/mcpt/wlmoj-wsevent
+  docker service update --detach wlmoj_wsevent --image ghcr.io/mcpt/wlmoj-wsevent
   # backups
-  docker service update --deteach wlmoj_backups --image ghcr.io/mcpt/wlmoj-backups
+  docker service update --detach wlmoj_backups --image ghcr.io/mcpt/wlmoj-backups
 
 # Don't update nginx automatically, as it will cause downtime. Update it manually. via passing the nginx flag to this script.
 fi
