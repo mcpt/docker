@@ -14,6 +14,19 @@ has_param() {
   return 1
 }
 
+# ------ Help Command ------
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+  echo "Usage: $0 [OPTION]"
+  echo "Update the docker swarm services."
+  echo "If you want to update only a specific service, pass the service name as an argument. (e.g. ./update.sh site)"
+  echo "Options:"
+  echo "  -h, --help         Show this help message."
+  echo "  -sd, --skip-deploy Skip updating the docker services."
+  echo "  -ns, --no-static   Skip updating the static files."
+  exit 0
+fi
+
+
 if [ ! -d /home/judge/docker ]; then
   echo "Directory /home/judge/docker does not exist. Please rethink the machine you are running this on... :)"
   exit 1
@@ -25,33 +38,36 @@ git stash
 git pull
 git stash pop
 
-# check if the user called the script with any specific service, if so update only that service
-if [ "$1" != "" ]; then
-  echo "Updating only $1..."
-  docker service update wlmoj_"$1" --image ghcr.io/mcpt/wlmoj-"$1"
-  exit 0
-else
-  echo "Updating all services..."
-  # Don't use docker stack deploy as that would also update the services that are not changed.
-  # texoid
-  docker service update --detach wlmoj_textoid --image ghcr.io/mcpt/wlmoj-texoid
-  # pdfoid
-  docker service update --detach wlmoj_pdfoid --image ghcr.io/mcpt/wlmoj-pdfoid
-  # mathoid
-  docker service update --detach wlmoj_mathoid --image ghcr.io/mcpt/wlmoj-mathoid
-  # site
-  docker service update --detach wlmoj_site --image ghcr.io/mcpt/wlmoj-site
-  # celery
-  docker service update --detach wlmoj_celery --image ghcr.io/mcpt/wlmoj-celery
-  # bridged
-  docker service update --detach wlmoj_bridged --image ghcr.io/mcpt/wlmoj-bridged
-  # wsevent
-  docker service update --detach wlmoj_wsevent --image ghcr.io/mcpt/wlmoj-wsevent
-  # backups
-  docker service update --detach wlmoj_backups --image ghcr.io/mcpt/wlmoj-backups
+if ! has_param '-sd' "$@" || ! has_param '--skip-deploy' "$@"; then
+  # check if the user called the script with any specific service, if so update only that service
+  if [ "$1" != "" ]; then
+    echo "Updating only $1..."
+    docker service update wlmoj_"$1" --image ghcr.io/mcpt/wlmoj-"$1"
+    exit 0
+  else
+    echo "Updating all services..."
+    # Don't use docker stack deploy as that would also update the services that are not changed.
+    # texoid
+    docker service update --detach wlmoj_textoid --image ghcr.io/mcpt/wlmoj-texoid
+    # pdfoid
+    docker service update --detach wlmoj_pdfoid --image ghcr.io/mcpt/wlmoj-pdfoid
+    # mathoid
+    docker service update --detach wlmoj_mathoid --image ghcr.io/mcpt/wlmoj-mathoid
+    # site
+    docker service update --detach wlmoj_site --image ghcr.io/mcpt/wlmoj-site
+    # celery
+    docker service update --detach wlmoj_celery --image ghcr.io/mcpt/wlmoj-celery
+    # bridged
+    docker service update --detach wlmoj_bridged --image ghcr.io/mcpt/wlmoj-bridged
+    # wsevent
+    docker service update --detach wlmoj_wsevent --image ghcr.io/mcpt/wlmoj-wsevent
+    # backups
+    docker service update --detach wlmoj_backups --image ghcr.io/mcpt/wlmoj-backups
 
-# Don't update nginx automatically, as it will cause downtime. Update it manually. via passing the nginx flag to this script.
+  # Don't update nginx automatically, as it will cause downtime. Update it manually. via passing the nginx flag to this script.
+  fi
 fi
+
 
 echo "Done updating services."
 
