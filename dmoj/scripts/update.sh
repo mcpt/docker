@@ -45,7 +45,7 @@ git stash
 git pull
 git stash pop
 
-if ! has_param '-sd' "$@" || ! has_param '--skip-deploy' "$@"; then
+if ! ( has_param '-sd' "$@" || has_param '--skip-deploy' "$@"); then
   # check if the user called the script with any specific service, if so update only that service
   if [ "$1" != "" ]; then
     echo "Updating only $1..."
@@ -107,7 +107,7 @@ EOF
 
 
 # check if the --no-static or -ns flag is passed, if so don't update the static files
-if ! has_param '-ns' "$@" || ! has_param '--no-static' "$@"; then
+if ! (has_param '-ns' "$@" || has_param '--no-static' "$@"); then
   # ask the user if they want to update the static files
   read -r -p "Do you want to update the static files? [y/N] " response
   if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
