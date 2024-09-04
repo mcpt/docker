@@ -55,7 +55,7 @@ if ! ( has_param '-sd' "$@" || has_param '--skip-deploy' "$@"); then
     echo "Updating all services..."
     # Don't use docker stack deploy as that would also update the services that are not changed.
     # texoid
-    docker service update --detach wlmoj_textoid --image ghcr.io/mcpt/wlmoj-texoid
+    docker service update --detach wlmoj_texoid --image ghcr.io/mcpt/wlmoj-texoid
     # pdfoid
     docker service update --detach wlmoj_pdfoid --image ghcr.io/mcpt/wlmoj-pdfoid
     # mathoid
