@@ -29,7 +29,7 @@ if has_param '-h' "$@" || has_param '--help' "$@"; then
   echo "Options:"
   echo "  -h, --help         Show this help message."
   echo "  -sd, --skip-deploy Skip updating the docker services."
-  echo "  -ns, --no-static   Skip updating the static files."
+  echo "  -ss, --skip-static   Skip updating the static files."
   exit 0
 fi
 
@@ -107,7 +107,7 @@ EOF
 
 
 # check if the --no-static or -ns flag is passed, if so don't update the static files
-if ! (has_param '-ns' "$@" || has_param '--no-static' "$@"); then
+if ! (has_param '-ss' "$@" || has_param '--skip-static' "$@"); then
   # ask the user if they want to update the static files
   read -r -p "Do you want to update the static files? [y/N] " response
   if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
