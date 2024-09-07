@@ -39,7 +39,6 @@ services:
       - /var/share/assets:/assets/
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
-      - /var/share/cache/pdfoid:/pdfoid/
       - /var/share/cache/mathoid:/mathoid/
       - /var/share/media:/media/
       - /var/share/problems:/problems/
