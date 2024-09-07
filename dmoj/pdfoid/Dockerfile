@@ -17,7 +17,9 @@ RUN apt-get update && \
     mv chromedriver /usr/bin/chromedriver && \
     chmod +x /usr/bin/chromedriver && \
     rm chromedriver_linux64.zip && \
-    useradd -m pdfoid
+    useradd -m pdfoid && \
+
+
 
 RUN git clone https://github.com/DMOJ/pdfoid.git pdfoid
 WORKDIR /pdfoid/
@@ -25,6 +27,7 @@ RUN pip3 install -e .
 
 ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
 ENV EXIFTOOL_PATH=/usr/bin/exiftool
+ENV CHROME_PATH=/usr/bin/google-chrome-stable
 
 EXPOSE 8888
 USER pdfoid

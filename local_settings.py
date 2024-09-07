@@ -196,7 +196,7 @@ TIMEZONE_MAP = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Blue_M
 
 ## PDF rendering settings.
 # Directory to cache the PDF.
-DMOJ_PDF_PROBLEM_CACHE = '/pdfcache'
+DMOJ_PDF_PROBLEM_CACHE = '/pdfcache/'
 
 # Path to use for nginx's X-Accel-Redirect feature.
 # Should be an internal location mapped to the above directory.
@@ -214,7 +214,7 @@ DMOJ_USER_DATA_INTERNAL = '/datacache'
 #############
 # Documentation: https://github.com/wikimedia/mathoid
 MATHOID_URL = 'http://mathoid:10044'
-MATHOID_CACHE_ROOT = '/mathoid'
+MATHOID_CACHE_ROOT = '/mathoid/'
 MATHOID_CACHE_URL = '//{host}/mathoid/'.format(host=HOST)
 
 ############
@@ -228,7 +228,7 @@ DMOJ_PDF_PDFOID_URL = 'http://pdfoid:8888'
 ############
 
 TEXOID_URL = 'http://texoid:8888'
-TEXOID_CACHE_ROOT = '/texoid'
+TEXOID_CACHE_ROOT = '/texoid/'
 TEXOID_CACHE_URL = '//{host}/texoid/'.format(host=HOST)
 
 ## ======== Logging Settings ========
