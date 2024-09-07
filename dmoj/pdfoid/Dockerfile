@@ -17,7 +17,7 @@ RUN apt-get update && \
     mv chromedriver /usr/bin/chromedriver && \
     chmod +x /usr/bin/chromedriver && \
     rm chromedriver_linux64.zip && \
-    useradd -m pdfoid && \
+    useradd -m pdfoid
 
 
 
