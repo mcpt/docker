@@ -3,33 +3,33 @@ services:
     image: ghcr.io/mcpt/wlmoj-texoid
     init: true
     networks:
-        - site
+      - site
 
   pdfoid:
     image: ghcr.io/mcpt/wlmoj-pdfoid
     init: true
     networks:
-        - site
+      - site
     cap_add:
       - SYS_ADMIN
     deploy:
-        resources:
-            limits:
-              memory: 512M
-        placement:
-          constraints: [ node.role == worker ]
+      resources:
+        limits:
+          memory: 512M
+      placement:
+        constraints: [ node.role == worker ]
 
   mathoid:
     image: ghcr.io/mcpt/wlmoj-mathoid
     init: true
     networks:
-        - site
+      - site
     deploy:
-        resources:
-            limits:
-              memory: 512M
-        placement:
-          constraints: [ node.role == worker ]
+      resources:
+        limits:
+          memory: 512M
+      placement:
+        constraints: [ node.role == worker ]
 
   site:
     image: ghcr.io/mcpt/wlmoj-site
@@ -47,18 +47,19 @@ services:
       - /site/:/site/
       - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
-    env_file: [environment/mysql.env, environment/site.env]
+    env_file: [ environment/mysql.env, environment/site.env ]
     networks:
       - site
       - db
+      - judge
     deploy:
       replicas: 1
       placement:
-        constraints: [node.role == worker]
+        constraints: [ node.role == worker ]
       update_config:
-         parallelism: 1
-         delay: 1m
-         failure_action: rollback
+        parallelism: 1
+        delay: 1m
+        failure_action: rollback
 
   celery:
     image: ghcr.io/mcpt/wlmoj-celery
@@ -71,18 +72,18 @@ services:
       - /site/:/site/
       - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
-    env_file: [environment/mysql.env, environment/site.env]
+    env_file: [ environment/mysql.env, environment/site.env ]
     networks:
-        - site
-        - db
+      - site
+      - db
     deploy:
       replicas: 1
       placement:
-        constraints: [node.role == worker]
+        constraints: [ node.role == worker ]
       update_config:
-         parallelism: 1
-         delay: 1m
-         failure_action: rollback
+        parallelism: 1
+        delay: 1m
+        failure_action: rollback
 
   bridged:
     image: ghcr.io/mcpt/wlmoj-bridged
@@ -95,17 +96,17 @@ services:
       - /site/:/site/
       - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
-    env_file: [environment/mysql.env, environment/site.env]
+    env_file: [ environment/mysql.env, environment/site.env ]
     networks:
-        - site
-        - db
+      - site
+      - db
     ports:
       - "9999:9999"
       - "9998:9998"
     deploy:
-        replicas: 1
-        placement:
-            constraints: [node.role == manager]
+      replicas: 1
+      placement:
+        constraints: [ node.role == manager ]
 
   wsevent:
     image: ghcr.io/mcpt/wlmoj-wsevent
@@ -114,13 +115,13 @@ services:
     volumes:
       - /site/:/app/site/
     working_dir: /app/site
-    env_file: [environment/mysql.env, environment/site.env]
+    env_file: [ environment/mysql.env, environment/site.env ]
     networks:
-        - site
+      - site
     deploy:
-        replicas: 1
-        placement:
-            constraints: [node.role == manager]
+      replicas: 1
+      placement:
+        constraints: [ node.role == manager ]
 
   db:
     image: mariadb
@@ -135,7 +136,7 @@ services:
     environment:
       TZ: "America/Toronto"
     networks:
-        - db
+      - db
     deploy:
       replicas: 1
       placement:
@@ -145,9 +146,9 @@ services:
     image: ghcr.io/mcpt/wlmoj-backups
     env_file: [ environment/mysql.env, environment/mysql-admin.env, environment/backups.env ]
     networks:
-        - db
+      - db
     deploy:
-        replicas: 1
+      replicas: 1
 
   redis:
     image: redis:alpine
@@ -197,15 +198,11 @@ services:
       restart_policy:
         delay: 24h
 
-#  judge:
-#    container_name: dmoj_judge
-#    image: ghcr.io/mcpt/wlmoj-judge
-#    deploy:
-#      replicas: 1 # 1 by default but can be scaled up
-
 
 networks:
   site:
     driver: overlay
   db:
+    driver: overlay
+  judge:
     driver: overlay
