@@ -24,6 +24,7 @@ RUN apt-get update && \
 RUN git clone https://github.com/DMOJ/pdfoid.git pdfoid
 WORKDIR /pdfoid/
 RUN pip3 install -e .
+RUN pip3 install selenium==4.10.0
 
 ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
 ENV EXIFTOOL_PATH=/usr/bin/exiftool
