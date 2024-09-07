@@ -23,13 +23,14 @@ has_param() {
 
 # ------ Help Command ------
 if has_param '-h' "$@" || has_param '--help' "$@"; then
-  echo "Usage: $0 [OPTION]"
+  echo "Usage: $0 [OPTIONAL_NAME] [FLAGS]"
   echo "Update the docker swarm services."
   echo "If you want to update only a specific service, pass the service name as an argument. (e.g. ./update.sh site)"
   echo "Options:"
   echo "  -h, --help         Show this help message."
   echo "  -sd, --skip-deploy Skip updating the docker services."
   echo "  -ss, --skip-static   Skip updating the static files."
+  echo "note: do not place flags before the service name. (e.g. ./update.sh -sd site) they will be ignored."
   exit 0
 fi
 
@@ -47,7 +48,7 @@ git stash pop
 
 if ! ( has_param '-sd' "$@" || has_param '--skip-deploy' "$@"); then
   # check if the user called the script with any specific service, if so update only that service
-  if [ "$1" != "" ]; then
+  if [ "$1" != ""  ] &&  [[ ! "$1" =~ ^- ]]; then # ignore the case where the user passes a flag as the first argument
     echo "Updating only $1..."
     docker service update --force wlmoj_"$1" --image ghcr.io/mcpt/wlmoj-"$1":latest
     exit 0
