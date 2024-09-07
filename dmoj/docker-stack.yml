@@ -39,7 +39,8 @@ services:
       - /var/share/assets:/assets/
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
-      - /var/share/cache/cache:/cache/
+      - /var/share/cache/pdfoid:/pdfoid/
+      - /var/share/cache/mathoid:/mathoid/
       - /var/share/media:/media/
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
@@ -165,7 +166,8 @@ services:
       - /var/share/assets/:/assets/
       - /var/share/cache/pdfcache/:/pdfcache/
       - /var/share/cache/datacache/:/datacache/
-      - /var/cache/cache:/cache/
+      - /var/share/cache/texoid/:/texoid/
+      - /var/share/cache/mathoid/:/mathoid
       - /var/share/media/:/media/
       - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:

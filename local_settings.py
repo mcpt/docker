@@ -214,7 +214,7 @@ DMOJ_USER_DATA_INTERNAL = '/datacache'
 #############
 # Documentation: https://github.com/wikimedia/mathoid
 MATHOID_URL = 'http://mathoid:10044'
-MATHOID_CACHE_ROOT = '/cache/mathoid/'
+MATHOID_CACHE_ROOT = '/mathoid'
 MATHOID_CACHE_URL = '//{host}/mathoid/'.format(host=HOST)
 
 ############
@@ -228,7 +228,7 @@ DMOJ_PDF_PDFOID_URL = 'http://pdfoid:8888'
 ############
 
 TEXOID_URL = 'http://texoid:8888'
-TEXOID_CACHE_ROOT = '/cache/texoid/'
+TEXOID_CACHE_ROOT = '/texoid'
 TEXOID_CACHE_URL = '//{host}/texoid/'.format(host=HOST)
 
 ## ======== Logging Settings ========

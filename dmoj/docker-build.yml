@@ -43,7 +43,8 @@ services:
       - /var/share/assets:/assets/
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
-      - /var/share/cache/cache:/cache/
+      - /var/share/cache/mathoid:/mathoid/
+      - /var/share/cache/mathoid:/texoid/
       - /var/share/media:/media/
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
