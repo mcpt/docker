@@ -1,6 +1,6 @@
 FROM python:3.11-slim-bookworm
 
-LABEL org.opencontainers.image.source="https://github.com/DMOJ/pdfoid"
+LABEL org.opencontainers.image.source="https://github.com/mcpt/wlmoj"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -17,7 +17,7 @@ RUN apt-get update && \
     rm chromedriver-linux64.zip && \
     useradd -m pdfoid
 
-RUN git clone https://github.com/DMOJ/pdfoid.git pdfoid
+RUN git clone https://github.com/mcpt/pdfoid.git pdfoid
 WORKDIR /pdfoid/
 RUN pip3 install -e .
 
