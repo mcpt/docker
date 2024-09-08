@@ -65,12 +65,13 @@ jobs:
         if: (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/master'
         run: |
           docker push ghcr.io/mcpt/wlmoj-base:latest
-          docker push ghcr.io/mcpt/wlmoj-texoid:latest
           docker push ghcr.io/mcpt/wlmoj-pdfoid:latest
-          docker push ghcr.io/mcpt/wlmoj-mathoid:latest
           docker push ghcr.io/mcpt/wlmoj-site:latest
+          docker push ghcr.io/mcpt/wlmoj-nginx:latest
+          docker push ghcr.io/mcpt/wlmoj-mathoid:latest
+          docker push ghcr.io/mcpt/wlmoj-texoid:latest
           docker push ghcr.io/mcpt/wlmoj-celery:latest
           docker push ghcr.io/mcpt/wlmoj-bridged:latest
           docker push ghcr.io/mcpt/wlmoj-wsevent:latest
-          docker push ghcr.io/mcpt/wlmoj-nginx:latest
           docker push ghcr.io/mcpt/wlmoj-backups:latest
+
