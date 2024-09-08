@@ -5,18 +5,19 @@ LABEL org.opencontainers.image.source="https://github.com/mcpt/wlmoj"
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         curl gnupg git unzip xvfb libxi6 libgconf-2-4 exiftool && \
-    curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add && \
-    echo "deb [arch=amd64]  http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list && \
-    sed -i 's/^Components: main$/& contrib non-free/' /etc/apt/sources.list.d/debian.sources && \
     apt-get update && \
-    apt-get install -y --no-install-recommends \
-        google-chrome-stable fonts-noto ttf-mscorefonts-installer && \
+    apt-get install -y --no-install-recommends fonts-noto ttf-mscorefonts-installer && \
     rm -rf /var/lib/apt/lists/* && \
-    wget https://chromedriver.storage.googleapis.com/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip && \
+    wget https://storage.googleapis.com/chrome-for-testing-public/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/linux64/chrome-linux64.zip && \
+    wget https://storage.googleapis.com/chrome-for-testing-public/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/linux64/chromedriver-linux64.zip && \
     unzip chromedriver_linux64.zip && \
+    unzip chrome_linux64.zip && \
     mv chromedriver /usr/bin/chromedriver && \
+    mv chrome /usr/bin/google-chrome-stable && \
     chmod +x /usr/bin/chromedriver && \
+    chmod +x /usr/bin/google-chrome-stable && \
     rm chromedriver_linux64.zip && \
+    rm chrome_linux64.zip && \
     useradd -m pdfoid
 
 
