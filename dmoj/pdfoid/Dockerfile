@@ -4,9 +4,7 @@ LABEL org.opencontainers.image.source="https://github.com/mcpt/wlmoj"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        curl gnupg git unzip xvfb libxi6 libgconf-2-4 exiftool && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends fonts-noto ttf-mscorefonts-installer && \
+        curl gnupg git unzip xvfb libxi6 libgconf-2-4 exiftool fonts-noto-core && \
     rm -rf /var/lib/apt/lists/* && \
     wget https://storage.googleapis.com/chrome-for-testing-public/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/linux64/chrome-linux64.zip && \
     wget https://storage.googleapis.com/chrome-for-testing-public/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/linux64/chromedriver-linux64.zip && \
