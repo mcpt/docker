@@ -237,6 +237,10 @@ TEXOID_CACHE_URL = '//{host}/texoid/'.format(host=HOST)
 LOGGING = {
 	'version': 1,
 	'disable_existing_loggers': False,
+	'filters': {
+		'silence_invalid_header': {
+			'()': 'dmoj.filters.SilenceInvalidHttpHostHeader'
+		}, },
 	'formatters': {
 		'file': {
 			'format': '%(levelname)s %(asctime)s %(module)s %(message)s',
@@ -253,6 +257,7 @@ LOGGING = {
 			'maxBytes': 10 * 1024 * 1024,
 			'backupCount': 10,
 			'formatter': 'file',
+			'filters': ['silence_invalid_header'],
 		},
 		'all': {
 			'level': 'INFO',
@@ -261,23 +266,28 @@ LOGGING = {
 			'maxBytes': 10 * 1024 * 1024,
 			'backupCount': 10,
 			'formatter': 'file',
+			'filters': ['silence_invalid_header'],
 		},
 		'mail_admins': {
 			'level': 'ERROR',
 			'class': 'dmoj.throttle_mail.ThrottledEmailHandler',
+			'filters': ['silence_invalid_header'],
 		},
 		'console': {
 			'level': 'DEBUG',
 			'class': 'logging.StreamHandler',
 			'formatter': 'file',
+			'filters': ['silence_invalid_header'],
 		},
 		'discord_integration': {
 			'level': 'ERROR',
 			'class': 'discord_integration.log.DiscordMessageHandler',
+			'filters': ['silence_invalid_header'],
 		},
 		'discord_simple': {
 			'level': 'INFO',
 			'class': 'discord_integration.log.SimpleDiscordMessageHandler',
+			'filters': ['silence_invalid_header'],
 		},
 	},
 	'loggers': {
