@@ -239,7 +239,7 @@ LOGGING = {
 	'disable_existing_loggers': False,
 	'filters': {
 		'silence_invalid_header': {
-			'()': 'dmoj.filters.SilenceInvalidHttpHostHeader'
+			'()': ' judge.filters.SilenceInvalidHttpHostHeader'
 		}, },
 	'formatters': {
 		'file': {
