@@ -43,7 +43,7 @@ function run_single_command_on_site() {
 EOF
 }
 
-rand=$(head -c 75 /dev/urandom)
+rand=$(head -c 75 /dev/urandom | tr -d '\0')
 # Convert bytes to Base64
 key=$(echo "$rand" | base64 | tr -d '\n')
 
