@@ -24,7 +24,7 @@
     - name: 'Check if WLMOJ repo exists'
       stat:
         path: /site
-        register: wlmoj_repo
+      register: wlmoj_repo
 
 
     - name: 'Get WLMOJ Repo'
