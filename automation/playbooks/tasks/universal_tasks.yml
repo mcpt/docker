@@ -4,6 +4,7 @@
     state: present
     system: yes
     gid: 9889
+  failed_when: false # Ignore failure if the group already exists
 
 - name: add root to the homeshare group
   user:
