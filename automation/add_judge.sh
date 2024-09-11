@@ -61,4 +61,5 @@ docker service create \
     --network judge \
     --cap-add SYS_PTRACE \
     --mount type=bind,src=/var/share/problems/,dst=/problems/ \
-    ghcr.io/dmoj/runtimes-tier3:amd64-latest
+    ghcr.io/dmoj/runtimes-tier3:amd64-latest \
+    run -p 9999 -c /problems/judge.yml "localhost" "$JUDGE_NAME" "$JUDGE_AUTH_KEY"
