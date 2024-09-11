@@ -35,8 +35,7 @@
     rule: allow
     to: '{{ overlay_network_range }}'
     from: '{{ overlay_network_range }}'
-- name:
-    UFW: enable and by default drop
+- name: UFW - enable and by default drop
   ufw:
     state: enabled
     policy: deny
