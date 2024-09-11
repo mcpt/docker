@@ -45,10 +45,10 @@ EOF
 
 rand=$(head -c 75 /dev/urandom | tr -d '\0')
 # Convert bytes to Base64
-JUDGE_AUTH_KEY=$(echo "$rand" | base64 | tr -d '\n')
+JUDGE_AUTH_KEY=$(echo "$rand" | base64 | tr -d '\n' | cut -c -100 ) # db type is varchar(100)
 
 notify "Attempting to create new judge $JUDGE_NAME"
-run_single_command_on_site "python3 manage.py shell -c 'from judge.models import Judge; Judge.objects.create(name=\"$JUDGE_NAME\", auth_key=\"$JUDGE_AUTH_KEY\")'"
+run_single_command_on_site "python3 manage.py shell -c '''from judge.models import Judge; Judge.objects.create(name=\"$JUDGE_NAME\", auth_key=\"$JUDGE_AUTH_KEY\")'''"
 
 notify "Judge $JUDGE_NAME's DB obj was created"
 
