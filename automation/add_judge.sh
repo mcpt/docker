@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Confirm you're running on general and as root
 
+set -e # exit on error
+
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
