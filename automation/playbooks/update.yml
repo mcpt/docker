@@ -44,7 +44,7 @@
       stat:
         path: /var/run/reboot-required
       register: check_reboot
-
+      changed_when: check_reboot.stat.exists
     - meta: end_host
       when: not check_reboot.stat.exists
 
