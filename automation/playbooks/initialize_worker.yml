@@ -21,6 +21,12 @@
     - name: 'Add Judge Users'
       ansible.builtin.include_tasks: "tasks/add_judge.yml"
 
+    - name: 'Check if WLMOJ repo exists'
+      stat:
+        path: /site
+        register: wlmoj_repo
+
+
     - name: 'Get WLMOJ Repo'
       environment:
         GIT_TERMINAL_PROMPT: 0
@@ -29,6 +35,7 @@
         clone: true
         recursive: true
         dest: '/site'
+      when: wlmoj_repo.stat.exists == false
 
     - name: 'Disable password for root'
       shell: passwd -d root
