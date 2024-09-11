@@ -36,7 +36,7 @@ function run_single_command_on_site() {
   NODE_IP=$(docker node inspect --format '{{ .Status.Addr  }}' "$SITE_NODE")
 
   # run the command
-  sudo ssh -f -q -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "root@$NODE_IP" <<EOF
+  sudo ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "root@$NODE_IP" <<EOF
   # get id of the site container
   SITE_ID=\$(docker ps --filter name=wlmoj_site --format "{{.ID}}")
   docker exec -it \$SITE_ID /bin/bash -c "$1"
