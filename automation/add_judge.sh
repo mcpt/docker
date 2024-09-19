@@ -2,7 +2,7 @@
 # Confirm you're running on general and as root
 
 set -e # exit on error
-set -x # print each command before executing it
+#set -x # print each command before executing it
 if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
@@ -13,7 +13,10 @@ if [ "$HOSTNAME" != "general" ]
   exit
 fi
 
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )" # cd to the directory of this script
+
 . /home/judge/docker/dmoj/scripts/utils/notify
+. ./utils/commands.sh
 
 # check if name was provided
 if [ -z "$1" ]
@@ -22,26 +25,6 @@ if [ -z "$1" ]
 fi
 JUDGE_NAME=$1
 
-
-# Create new judge object in db
-function run_single_command_on_site() {
-  # find out which node site is running on
-  SITE_NODE=$(docker service ps wlmoj_site --format "{{.Node}}" --filter desired-state=running)
-  # keep running the command if there is no node
-  while [ "$SITE_NODE" = "" ]; do
-    SITE_NODE=$(docker service ps wlmoj_site --format "{{.Node}}" --filter desired-state=running)
-  done
-
-  # get node's local ip
-  NODE_IP=$(docker node inspect --format '{{ .Status.Addr  }}' "$SITE_NODE")
-
-  # run the command
-  sudo ssh -q -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "root@$NODE_IP" <<EOF
-  # get id of the site container
-  SITE_ID=\$(docker ps --filter name=wlmoj_site --format "{{.ID}}")
-  docker exec -i \$SITE_ID /bin/bash -c "$1"
-EOF
-}
 
 rand=$(head -c 75 /dev/urandom | tr -d '\0')
 # Convert bytes to Base64
