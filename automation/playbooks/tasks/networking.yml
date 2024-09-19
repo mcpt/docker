@@ -13,10 +13,12 @@
     rule: allow
     port: 2377
     proto: tcp
+
 - name: Allow TCP/UDP port 7946 (Overlay network discovery)
   ufw:
     rule: allow
     port: 7946
+
 - name: Allow UDP port 4789 (Overlay network traffic)
   ufw:
     rule: allow
@@ -24,6 +26,7 @@
     proto: udp
     to: '{{ overlay_network_range }}'  # Replace with your actual overlay network range
     from: '{{ overlay_network_range }}'
+
 - name: Allow IP protocol 50 (IPSec ESP) for encrypted overlay networks (optional)
   ufw:
     rule: allow
