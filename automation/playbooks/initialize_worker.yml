@@ -80,7 +80,7 @@
       shell: |
         sudo chown -R judge:homeshare /var/share 
         sudo chmod -R 2770 /var/share
-    # This is equivalent to rwxrws---, which is the same as 2770
+    # 2770  is equivalent to rwxrws---
 
     - name: Ensure Docker group exists
       group:

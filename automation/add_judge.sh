@@ -41,8 +41,8 @@ docker service create \
     --env AUTH_KEY="${JUDGE_AUTH_KEY}" \
     --replicas 1 \
     --constraint 'node.role == worker' \
-    --network judge \
+    --network wlmoj_judge \
     --cap-add SYS_PTRACE \
     --mount type=bind,src=/var/share/problems/,dst=/problems/ \
-    ghcr.io/dmoj/runtimes-tier3:amd64-latest \
-    run -p 9999 -c /problems/judge.yml "localhost" "$JUDGE_NAME" "$JUDGE_AUTH_KEY"
+    ghcr.io/mcpt/judge:latest \
+    run -p 9999 -c /judge.yml "localhost" "$JUDGE_NAME" "$JUDGE_AUTH_KEY"
