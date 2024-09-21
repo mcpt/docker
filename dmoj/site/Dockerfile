@@ -1,5 +1,7 @@
 FROM ghcr.io/mcpt/wlmoj-base:latest
 
+LABEL org.opencontainers.image.source="https://github.com/mcpt/wlmoj"
+
 RUN groupadd uwsgi && useradd -rm -s /bin/bash -g root -G uwsgi -u 1001 uwsgi
 USER uwsgi
 
