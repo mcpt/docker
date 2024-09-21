@@ -109,17 +109,6 @@
 	  "output": [
 		"type=docker"
 	  ]
-	},
-	"judge": {
-	  "cache-from": [
-		"type=registry,ref=ghcr.io/mcpt/wlmoj-judge:cache"
-	  ],
-	  "cache-to": [
-		"type=registry,ref=ghcr.io/mcpt/wlmoj-judge:cache"
-	  ],
-	  "output": [
-		"type=docker"
-	  ]
 	}
   }
 }

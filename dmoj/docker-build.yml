@@ -47,7 +47,7 @@ services:
       - ${GITHUB_WORKSPACE}/dmoj/repo/:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
-    networks: [ site, nginx, db, judge ]
+    networks: [ site, nginx, db ]
     depends_on: [ base, db, redis ]
 
   celery:
@@ -134,15 +134,7 @@ services:
     networks: [ nginx ]
     depends_on: [ site, wsevent ]
 
-  judge:
-    build:
-        context: ./judge/
-    networks: [ judge ]
-    restart: always
-
-
 networks:
   site:
   db:
   nginx:
-  judge:
