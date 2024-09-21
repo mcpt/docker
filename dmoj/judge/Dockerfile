@@ -1,4 +1,4 @@
-FROM ghcr.io/dmoj/runtimes-tier3
+FROM ghcr.io/dmoj/runtimes-tier3:amd64-latest
 
 LABEL org.opencontainers.image.source="https://github.com/mcpt/wlmoj-judge"
 
