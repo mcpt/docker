@@ -74,4 +74,5 @@ jobs:
           docker push ghcr.io/mcpt/wlmoj-bridged:latest
           docker push ghcr.io/mcpt/wlmoj-wsevent:latest
           docker push ghcr.io/mcpt/wlmoj-backups:latest
+          docker push ghcr.io/mcpt/wlmoj-judge:latest
 
