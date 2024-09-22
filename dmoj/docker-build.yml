@@ -83,7 +83,7 @@ services:
       - ${GITHUB_WORKSPACE}/dmoj/repo/:/site/
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
-    networks: [ site, nginx, db ]
+    networks: [ site, db ]
     ports:
       - "9999:9999"
     depends_on: [ base, db, redis ]
