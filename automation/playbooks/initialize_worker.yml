@@ -141,7 +141,6 @@
       community.docker.docker_swarm:
         state: join
         join_token: "{{ join_token.stdout }}"
-        advertise_addr: "{{ groups['managers'][0] }}"
         remote_addrs: "{{ groups['managers'] }}"
 
     #    - name: Create overlay networks
