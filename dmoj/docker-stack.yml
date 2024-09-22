@@ -201,7 +201,7 @@ services:
     image: traefik:v3
     command:
       - "--docker=true"
-      - "--docker.swarmMode=true"
+      - "--swarm=true"
       - "--docker.exposedbydefault=false"
       - "--docker.network=wlmoj_judge"
       - "--entrypoints.judge.address=:9999"
