@@ -57,6 +57,7 @@ docker service create \
     --replicas 1 \
     --constraint "$CONSTRAINT" \
     --network wlmoj_judge \
+    --network-alias judge \
     --cap-add SYS_PTRACE \
     --mount type=bind,src=/var/share/problems/,dst=/problems/ \
     ghcr.io/mcpt/wlmoj-judge:latest \
