@@ -26,13 +26,20 @@ function get_judges() {
 
 function formatted_judges() {
   local judges
-  judges="($(get_judges Name))"
+  judges="$(get_judges Name)"
   echo "${judges[@]// /, }"  # Replace spaces with commas and spaces
 }
 
 function formatted_time() {
   echo "<t:$(date +%s)>"
 }
+
+function format_problem() {
+  problem_id="$1"
+  echo "[$problem_id](https://test.mcpt.ca/problem/$problem_id)"
+
+}
+
 
 problem_storage_root="$(realpath "$1")"
 recent_notifs_file=$(mktemp)
@@ -55,7 +62,7 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
   if ! grep -q "^${problem}:" "$recent_notifs_file"; then
     echo "${problem}:$(date +%s)" >> "$recent_notifs_file"
 
-    problem_notify "-# $(formatted_time): Found updates in [$problem] on  **$(formatted_judges)** | __**$n_problems**__ problems"
+    problem_notify "-# $(formatted_time): Updated $(format_problem problem) on  **$(formatted_judges)** | __**$n_problems**__ problems in share"
     judges="($(get_judges ID))"
     for judge in "${judges[@]}"; do
       curl -4 -s -X POST "http://$judge:9998/update/problems" | sed "s/^/$(date) [$judge]: /"';$a\'
