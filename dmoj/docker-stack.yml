@@ -205,3 +205,4 @@ networks:
     driver: overlay
   judge:
     driver: overlay
+    attachable: true
