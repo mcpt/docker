@@ -27,7 +27,7 @@ function get_judges() {
 
 problem_storage_root="$(realpath "$1")"
 
-notify "$(date): Start watching ${problem_storage_root}, notifying judges on $(get_judges NAME)"
+notify "$(date): Start watching ${problem_storage_root}, notifying judges on $(get_judges Name)"
 
 inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read -r line; do
   if [ "$(echo "$line" | cut -d' ' -f3)" != "init.yml" ]; then
