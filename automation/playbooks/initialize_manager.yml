@@ -7,21 +7,22 @@ tasks:
   - name: 'Change timezone to Toronto time'
     shell: timedatectl set-timezone America/Toronto
 
-  - name: 'Set up vm-problem-watch on @restart'
-    cron:
-        name: "vm-problem-watch"
-        job: "/home/judge/docker/automation/vm-host-problem-watch /var/share/problems"
-        special_time: reboot
-    user: root
-
   - name: 'Install nfs, pip & ufw'
     apt:
       pkg:
         - nfs-common
         - python3-pip
+        - inotify-tools
         - ufw
         - python3-jsondiff   # Used for ansible-dockerpw
 
+
+  - name: 'Set up vm-problem-watch on @restart'
+    cron:
+      name: "vm-problem-watch"
+      job: "/home/judge/docker/automation/vm-host-problem-watch /var/share/problems"
+      special_time: reboot
+    user: root
 
   - name: Ensure .ssh directory exists
     ansible.builtin.file:
