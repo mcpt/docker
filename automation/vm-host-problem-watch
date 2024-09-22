@@ -14,7 +14,6 @@ fi
 . ../dmoj/scripts/utils/notify
 . ./swarm_info
 
-
 function get_judges() {
     local filter_type="$1"
     local container_names=()
@@ -36,6 +35,8 @@ function formatted_time() {
 }
 
 problem_storage_root="$(realpath "$1")"
+recent_notifs_file=$(mktemp)
+
 
 notify "$(formatted_time): Watching ${problem_storage_root}, notifying judges **$(formatted_judges)**"
 
@@ -45,11 +46,22 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
   fi
   problems_raw="$(echo "$line" | cut -d' ' -f1)"
   problems=${problems_raw#"$problem_storage_root"}
-  problems=${problems%$'\n'}
-  problems=${problems%/}
-  notify "$(formatted_time):  [$problems] on  **$(formatted_judges)**"
-  judges="($(get_judges ID))"
-  for judge in "${judges[@]}"; do
-    curl -4 -s -X POST "http://$judge:9998/update/problems" | sed "s/^/$(date) [$judge]: /"';$a\'
-  done
+  # Extract the top-level directory
+  top_dir=$(echo "$problems" | cut -d'/' -f2)
+
+  # Check if this directory has been notified recently
+  if ! grep -q "^${top_dir}:" "$recent_notifs_file"; then
+    echo "${top_dir}:$(date +%s)" >> "$recent_notifs_file"
+
+    notify "$(formatted_time):  [$problems] on  **$(formatted_judges)**"
+    judges="($(get_judges ID))"
+    for judge in "${judges[@]}"; do
+      curl -4 -s -X POST "http://$judge:9998/update/problems" | sed "s/^/$(date) [$judge]: /"';$a\'
+    done
+  fi
+
+  # Clean up old entries (older than 10 seconds)
+  current_time=$(date +%s)
+  temp_file_content=$(awk -v now="$current_time" '{split($0,a,":"); if (now - a[2] <= 10) print $0}' "$recent_notifs_file")
+  echo "$temp_file_content" > "$recent_notifs_file"
 done
