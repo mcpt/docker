@@ -62,7 +62,14 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
   if ! grep -q "^${problem}:" "$recent_notifs_file"; then
     echo "${problem}:$(date +%s)" >> "$recent_notifs_file"
 
-    problem_notify "-# $(formatted_time): Updated $(format_problem "$problem") on  **$(formatted_judges)** | __**$n_problems**__ problems in share"
+    if [ "$(echo "$line" | cut -d' ' -f2)" = "DELETE" ]; then
+      problem_notify "-# $(formatted_time): Deleted $problem on  **$(formatted_judges)** | __**$n_problems**__ problems in share"
+    elif [ "$(echo "$line" | cut -d' ' -f2)" = "CREATE" ]; then
+      problem_notify "-# $(formatted_time): Created $(format_problem  "$problem") on  **$(formatted_judges)** | __**$n_problems**__ problems in share"
+    else # Must be a UPDATE (move)
+      problem_notify "-# $(formatted_time): Updated $(format_problem  "$problem") on  **$(formatted_judges)** | __**$n_problems**__ problems in share"
+    fi
+
     judges="($(get_judges ID))"
     for judge in "${judges[@]}"; do
       curl -4 -s -X POST "http://$judge:9998/update/problems" | sed "s/^/$(date) [$judge]: /"';$a\'
