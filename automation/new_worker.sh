@@ -4,11 +4,20 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 
 [ "$(whoami)" = root ] || { sudo "$0" "$@"; exit $?; } # enforce root as the ansible ssh key is installed under root
 
+# grab a argument of --size
+if [[ $* == *--large* ]]
+then
+    SIZE="s-2vcpu-2gb"
+else
+    SIZE="s-1vcpu-1gb"
+fi
+
+
 . ../dmoj/scripts/utils/notify
 . ./swarm_info
 
 if [ -z "$1" ]; then
-    echo "Usage: $0 <droplet_name>"
+    echo "Usage: $0 <droplet_name> [--large]"
     exit 1
 fi
 
@@ -30,7 +39,7 @@ notify "## Provisioning new droplet **$1**"
 # Create the droplet
 droplet_id=$(doctl compute droplet create \
     --image ubuntu-22-04-x64 \
-    --size s-1vcpu-1gb \
+    --size "$SIZE" \
     --region tor1 \
     --enable-monitoring \
     --tag-names "worker" \

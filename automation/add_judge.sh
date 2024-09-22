@@ -21,9 +21,22 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )" # cd to the directory of t
 # check if name was provided
 if [ -z "$1" ]
   then echo "Please provide a name for the judge"
+  echo "Usage: $0 <judge_name> <droplet_name_to_run_on (optional)> "
   exit
 fi
 JUDGE_NAME=$1
+
+if [ -z "$2" ]
+  then
+    # Check if the droplet already exists as a safety measure
+    if ! doctl compute droplet list --format Name | grep -i "$1"; then
+        echo "Droplet $1 does not exist!" >&2
+        exit 1
+    fi
+    CONSTRAINT="node.name == $(doctl compute droplet list --format Name | grep -i "$1" | awk '{print $1}')"
+else
+    CONSTRAINT="node.role == worker"
+fi
 
 
 rand=$(head -c 75 /dev/urandom | tr -d '\0')
@@ -35,12 +48,14 @@ notify "Attempting to create new judge $JUDGE_NAME"
 run_single_command_on_site "python3 manage.py shell -c 'from judge.models import Judge; Judge.objects.create(name=\"'\"$JUDGE_NAME\"'\", auth_key=r\"'\"$JUDGE_AUTH_KEY\"'\")'"
 
 notify "Judge $JUDGE_NAME's DB obj was created"
+
+
 docker service create \
     --name "judge_${JUDGE_NAME}" \
     --env JUDGE_NAME="${JUDGE_NAME}" \
     --env AUTH_KEY="${JUDGE_AUTH_KEY}" \
     --replicas 1 \
-    --constraint 'node.role == worker' \
+    --constraint "$CONSTRAINT" \
     --network wlmoj_judge \
     --cap-add SYS_PTRACE \
     --mount type=bind,src=/var/share/problems/,dst=/problems/ \
