@@ -36,8 +36,8 @@ function notify() {
 }
 
 function problem_notify() {
-  if [ -z "$PROBLEMS_WEBHOOK_URL" ]; then
-    echo "ERROR: PROBLEMS_WEBHOOK_URL environment variable not set." >&2
+  if [ -z "$PROBLEMS_WEBHOOK" ]; then
+    echo "ERROR: PROBLEMS_WEBHOOK environment variable not set." >&2
     return 1
   fi
   notify "$1" "$2" "$PROBLEMS_WEBHOOK"
