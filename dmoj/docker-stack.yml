@@ -198,16 +198,26 @@ services:
         delay: 24h
 
   traefik:
-    image: traefik:v3.1
+    image: traefik:v3
     command:
-      - "--providers.docker.swarmMode=true"
-      - "--providers.docker.exposedbydefault=false"
+      - "--docker=true"
+      - "--docker.swarmMode=true"
+      - "--docker.exposedbydefault=false"
+      - "--docker.network=wlmoj_judge"
       - "--entrypoints.judge.address=:9999"
     networks:
       - judge
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     deploy:
       placement:
-        constraints: [node.role == manager]
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.traefik.rule=Host(`traefik.local`)"
+        - "traefik.http.routers.traefik.service=api@internal"
+        - "traefik.http.routers.traefik.entrypoints=judge"
 
 networks:
   site:
