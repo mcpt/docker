@@ -1,44 +1,114 @@
-- name: Allow TCP port 22 (SSH)
+- name: Allow TCP port 22 (SSH) on IPv4
   ufw:
     rule: allow
     port: 22
     proto: tcp
-- name: Allow TCP port 2376 (Docker Swarm manager communication)
+
+- name: Allow TCP port 22 (SSH) on IPv6
+  ufw:
+    rule: allow
+    port: 22
+    proto: tcp
+    ipv6: true
+
+- name: Allow TCP port 2376 (Docker Swarm manager communication) on IPv4
   ufw:
     rule: allow
     port: 2376
     proto: tcp
-- name: Allow TCP port 2377 (Docker Swarm manager communication)
+
+- name: Allow TCP port 2376 (Docker Swarm manager communication) on IPv6
+  ufw:
+    rule: allow
+    port: 2376
+    proto: tcp
+    ipv6: true
+
+- name: Allow TCP port 2377 (Docker Swarm manager communication) on IPv4
   ufw:
     rule: allow
     port: 2377
     proto: tcp
 
-- name: Allow TCP/UDP port 7946 (Overlay network discovery)
+- name: Allow TCP port 2377 (Docker Swarm manager communication) on IPv6
+  ufw:
+    rule: allow
+    port: 2377
+    proto: tcp
+    ipv6: true
+
+- name: Allow TCP/UDP port 7946 (Overlay network discovery) on IPv4 (TCP)
   ufw:
     rule: allow
     port: 7946
+    proto: tcp
 
-- name: Allow UDP port 4789 (Overlay network traffic)
+- name: Allow TCP/UDP port 7946 (Overlay network discovery) on IPv6 (TCP)
+  ufw:
+    rule: allow
+    port: 7946
+    proto: tcp
+    ipv6: true
+
+- name: Allow TCP/UDP port 7946 (Overlay network discovery) on IPv4 (UDP)
+  ufw:
+    rule: allow
+    port: 7946
+    proto: udp
+
+- name: Allow TCP/UDP port 7946 (Overlay network discovery) on IPv6 (UDP)
+  ufw:
+    rule: allow
+    port: 7946
+    proto: udp
+    ipv6: true
+
+- name: Allow UDP port 4789 (Overlay network traffic) on IPv4
   ufw:
     rule: allow
     port: 4789
     proto: udp
-    to: '{{ overlay_network_range }}'  # Replace with your actual overlay network range
+    to: '{{ overlay_network_range }}'
     from: '{{ overlay_network_range }}'
 
-- name: Allow IP protocol 50 (IPSec ESP) for encrypted overlay networks (optional)
+- name: Allow UDP port 4789 (Overlay network traffic) on IPv6
+  ufw:
+    rule: allow
+    port: 4789
+    proto: udp
+    ipv6: true
+    to: '{{ overlay_network_range }}'
+    from: '{{ overlay_network_range }}'
+
+- name: Allow IP protocol 50 (IPSec ESP) for encrypted overlay networks (optional) on IPv4
   ufw:
     rule: allow
     proto: esp
     to: '{{ overlay_network_range }}'
     from: '{{ overlay_network_range }}'
-- name: Allow internal network communication (optional)
+
+- name: Allow IP protocol 50 (IPSec ESP) for encrypted overlay networks (optional) on IPv6
+  ufw:
+    rule: allow
+    proto: esp
+    ipv6: true
+    to: '{{ overlay_network_range }}'
+    from: '{{ overlay_network_range }}'
+
+- name: Allow internal network communication (optional) on IPv4
   ufw:
     rule: allow
     to: '{{ overlay_network_range }}'
     from: '{{ overlay_network_range }}'
+
+- name: Allow internal network communication (optional) on IPv6
+  ufw:
+    rule: allow
+    ipv6: true
+    to: '{{ overlay_network_range }}'
+    from: '{{ overlay_network_range }}'
+
 - name: UFW - enable and by default drop
   ufw:
     state: enabled
-    policy: deny
+    default: deny
