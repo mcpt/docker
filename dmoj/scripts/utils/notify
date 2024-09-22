@@ -3,7 +3,12 @@
 function notify() {
   local message="$1"
   local is_urgent="$2"  # Use "true" to trigger urgent notification
-  local webhook_url="$DISCORD_WEBHOOK"
+  local webhook_url
+  if [ -n "$3" ]; then # if webhook_url is provided as an argument use it
+    webhook_url="$3"
+  else
+    webhook_url="$DISCORD_WEBHOOK"
+  fi
   local message_with_mention=""
   local DISCORD_ROLE_OR_USER_ID="511724576674414600"       # todo replace with judge ID
 
@@ -30,6 +35,13 @@ function notify() {
     fi
 }
 
+function problem_notify() {
+  if [ -z "$PROBLEMS_WEBHOOK_URL" ]; then
+    echo "ERROR: PROBLEMS_WEBHOOK_URL environment variable not set." >&2
+    return 1
+  fi
+  notify "$1" "$2" "$PROBLEMS_WEBHOOK"
+}
 
 # Example usage:
 # notify "Regular notification content"         # No mention

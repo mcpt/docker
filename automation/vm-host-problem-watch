@@ -38,22 +38,24 @@ problem_storage_root="$(realpath "$1")"
 recent_notifs_file=$(mktemp)
 
 
-notify "$(formatted_time): Watching ${problem_storage_root}, notifying judges **$(formatted_judges)**"
+problem_notify "$(formatted_time): Watching ${problem_storage_root}, notifying judges **$(formatted_judges)**"
 
 inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read -r line; do
   if [ "$(echo "$line" | cut -d' ' -f3)" != "init.yml" ]; then
     continue
   fi
   problems_raw="$(echo "$line" | cut -d' ' -f1)"
-  problems=${problems_raw#"$problem_storage_root"}
+  problem=${problems_raw#"$problem_storage_root"}
   # Extract the top-level directory
-  top_dir=$(echo "$problems" | cut -d'/' -f2)
+  problem=$(echo "$problem" | cut -d'/' -f2)
+  # shellcheck disable=SC2012
+  n_problems=$(ls -1 "$problem_storage_root" | wc -l)
 
   # Check if this directory has been notified recently
-  if ! grep -q "^${top_dir}:" "$recent_notifs_file"; then
-    echo "${top_dir}:$(date +%s)" >> "$recent_notifs_file"
+  if ! grep -q "^${problem}:" "$recent_notifs_file"; then
+    echo "${problem}:$(date +%s)" >> "$recent_notifs_file"
 
-    notify "$(formatted_time):  [$problems] on  **$(formatted_judges)**"
+    problem_notify "-# $(formatted_time): Found updates in [$problem] on  **$(formatted_judges)** | __**$n_problems**__ problems"
     judges="($(get_judges ID))"
     for judge in "${judges[@]}"; do
       curl -4 -s -X POST "http://$judge:9998/update/problems" | sed "s/^/$(date) [$judge]: /"';$a\'
