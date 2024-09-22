@@ -32,7 +32,7 @@ function formatted_judges() {
 }
 
 function formatted_time() {
-  echo "<t:$(date +%s)}>"
+  echo "<t:$(date +%s)>"
 }
 
 problem_storage_root="$(realpath "$1")"
