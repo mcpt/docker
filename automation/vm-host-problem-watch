@@ -25,15 +25,29 @@ function get_judges() {
     echo "${container_names[@]}"
 }
 
+function formatted_judges() {
+  local judges
+  judges="($(get_judges Name))"
+  echo "${judges[@]// /, }"  # Replace spaces with commas and spaces
+}
+
+function formatted_time() {
+  echo "<t:$(date +%s)}>"
+}
+
 problem_storage_root="$(realpath "$1")"
 
-notify "$(date): Watching ${problem_storage_root}, notifying judges **$(get_judges Name)**"
+notify "$(formatted_time): Watching ${problem_storage_root}, notifying judges **$(formatted_judges)**"
 
 inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read -r line; do
   if [ "$(echo "$line" | cut -d' ' -f3)" != "init.yml" ]; then
     continue
   fi
-  notify "$(date): Update problems [$line]"
+  problems_raw="$(echo "$line" | cut -d' ' -f1)"
+  problems=${problems_raw#"$problem_storage_root"}
+  problems=${problems%$'\n'}
+  problems=${problems%/}
+  notify "$(formatted_time):  [$problems] on  **$(formatted_judges)**"
   judges="($(get_judges ID))"
   for judge in "${judges[@]}"; do
     curl -4 -s -X POST "http://$judge:9998/update/problems" | sed "s/^/$(date) [$judge]: /"';$a\'
