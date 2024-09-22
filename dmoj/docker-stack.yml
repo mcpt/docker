@@ -197,6 +197,17 @@ services:
       restart_policy:
         delay: 24h
 
+  traefik:
+    image: traefik:v3.1
+    command:
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.judge.address=:9999"
+    networks:
+      - judge
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 
 networks:
   site:
