@@ -44,5 +44,5 @@ docker service create \
     --network wlmoj_judge \
     --cap-add SYS_PTRACE \
     --mount type=bind,src=/var/share/problems/,dst=/problems/ \
-    ghcr.io/mcpt/wlmoj_judge:latest \
+    ghcr.io/mcpt/wlmoj-judge:latest \
     run -p 9999 -c /judge.yml "localhost" "$JUDGE_NAME" "$JUDGE_AUTH_KEY"
