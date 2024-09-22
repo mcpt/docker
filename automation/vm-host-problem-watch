@@ -1,0 +1,41 @@
+#!/bin/bash
+
+cd "$(
+  cd "$(dirname "${BASH_SOURCE[0]}")"
+  pwd -P
+)" || exit
+
+# Ensure running on a swarm manager
+if [ "$(docker info --format '{{.Swarm.ControlAvailable}}')" != "true" ]; then
+  echo "This script must be run on the swarm manager" >&2
+  exit 1
+fi
+
+. ../dmoj/scripts/utils/notify
+. ./swarm_info
+
+
+function get_judges() {
+    local filter_type="$1"
+    local container_names=()
+    for container_name in $(docker service ls --filter name='judge_'  --format "{{.$filter_type}}"); do
+        container_names+=("$container_name")
+    done
+
+    echo "${container_names[@]}"
+}
+
+problem_storage_root="$(realpath "$1")"
+
+notify "$(date): Start watching ${problem_storage_root}, notifying judges on $(get_judges NAME)"
+
+inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read -r line; do
+  if [ "$(echo "$line" | cut -d' ' -f3)" != "init.yml" ]; then
+    continue
+  fi
+  notify "$(date): Update problems [$line]"
+  judges="($(get_judges ID))"
+  for judge in "${judges[@]}"; do
+    curl -4 -s -X POST "http://$judge:9998/update/problems" | sed "s/^/$(date) [$judge]: /"';$a\'
+  done
+done
