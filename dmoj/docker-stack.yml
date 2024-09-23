@@ -198,26 +198,6 @@ services:
       restart_policy:
         delay: 24h
 
-  traefik:
-    image: traefik:v2.10
-    command:
-      - "--providers.docker=true"
-      - "--providers.docker.swarmMode=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.internal.address=:9999"
-    networks:
-      - judge
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.role == manager  # Traefik should run on a manager node
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.services.api.loadbalancer.server.port=8080"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
 networks:
   site:
     driver: overlay
