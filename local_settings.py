@@ -132,8 +132,7 @@ TERMS_OF_SERVICE_URL = '//mcpt.ca/tos'  # Use a flatpage.
 # You should change this to something your judges can actually connect to
 # (e.g., a port that is unused and unblocked by a firewall).
 BRIDGED_JUDGE_ADDRESS = [('0.0.0.0', JUDGE_PORT := 9999)]
-BRIDGED_DJANGO_CONNECT = ("judge", JUDGE_PORT)
-
+BRIDGED_DJANGO_CONNECT = ("bridged", JUDGE_PORT)
 # The bridged daemon bind address and port to communicate with the site.
 BRIDGED_DJANGO_ADDRESS = [('localhost', 9998)]
 
