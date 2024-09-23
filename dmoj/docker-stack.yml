@@ -205,7 +205,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.internal.address=:9999"
     networks:
-      - wlmoj_judge
+      - judge
     deploy:
       replicas: 1
       placement:
