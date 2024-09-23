@@ -56,9 +56,8 @@ docker service create \
     --env AUTH_KEY="${JUDGE_AUTH_KEY}" \
     --replicas 1 \
     --constraint "$CONSTRAINT" \
-    --network wlmoj_judge \
+    --network name=my-wlmoj_judge,alias=judge \
     --cap-add SYS_PTRACE \
-    --network-alias judge \
     --mount type=bind,src=/var/share/problems/,dst=/problems/ \
     ghcr.io/mcpt/wlmoj-judge:latest \
     run -p 9999 -c /judge.yml "bridged" "$JUDGE_NAME" "$JUDGE_AUTH_KEY"
