@@ -57,10 +57,10 @@ docker service create \
     --replicas 1 \
     --constraint "$CONSTRAINT" \
     --network wlmoj_judge \
-    --label "traefik.enable=true" \
-    --label "traefik.http.routers.${JUDGE_NAME}.rule=Host(\`judge\`)" \
-    --label "traefik.http.services.${JUDGE_NAME}.loadbalancer.server.port=9999" \
     --cap-add SYS_PTRACE \
+    --label "traefik.enable=true" \
+    --label "traefik.http.routers.judge.rule=Host(\`judge\`)" \
+    --label "traefik.http.services.${JUDGE_NAME}.loadbalancer.server.port=9999" \
     --mount type=bind,src=/var/share/problems/,dst=/problems/ \
     ghcr.io/mcpt/wlmoj-judge:latest \
     run -p 9999 -c /judge.yml "bridged" "$JUDGE_NAME" "$JUDGE_AUTH_KEY"

@@ -198,26 +198,24 @@ services:
         delay: 24h
 
   traefik:
-    image: traefik:v3
+    image: traefik:v2.10
     command:
-      - "--docker=true"
-      - "--swarm=true"
-      - "--docker.exposedbydefault=false"
-      - "--docker.network=wlmoj_judge"
-      - "--entrypoints.judge.address=:9999"
+      - "--providers.docker=true"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.internal.address=:9999"
     networks:
-      - judge
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - wlmoj_judge
     deploy:
+      replicas: 1
       placement:
         constraints:
-          - node.role == manager
+          - node.role == manager  # Traefik should run on a manager node
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.traefik.rule=Host(`traefik.local`)"
-        - "traefik.http.routers.traefik.service=api@internal"
-        - "traefik.http.routers.traefik.entrypoints=judge"
+        - "traefik.http.services.api.loadbalancer.server.port=8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
 networks:
   site:
