@@ -72,7 +72,7 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
 
     judges="($(get_judges ID))"
     for judge in "${judges[@]}"; do
-      curl -4 -s -X POST "http://$judge:9998/update/problems" | sed "s/^/$(date) [$judge]: /"';$a\'
+      curl -4 -s -X POST "http://$judge:9995/update/problems" | sed "s/^/$(date) [$judge]: /"';$a\'
     done
   fi
 
