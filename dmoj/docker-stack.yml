@@ -49,6 +49,7 @@ services:
     env_file: [ environment/mysql.env, environment/site.env ]
     networks:
       - site
+      - judge
       - db
     deploy:
       replicas: 1
