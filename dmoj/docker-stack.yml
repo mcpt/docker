@@ -153,7 +153,7 @@ services:
   redis:
     image: redis:alpine
     networks:
-      - site
+      - db
     deploy:
       replicas: 1
 
