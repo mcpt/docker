@@ -18,7 +18,7 @@
         - not 'Local modifications exist in repository' in repo_clone.msg
 
     - name: Get the latest commit hash
-      ansible.builtin.shell: "git rev-parse HEAD"
+      ansible.builtin.shell: "cd /site && git rev-parse HEAD"
       register: commit_hash
       changed_when: false
       when: repo_clone.changed
