@@ -106,6 +106,17 @@ EOF
   ls
 }
 
+if ! (has_param '-su' "$@" || has_param '--skip-update' "$@"); then
+  # Ask the user if they want to update the site on the nodes
+  read -r -p "Do you want to update the site on the nodes? [y/N] " response
+  if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
+    echo "Updating site on the nodes..."
+    # ask for root perms
+    sudo -v || exit 1
+    source /home/judge/docker/automation/update_nodes.sh
+  else
+    echo "Skipping site update..."
+  fi
 
 # check if the --no-static or -ns flag is passed, if so don't update the static files
 if ! (has_param '-ss' "$@" || has_param '--skip-static' "$@"); then
