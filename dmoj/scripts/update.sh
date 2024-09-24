@@ -127,6 +127,7 @@ if ! (has_param '-ss' "$@" || has_param '--skip-static' "$@"); then
   if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     echo "Updating static files..."
     update_static
+    echo "Static files updated."
 
   else
     echo "Skipping static files update..."
