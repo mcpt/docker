@@ -118,6 +118,8 @@ if ! (has_param '-su' "$@" || has_param '--skip-update' "$@"); then
     echo "Skipping site update..."
   fi
 
+fi
+
 # check if the --no-static or -ns flag is passed, if so don't update the static files
 if ! (has_param '-ss' "$@" || has_param '--skip-static' "$@"); then
   # ask the user if they want to update the static files
