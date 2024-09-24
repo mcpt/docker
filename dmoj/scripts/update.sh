@@ -49,41 +49,7 @@ git stash
 git pull
 git stash pop
 
-if ! ( has_param '-sd' "$@" || has_param '--skip-deploy' "$@"); then
-  # check if the user called the script with any specific service, if so update only that service
-  if [ "$1" != ""  ] &&  [[ ! "$1" =~ ^- ]]; then # ignore the case where the user passes a flag as the first argument
-    echo "Updating only $1..."
-    docker service update --force wlmoj_"$1" --image ghcr.io/mcpt/wlmoj-"$1":latest
-    exit 0
-  else
-    echo "Updating all services..."
-    # Don't use docker stack deploy as that would also update the services that are not changed.
-    # texoid
-    docker service update --detach wlmoj_texoid --image ghcr.io/mcpt/wlmoj-texoid
-    # pdfoid
-    docker service update --detach wlmoj_pdfoid --image ghcr.io/mcpt/wlmoj-pdfoid
-    # mathoid
-    docker service update --detach wlmoj_mathoid --image ghcr.io/mcpt/wlmoj-mathoid
-    # site
-    docker service update --detach wlmoj_site --image ghcr.io/mcpt/wlmoj-site
-    # celery
-    docker service update --detach wlmoj_celery --image ghcr.io/mcpt/wlmoj-celery
-    # bridged
-    docker service update --detach wlmoj_bridged --image ghcr.io/mcpt/wlmoj-bridged
-    # wsevent
-    docker service update --detach wlmoj_wsevent --image ghcr.io/mcpt/wlmoj-wsevent
-    # backups
-    docker service update --detach wlmoj_backups --image ghcr.io/mcpt/wlmoj-backups
-
-  # Don't update nginx automatically, as it will cause downtime. Update it manually. via passing the nginx flag to this script.
-  fi
-fi
-
 cp /home/judge/docker/local_settings.py /var/share/configs/wlmoj/local_settings.py
-
-
-echo "Done updating services."
-
 
 # --------- Static files update ---------
 
@@ -136,3 +102,37 @@ if ! (has_param '-ss' "$@" || has_param '--skip-static' "$@"); then
   fi
 
 fi
+
+
+if ! ( has_param '-sd' "$@" || has_param '--skip-deploy' "$@"); then
+  # check if the user called the script with any specific service, if so update only that service
+  if [ "$1" != ""  ] &&  [[ ! "$1" =~ ^- ]]; then # ignore the case where the user passes a flag as the first argument
+    echo "Updating only $1..."
+    docker service update --force wlmoj_"$1" --image ghcr.io/mcpt/wlmoj-"$1":latest
+    exit 0
+  else
+    echo "Updating all services..."
+    # Don't use docker stack deploy as that would also update the services that are not changed.
+    # texoid
+    docker service update --detach wlmoj_texoid --image ghcr.io/mcpt/wlmoj-texoid
+    # pdfoid
+    docker service update --detach wlmoj_pdfoid --image ghcr.io/mcpt/wlmoj-pdfoid
+    # mathoid
+    docker service update --detach wlmoj_mathoid --image ghcr.io/mcpt/wlmoj-mathoid
+    # site
+    docker service update --detach wlmoj_site --image ghcr.io/mcpt/wlmoj-site
+    # celery
+    docker service update --detach wlmoj_celery --image ghcr.io/mcpt/wlmoj-celery
+    # bridged
+    docker service update --detach wlmoj_bridged --image ghcr.io/mcpt/wlmoj-bridged
+    # wsevent
+    docker service update --detach wlmoj_wsevent --image ghcr.io/mcpt/wlmoj-wsevent
+    # backups
+    docker service update --detach wlmoj_backups --image ghcr.io/mcpt/wlmoj-backups
+
+  # Don't update nginx automatically, as it will cause downtime. Update it manually. via passing the nginx flag to this script.
+  fi
+fi
+
+
+echo "Done updating services."
