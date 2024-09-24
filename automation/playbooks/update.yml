@@ -17,11 +17,18 @@
         - repo_clone.failed
         - not 'Local modifications exist in repository' in repo_clone.msg
 
+    - name: Get the latest commit hash
+      ansible.builtin.shell: "git rev-parse HEAD"
+      register: commit_hash
+      changed_when: false
+      when: repo_clone.changed
+
+
     - name: Trigger Discord webhook on successful updates
       community.general.discord:
         webhook_id: 1265698136480022741
         webhook_token: "6UGB0mwC1LJ51csq9UqLjX38wz-vYxnFZ1_nFK1nwzZG3OkLElpRBTmf-NinhpTpvmY8"
-        content: '-# WLMOJ repositories updated successfully on **{{ ansible_hostname }}**'
+        content: '-# WLMOJ repositories updated successfully on **{{ ansible_hostname }}**. [View Commit](https://github.com/mcpt/wlmoj/commit/{{ commit_hash.stdout }})'
 
     - name: Remove outdated docker artifacts
       ansible.builtin.include_tasks: "tasks/cleanup.yml"

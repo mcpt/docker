@@ -1,8 +1,6 @@
 #!/bin/bash
-cd $(dirname $(dirname $0)) || exit
-
 if [ -z "$CI" ]; then  # Not running in CI
-         bash make_style.sh && \
+         bash /scripts/make_style.sh && \
          cd /site && \
          python3 manage.py collectstatic --noinput && \
          python3 manage.py compilemessages && \

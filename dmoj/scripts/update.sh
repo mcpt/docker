@@ -32,6 +32,7 @@ if has_param '-h' "$@" || has_param '--help' "$@"; then
   echo "  -h, --help         Show this help message."
   echo "  -sd, --skip-deploy Skip updating the docker services."
   echo "  -ss, --skip-static   Skip updating the static files."
+  echo "  -su, --skip-update   Skip updating the site on the nodes."
   echo "note: do not place flags before the service name. (e.g. ./update.sh -sd site) they will be ignored."
   exit 0
 fi
@@ -113,7 +114,7 @@ if ! (has_param '-su' "$@" || has_param '--skip-update' "$@"); then
   read -r -p "Do you want to update the site on the nodes? [y/N] " response
   if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     echo "Updating site on the nodes..."
-    source /home/judge/docker/automation/update_nodes.sh
+    bash /home/judge/docker/automation/update_nodes.sh
   else
     echo "Skipping site update..."
   fi
