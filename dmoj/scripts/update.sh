@@ -112,7 +112,7 @@ if ! (has_param '-su' "$@" || has_param '--skip-update' "$@"); then
   if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     echo "Updating site on the nodes..."
     # ask for root perms
-    sudo -v || exit 1
+    [ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
     source /home/judge/docker/automation/update_nodes.sh
   else
     echo "Skipping site update..."
@@ -127,7 +127,7 @@ if ! (has_param '-ss' "$@" || has_param '--skip-static' "$@"); then
   if [[ "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
     echo "Updating static files..."
     # ask for root perms
-    sudo -v || exit 1
+    [ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
     update_static
 
   else
