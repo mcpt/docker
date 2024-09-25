@@ -66,13 +66,11 @@ function update_static() {
 
   # update the site
 
-  sudo ssh -f -q -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "root@$NODE_IP"  <<EOF
+  sudo ssh -o BatchMode=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null "root@$NODE_IP"  <<EOF
   # get id of the site container
   SITE_ID=\$(docker ps --filter name=wlmoj_site --format "{{.ID}}")
-  docker exec -it \$SITE_ID /bin/bash -c "/scripts/copy_static"
+  docker exec \$SITE_ID /bin/bash -c "/scripts/copy_static"
 EOF
-
-  ls
 }
 
 if ! (has_param '-su' "$@" || has_param '--skip-update' "$@"); then
