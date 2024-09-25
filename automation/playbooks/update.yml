@@ -27,13 +27,13 @@
     - name: Remove outdated docker artifacts
       ansible.builtin.include_tasks: "tasks/cleanup.yml"
 
-    - name: Update docker stack
-      docker_stack:
-        state: present
-        name: wlmoj
-        compose:
-          - /home/judge/docker/dmoj/docker-stack.yml
-      when: ansible_hostname == "general"
+#    - name: Update docker stack
+#      docker_stack:
+#        state: present
+#        name: wlmoj
+#        compose:
+#          - /home/judge/docker/dmoj/docker-stack.yml
+#      when: ansible_hostname == "general"
 
     - name: Update packages
       apt:
