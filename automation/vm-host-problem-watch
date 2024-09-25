@@ -36,7 +36,7 @@ function formatted_time() {
 
 function format_problem() {
   problem_id="$1"
-  echo "[$problem_id](https://test.mcpt.ca/problem/$problem_id)"
+  echo "[$problem_id](https://mcpt.ca/problem/$problem_id)"
 
 }
 

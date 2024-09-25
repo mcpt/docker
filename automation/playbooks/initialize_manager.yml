@@ -81,13 +81,13 @@ tasks:
   - name: Obtain SSL certificate
     command: >
       certbot certonly --standalone
-      -d test.mcpt.ca
+      -d mcpt.ca
       --email admin@mcpt.ca
       --agree-tos
       --non-interactive
       --expand
     args:
-      creates: /etc/letsencrypt/live/test.mcpt.ca/fullchain.pem
+      creates: /etc/letsencrypt/live/mcpt.ca/fullchain.pem
 
   - name: Set up automatic renewal
     cron:
