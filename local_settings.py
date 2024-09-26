@@ -15,9 +15,8 @@ from typing import Set
 SECRET_KEY = os.environ.get('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', '0') == '1'
-HOST = os.environ.get('HOST', '')
+HOST = os.environ.get('HOST', 'mcpt.ca')
 
-# Uncomment and set to the domain names this site is intended to serve.
 # You must do this once you set DEBUG to False.
 ALLOWED_HOSTS = [HOST]
 
@@ -356,7 +355,7 @@ EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
 
 MOSS_API_KEY = os.environ.get('MOSS_API_KEY', None)
 
-REGISTRATION_OPEN = False
+REGISTRATION_OPEN = True # Allow users to register
 DMOJ_RATING_COLORS = True
 X_FRAME_OPTIONS = 'DENY'
 
@@ -371,8 +370,8 @@ MEDIA_ROOT = '/media/'
 MEDIA_URL = '/media/'
 
 DMOJ_ICS_REPORT_PERIODS = {
-	1: {"name": "Mr. Guglielmi", "email": "test-void@fluix.one"},
-	2: {"name": "Mrs. Krasteva", "email": "test-void@fluix.one"},
+	1: {"name": "Mr. Guglielmi", "email": "Guglielmi@jasoncameron.dev"},
+	2: {"name": "Mrs. Krasteva", "email": "Krasteva@jasoncameron.dev"},
 }
 
 if DEBUG:
