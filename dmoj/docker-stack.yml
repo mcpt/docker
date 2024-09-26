@@ -52,6 +52,7 @@ services:
       - judge
       - db
     deploy:
+      endpoint_mode: dnsrr
       replicas: 1
       placement:
         constraints: [ node.role == worker ]
@@ -138,6 +139,7 @@ services:
     networks:
       - db
     deploy:
+      endpoint_mode: dnsrr
       replicas: 1
       placement:
         constraints: [ node.hostname == general ]
@@ -156,6 +158,7 @@ services:
       - db
     deploy:
       replicas: 1
+      endpoint_mode: dnsrr
 
   nginx:
     image: ghcr.io/mcpt/wlmoj-nginx
