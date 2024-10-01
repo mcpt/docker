@@ -133,8 +133,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /home/judge/backups:/backups
     env_file: [ environment/mysql.env, environment/mysql-admin.env ]
-    ports:
-      - "3306:3306"
+#    ports:
+#      - "3306:3306"
     environment:
       TZ: "America/Toronto"
     networks:
