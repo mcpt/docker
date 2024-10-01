@@ -40,6 +40,7 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
       - /var/share/cache/mathoid:/mathoid/
+      - /var/share/cache/texoid:/texoid/
       - /var/share/media:/media/
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
