@@ -107,6 +107,7 @@ services:
       - "9998:9998"
     deploy:
       replicas: 1
+      endpoint_mode: dnsrr
       placement:
         constraints: [ node.role == manager ]
 
