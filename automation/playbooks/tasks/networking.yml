@@ -112,3 +112,15 @@
   ufw:
     state: enabled
     default: deny
+
+
+- name: Set TCP keepalive parameters
+  ansible.builtin.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+  loop:
+    - { name: "net.ipv4.tcp_keepalive_time", value: "600" }
+    - { name: "net.ipv4.tcp_keepalive_intvl", value: "30" }
+    - { name: "net.ipv4.tcp_keepalive_probes", value: "10" }
