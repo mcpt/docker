@@ -145,13 +145,13 @@ services:
       placement:
         constraints: [ node.hostname == general ]
 
-  backups:
-    image: ghcr.io/mcpt/wlmoj-backups
-    env_file: [ environment/mysql.env, environment/mysql-admin.env, environment/backups.env ]
-    networks:
-      - db
-    deploy:
-      replicas: 1
+#  backups:
+#    image: ghcr.io/mcpt/wlmoj-backups
+#    env_file: [ environment/mysql.env, environment/mysql-admin.env, environment/backups.env ]
+#    networks:
+#      - db
+#    deploy:
+#      replicas: 1
 
   redis:
     image: redis:alpine

@@ -74,5 +74,4 @@ jobs:
           docker push ghcr.io/mcpt/wlmoj-celery:latest
           docker push ghcr.io/mcpt/wlmoj-bridged:latest
           docker push ghcr.io/mcpt/wlmoj-wsevent:latest
-          docker push ghcr.io/mcpt/wlmoj-backups:latest
 

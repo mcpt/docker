@@ -126,7 +126,7 @@ if ! ( has_param '-sd' "$@" || has_param '--skip-deploy' "$@"); then
     # wsevent
     docker service update --detach wlmoj_wsevent --image ghcr.io/mcpt/wlmoj-wsevent
     # backups
-    docker service update --detach wlmoj_backups --image ghcr.io/mcpt/wlmoj-backups
+#    docker service update --detach wlmoj_backups --image ghcr.io/mcpt/wlmoj-backups
 
   # Don't update nginx automatically, as it will cause downtime. Update it manually. via passing the nginx flag to this script.
   fi
