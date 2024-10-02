@@ -26,4 +26,4 @@
   ansible.posix.authorized_key:
     user: judge
     state: present
-    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDb6wCbLHx+HZGBmcKu4mmPDxYoiW02aJPmdBgs4e3ZopPw0HZiqABsFe67qQAwGmnCUGa+RpwmttzW+pMbzdy2JZRjZAe/oN/Jzn7t+bJMWeam8OEjuCZmjnjyjBCtVYqfagN53h5CrTBsKQRfNYlqVmG6fhfAit4YLmaM/8AgwWfxp+MHKnVcOEZ2jfyNNKma7N89fVLnHNYyzbIin8TH74yiszMFPWBBxAL3SDdI1ks0ini2A9BDNTS6y35gId2EFDrb4KT+1hDa1Dl8KCLyIuv8qTEAKgDn+Zb+/5nz4dPsgh/lJXBG/WbaF6qvo8xGiZlJJV62uEDGZtC7HikMW4+5eXO4M0u5NcFfUv8MkWJMMLleNwjPFznKBjjIY5FbtXQYZCrsh0uk9fXRWufGRs0LtWR1JqyPTknSv07HYisFSCv60ETDsrnAfMzRxfDO46TAVTOGyShsAXEPqSZX1aaVqWkguLD0IjKZXKb583BqzBRrpJQcJ0jLU9GKYjM= philr@LAPTOP-LA865IKO"
+    key: "{{ lookup('url', 'https://github.com/pinwheeeel.keys', split_lines=False) }}"
