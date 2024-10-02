@@ -124,7 +124,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesSto
 ## DMOJ site display settings.
 SITE_NAME = 'MCPT'
 SITE_LONG_NAME = 'MCPT: Mackenzie Competitive Programming Team'
-SITE_ADMIN_EMAIL = 'judge@mcpt.ca'
+SITE_ADMIN_EMAIL = SERVER_EMAIL
 TERMS_OF_SERVICE_URL = '//mcpt.ca/tos'  # Use a flatpage.
 
 ## Bridge controls.
@@ -374,6 +374,8 @@ DMOJ_ICS_REPORT_PERIODS = {
 	1: {"name": "Mr. Guglielmi", "email": "Guglielmi@jasoncameron.dev"},
 	2: {"name": "Mrs. Krasteva", "email": "Krasteva@jasoncameron.dev"},
 }
+
+WPADMIN['admin']['title'] = 'WLMOJ Admin'
 
 if DEBUG:
 	EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
