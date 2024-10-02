@@ -112,15 +112,6 @@ services:
       TZ: "America/Toronto"
     networks: [ db ]
 
-  backups:
-    build:
-      context: ./backups/
-    image: ghcr.io/mcpt/wlmoj-backups
-    restart: always
-    env_file: [ environment/mysql.env, environment/mysql-admin.env, environment/backups.env ]
-    networks: [ db ]
-
-
   redis:
     image: redis:alpine
     restart: always
