@@ -19,7 +19,7 @@
         update_cache: yes
 
     - name: 'Add Judge Users'
-      ansible.builtin.include_tasks: "tasks/add_judge.yml"
+      ansible.builtin.include_tasks: "tasks/users.yml"
 
     - name: 'Check if WLMOJ repo exists'
       stat:
@@ -78,7 +78,7 @@
 
     - name: Ensure /var/share and its subdirectories exist with correct permissions
       shell: |
-        sudo chown -R judge:homeshare /var/share 
+        sudo chown -R 1000:homeshare /var/share 
         sudo chmod -R 2770 /var/share
     # 2770  is equivalent to rwxrws---
 
