@@ -61,20 +61,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-## django-compressor settings, for speeding up page load times by minifying CSS and JavaScript files.
-# Documentation: https://django-compressor.readthedocs.io/en/latest/
-
-# COMPRESS_ROOT = 'cache'
-# COMPRESS_OUTPUT_DIR = 'cache'
-
-COMPRESS_CSS_FILTERS = [
-	'compressor.filters.css_default.CssAbsoluteFilter',
-	'compressor.filters.cssmin.CSSMinFilter',
-]
-COMPRESS_JS_FILTERS = ['compressor.filters.jsmin.JSMinFilter']
-COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
-STATICFILES_FINDERS += ('compressor.finders.CompressorFinder',)
-
 PASSWORD_HASHERS = [
 	'django.contrib.auth.hashers.Argon2PasswordHasher',
 	'django.contrib.auth.hashers.PBKDF2PasswordHasher',
@@ -116,6 +102,22 @@ STATIC_URL = '/static/'
 
 # Uncomment to use hashed filenames with the cache framework.
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
+
+
+## django-compressor settings, for speeding up page load times by minifying CSS and JavaScript files.
+# Documentation: https://django-compressor.readthedocs.io/en/latest/
+
+COMPRESS_ROOT = STATIC_ROOT
+# COMPRESS_OUTPUT_DIR = 'cache'
+
+COMPRESS_CSS_FILTERS = [
+	'compressor.filters.css_default.CssAbsoluteFilter',
+	'compressor.filters.cssmin.CSSMinFilter',
+]
+COMPRESS_JS_FILTERS = ['compressor.filters.jsmin.JSMinFilter']
+COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
+STATICFILES_FINDERS += ('compressor.finders.CompressorFinder',)
 
 ############################################
 ########## DMOJ-specific settings ##########
