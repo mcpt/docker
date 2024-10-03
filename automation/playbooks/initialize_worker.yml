@@ -74,7 +74,7 @@
         src: 10.137.0.5:/var/share
         state: mounted
         fstype: nfs4
-        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800,nfsvers=4.1,rw'
+        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800,nfsvers=4.2,rw'
 
     - name: Ensure /var/share and its subdirectories exist with correct permissions
       shell: |
