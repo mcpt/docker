@@ -44,8 +44,8 @@ services:
       - /var/share/media:/media/
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
-      - /site/:/site/:ro
-      - /var/share/configs/wlmoj/local_settings.py:/local_settings.py:ro
+      - /site/:/site/
+      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks:
@@ -70,8 +70,8 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
       - /var/share/logs:/logs/
-      - /site/:/site/:ro
-      - /var/share/configs/wlmoj/local_settings.py:/local_settings.py:ro
+      - /site/:/site/
+      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks:
@@ -94,8 +94,8 @@ services:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/problems/:/problems/
       - /var/share/logs:/logs/
-      - /site/:/site/:ro
-      - /var/share/configs/wlmoj/local_settings.py:/local_settings.py:ro
+      - /site/:/site/
+      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks:
@@ -115,7 +115,7 @@ services:
     init: true
     user: "root:9889"
     volumes:
-      - /site/:/app/site/:ro
+      - /site/:/app/site/
     working_dir: /app/site
     env_file: [ environment/mysql.env, environment/site.env ]
     networks:
