@@ -6,7 +6,7 @@
 - name: Add judge user
   user:
     name: judge
-    id: 1000
+    uid: 1000
     groups:
       - sudo
       - docker
