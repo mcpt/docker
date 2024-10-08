@@ -34,7 +34,7 @@ services:
   site:
     image: ghcr.io/mcpt/wlmoj-site
     init: true
-    user: "judge:9889"
+    user: "1000:9889"
     volumes:
       - /var/share/assets:/assets/
       - /var/share/cache/pdfcache:/pdfcache/
@@ -65,7 +65,7 @@ services:
   celery:
     image: ghcr.io/mcpt/wlmoj-celery
     init: true
-    user: "judge:9889"
+    user: "1000:9889"
     volumes:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
@@ -89,7 +89,7 @@ services:
   bridged:
     image: ghcr.io/mcpt/wlmoj-bridged
     init: true
-    user: "judge:9889"
+    user: "1000:9889"
     volumes:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/problems/:/problems/
