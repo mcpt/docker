@@ -34,7 +34,7 @@ services:
   site:
     image: ghcr.io/mcpt/wlmoj-site
     init: true
-    user: "root:9889"
+    user: "judge:9889"
     volumes:
       - /var/share/assets:/assets/
       - /var/share/cache/pdfcache:/pdfcache/
@@ -45,7 +45,7 @@ services:
       - /var/share/problems:/problems/
       - /var/share/logs:/logs/
       - /site/:/site/
-      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
+      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks:
@@ -65,13 +65,13 @@ services:
   celery:
     image: ghcr.io/mcpt/wlmoj-celery
     init: true
-    user: "root:9889"
+    user: "judge:9889"
     volumes:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/cache/datacache:/datacache/
       - /var/share/logs:/logs/
       - /site/:/site/
-      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
+      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks:
@@ -89,13 +89,13 @@ services:
   bridged:
     image: ghcr.io/mcpt/wlmoj-bridged
     init: true
-    user: "root:9889"
+    user: "judge:9889"
     volumes:
       - /var/share/cache/pdfcache:/pdfcache/
       - /var/share/problems/:/problems/
       - /var/share/logs:/logs/
       - /site/:/site/
-      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py:ro
+      - /var/share/configs/wlmoj/local_settings.py:/site/dmoj/local_settings.py
     working_dir: /site/
     env_file: [ environment/mysql.env, environment/site.env ]
     networks:
