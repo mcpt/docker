@@ -27,8 +27,12 @@ function get_judges() {
 function formatted_judges() {
   local judges
   judges="$(get_judges Name)"
-  echo "${judges[@]// /, }" # Replace spaces with commas and spaces
+
+  # Remove 'judge_' prefix and replace spaces with commas
+  # shellcheck disable=SC2001
+  echo "${judges//judge_/}" | sed 's/ /, /g'
 }
+
 
 function formatted_time() {
   echo "<t:$(date +%s)>"
