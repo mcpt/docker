@@ -29,11 +29,11 @@ JUDGE_NAME=$1
 if [ -z "$2" ]
   then
     # Check if the droplet already exists as a safety measure
-    if ! doctl compute droplet list --format Name | grep -i "$1"; then
-        echo "Droplet $1 does not exist!" >&2
+    if ! doctl compute droplet list --format Name | grep -i "$2"; then
+        echo "Droplet $2 does not exist!" >&2
         exit 1
     fi
-    CONSTRAINT="node.name == $(doctl compute droplet list --format Name | grep -i "$1" | awk '{print $1}')"
+    CONSTRAINT="node.name == $(doctl compute droplet list --format Name | grep -i "$2" | awk '{print $1}')"
 else
     CONSTRAINT="node.role == worker"
 fi
@@ -43,7 +43,7 @@ rand=$(head -c 75 /dev/urandom | tr -d '\0')
 # Convert bytes to Base64
 JUDGE_AUTH_KEY=$(echo "$rand" | base64 | tr -d '\n' | cut -c -90 ) # db type is varchar(100)
 
-notify "Attempting to create new judge $JUDGE_NAME"
+notify "Attempting to create new judge $JUDGE_NAME on $2"
 # Warning for future devs: THE LINE BELOW IS A PAIN TO WRITE/DEAL WITH. I KNOW IT'S UGLY. I'M SORRY.
 run_single_command_on_site "python3 manage.py shell -c 'from judge.models import Judge; Judge.objects.create(name=\"'\"$JUDGE_NAME\"'\", auth_key=r\"'\"$JUDGE_AUTH_KEY\"'\")'"
 
