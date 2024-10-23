@@ -22,12 +22,15 @@ docker_packages:
 docker_packages_state: present
 ```
 
-The `docker_edition` should be either `ce` (Community Edition) or `ee` (Enterprise Edition). 
-You can also specify a specific version of Docker to install using the distribution-specific format: 
+The `docker_edition` should be either `ce` (Community Edition) or `ee` (Enterprise Edition).
+You can also specify a specific version of Docker to install using the distribution-specific format:
 Red Hat/CentOS: `docker-{{ docker_edition }}-<VERSION>` (Note: you have to add this to all packages);
 Debian/Ubuntu: `docker-{{ docker_edition }}=<VERSION>` (Note: you have to add this to all packages).
 
-You can control whether the package is installed, uninstalled, or at the latest version by setting `docker_packages_state` to `present`, `absent`, or `latest`, respectively. Note that the Docker daemon will be automatically restarted if the Docker package is updated. This is a side effect of flushing all handlers (running any of the handlers that have been notified by this and any other role up to this point in the play).
+You can control whether the package is installed, uninstalled, or at the latest version by setting
+`docker_packages_state` to `present`, `absent`, or `latest`, respectively. Note that the Docker daemon will be
+automatically restarted if the Docker package is updated. This is a side effect of flushing all handlers (running any of
+the handlers that have been notified by this and any other role up to this point in the play).
 
 ```yaml
 docker_obsolete_packages:
@@ -39,7 +42,9 @@ docker_obsolete_packages:
   - runc
 ```
 
-A list of packages to be uninstalled prior to running this role. See [Docker's installation instructions](https://docs.docker.com/engine/install/debian/#uninstall-old-versions) for an up-to-date list of old packages that should be removed.
+A list of packages to be uninstalled prior to running this role.
+See [Docker's installation instructions](https://docs.docker.com/engine/install/debian/#uninstall-old-versions) for an
+up-to-date list of old packages that should be removed.
 
 ```yaml
 docker_service_manage: true
@@ -48,7 +53,8 @@ docker_service_enabled: true
 docker_restart_handler_state: restarted
 ```
 
-Variables to control the state of the `docker` service, and whether it should start on boot. If you're installing Docker inside a Docker container without systemd or sysvinit, you should set `docker_service_manage` to `false`.
+Variables to control the state of the `docker` service, and whether it should start on boot. If you're installing Docker
+inside a Docker container without systemd or sysvinit, you should set `docker_service_manage` to `false`.
 
 ```yaml
 docker_install_compose_plugin: false
@@ -56,7 +62,8 @@ docker_compose_package: docker-compose-plugin
 docker_compose_package_state: present
 ```
 
-Docker Compose Plugin installation options. These differ from the below in that docker-compose is installed as a docker plugin (and used with `docker compose`) instead of a standalone binary.
+Docker Compose Plugin installation options. These differ from the below in that docker-compose is installed as a docker
+plugin (and used with `docker compose`) instead of a standalone binary.
 
 ```yaml
 docker_install_compose: true
@@ -71,7 +78,8 @@ Docker Compose installation options.
 docker_add_repo: true
 ```
 
-Controls whether this role will add the official Docker repository. Set to `false` if you want to use the default docker packages for your system or manage the package repository on your own.
+Controls whether this role will add the official Docker repository. Set to `false` if you want to use the default docker
+packages for your system or manage the package repository on your own.
 
 ```yaml
 docker_repo_url: https://download.docker.com/linux
@@ -91,7 +99,10 @@ docker_apt_filename: "docker"
 (Used only for Debian/Ubuntu.) You can switch the channel to `nightly` if you want to use the Nightly release.
 
 You can change `docker_apt_gpg_key` to a different url if you are behind a firewall or provide a trustworthy mirror.
-Usually in combination with changing `docker_apt_repository` as well. `docker_apt_filename` controls the name of the source list file created in `sources.list.d`. If you are upgrading from an older (<7.0.0) version of this role, you should change this to the name of the existing file (e.g. `download_docker_com_linux_debian` on Debian) to avoid conflicting lists.
+Usually in combination with changing `docker_apt_repository` as well. `docker_apt_filename` controls the name of the
+source list file created in `sources.list.d`. If you are upgrading from an older (<7.0.0) version of this role, you
+should change this to the name of the existing file (e.g. `download_docker_com_linux_debian` on Debian) to avoid
+conflicting lists.
 
 ```yaml
 docker_yum_repo_url: "{{ docker_repo_url }}/{{ (ansible_distribution == 'Fedora') | ternary('fedora','centos') }}/docker-{{ docker_edition }}.repo"
@@ -124,7 +135,9 @@ Custom `dockerd` options can be configured through this dictionary representing 
 
 ## Use with Ansible (and `docker` Python library)
 
-Many users of this role wish to also use Ansible to then _build_ Docker images and manage Docker containers on the server where Docker is installed. In this case, you can easily add in the `docker` Python library using the `geerlingguy.pip` role:
+Many users of this role wish to also use Ansible to then _build_ Docker images and manage Docker containers on the
+server where Docker is installed. In this case, you can easily add in the `docker` Python library using the
+`geerlingguy.pip` role:
 
 ```yaml
 - hosts: all
@@ -158,8 +171,10 @@ MIT / BSD
 
 * [We Manage](https://we-manage.de): Helping start-ups and grown-ups scaling their infrastructure in a sustainable way.
 
-The above sponsor(s) are supporting Jeff Geerling on [GitHub Sponsors](https://github.com/sponsors/geerlingguy). You can sponsor Jeff's work too, to help him continue improving these Ansible open source projects!
+The above sponsor(s) are supporting Jeff Geerling on [GitHub Sponsors](https://github.com/sponsors/geerlingguy). You can
+sponsor Jeff's work too, to help him continue improving these Ansible open source projects!
 
 ## Author Information
 
-This role was created in 2017 by [Jeff Geerling](https://www.jeffgeerling.com/), author of [Ansible for DevOps](https://www.ansiblefordevops.com/).
+This role was created in 2017 by [Jeff Geerling](https://www.jeffgeerling.com/), author
+of [Ansible for DevOps](https://www.ansiblefordevops.com/).
