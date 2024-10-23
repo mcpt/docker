@@ -36,7 +36,7 @@ function formatted_time() {
 
 function format_problem() {
   problem_id="$1"
-  echo "[$problem_id](https://mcpt.ca/problem/$problem_id)"
+  echo "[$problem_id](<https://mcpt.ca/problem/$problem_id>)"
 
 }
 
@@ -63,7 +63,8 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
     echo "${problem}:$(date +%s)" >> "$recent_notifs_file"
 
     if [ "$(echo "$line" | cut -d' ' -f2)" = "DELETE" ]; then
-      problem_notify "-# $(formatted_time): Deleted $problem on  **$(formatted_judges)** | __**$n_problems**__ problems in share"
+      problem_notify "-# $(formatted_time): Deleted $problem on  **$(formatted_judges)** | __**$n_problems**__
+      problems in share"
     elif [ "$(echo "$line" | cut -d' ' -f2)" = "CREATE" ]; then
       problem_notify "-# $(formatted_time): Created $(format_problem  "$problem") on  **$(formatted_judges)** | __**$n_problems**__ problems in share"
     else # Must be a UPDATE (move)
