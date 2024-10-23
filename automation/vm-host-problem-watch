@@ -75,7 +75,6 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
       docker run -d --rm --network wlmoj_judge --name curl_container  curlimages/curl sleep infinity
     fi
 
-
     judges="$(get_judges Name)"
     for judge in "${judges[@]}"; do
       docker exec curl_container curl -4 -s -X POST "http://$judge:9995/update/problems"

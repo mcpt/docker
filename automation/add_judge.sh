@@ -59,9 +59,11 @@ docker service create \
     --publish 9995:9995 \
     --network name=wlmoj_judge \
     --cap-add SYS_PTRACE \
+    -e DMOJ_IN_DOCKER=1 \
     --mount type=bind,src=/var/share/problems/,dst=/problems/ \
     ghcr.io/mcpt/wlmoj-judge:latest \
     run -p 9999 -c /judge.yml \
     --skip-self-test \
+    --api-host=0.0.0.0 \
     --api-port=9995 \
     "bridged" "$JUDGE_NAME" "$JUDGE_AUTH_KEY"
