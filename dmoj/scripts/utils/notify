@@ -10,10 +10,10 @@ function notify() {
     webhook_url="$DISCORD_WEBHOOK"
   fi
   local message_with_mention=""
-  local DISCORD_ROLE_OR_USER_ID="511724576674414600"       # todo replace with judge ID
+  local DISCORD_ROLE_OR_USER_ID="529735345600987136"       # todo replace with judge ID
 
   if [ -z "$webhook_url" ]; then
-    echo "ERROR: DISCORD_WEBHOOK environment variable not set." >&2
+    echo "ERROR: DISCORD_WEBHOOK environment variable not set. Set in /etc/environment or as an argument." >&2
     return 1
   fi
 
