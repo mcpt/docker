@@ -56,7 +56,6 @@ docker service create \
     --env AUTH_KEY="${JUDGE_AUTH_KEY}" \
     --replicas 1 \
     --constraint "$CONSTRAINT" \
-    --publish 9995:9995 \
     --network name=wlmoj_judge \
     --cap-add SYS_PTRACE \
     -e DMOJ_IN_DOCKER=1 \
