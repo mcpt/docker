@@ -15,8 +15,10 @@
       ansible.builtin.include_tasks: "tasks/universal_tasks.yml"
 
     - name: Update apt
+      become: true
       apt:
         update_cache: yes
+        upgrade: yes
 
     - name: 'Add Judge Users'
       ansible.builtin.include_tasks: "tasks/users.yml"
