@@ -50,7 +50,7 @@ run_single_command_on_site "python3 manage.py shell -c 'from judge.models import
 
 notify "Judge $JUDGE_NAME's DB obj was created"
 
-echo docker service create \
+docker service create \
   --name "judge_${JUDGE_NAME}" \
   --env JUDGE_NAME="${JUDGE_NAME}" \
   --env AUTH_KEY="${JUDGE_AUTH_KEY}" \
