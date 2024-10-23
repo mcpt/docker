@@ -64,8 +64,8 @@ def send(dry_run=False):
 		profile: Profile = None
 		print("Making user: (%s, %s)" % (username, password))
 		if not dry_run:
-			usr = User.objects.create_user(username, password=password)
-			profile = Profile(user=usr)
+			user_account = User.objects.create_user(username, password=password)
+			profile = Profile(user=user_account, is_unlisted=True)
 		
 		msg = MESSAGE.format(**{"user": username, "pass": password, "team": team})
 		emails = []
