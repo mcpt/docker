@@ -55,10 +55,12 @@ cp /home/judge/docker/local_settings.py /var/share/configs/wlmoj/local_settings.
 
 function update_static() {
   # find out which node site is running on
-  SITE_NODE=$(docker service ps wlmoj_site --format "{{.Node}}" --filter desired-state=running)
+  SITE_NODE=$(docker service ps wlmoj_site --format "{{.Node}}" --filter desired-state=running  | awk "NR==1{print
+  \$1}")
   # keep running the command if there is no node
   while [ "$SITE_NODE" = "" ]; do
-    SITE_NODE=$(docker service ps wlmoj_site --format "{{.Node}}" --filter desired-state=running)
+    SITE_NODE=$(docker service ps wlmoj_site --format "{{.Node}}" --filter desired-state=running  | awk "NR==1{print
+    \$1}")
   done
 
   # get node's local ip
