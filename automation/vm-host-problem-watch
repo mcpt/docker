@@ -103,12 +103,12 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
 
   judges="$(get_judges Name)"
   declare -a judge_results=()
-  judge_url="http://$judge:9995/update/problems"
   for judge in "${judges[@]}"; do
+    judge_url="http://$judge:9995/update/problems"
     judge_results+=("$(docker exec curl_container curl -4 -X POST "$judge_url")")
   done
 
-  format_notification "$line" "$judges" "${judge_results[@]}"
+  format_notification "$line" "${judges[@]}" "${judge_results[@]}"
 
   # Clean up old entries (older than 10 seconds)
   current_time=$(date +%s)
