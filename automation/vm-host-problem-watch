@@ -11,6 +11,11 @@ if [ "$(docker info --format '{{.Swarm.ControlAvailable}}')" != "true" ]; then
   exit 1
 fi
 
+if [ -z "$1" ]; then
+  echo "Usage: $0 <problem_storage_root>" >&2
+  exit 1
+fi
+
 . ../dmoj/scripts/utils/notify
 . ./swarm_info
 
