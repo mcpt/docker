@@ -108,7 +108,9 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
   declare -a judge_results=()
   for judge in "${judges[@]}"; do
     judge_url="http://$judge:9995/update/problems"
-    judge_results+=("$(docker exec curl_container curl -4 -X POST "$judge_url")")
+    echo "Sending request to $judge_url"
+    judge_results+=("$(docker exec curl_container curl -4 -s -X POST "$judge_url")")
+    echo "${judge_results[-1]}" # print the last element of the array
   done
 
   format_notification "$line" "${judges[@]}" "${judge_results[@]}"
