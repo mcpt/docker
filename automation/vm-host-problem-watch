@@ -1,5 +1,15 @@
 #!/bin/bash
 
+
+# Note to future maintainers:
+# I don't know why, but whenever you indent the problem_notify calls, it just doesn't work.
+# Do not indent the problem_notify calls. or you will suffer just as much as I did.
+
+# If you are looking at this code, i'm sorry. I'm not a bash expert.
+# Enjoy! :)
+
+
+
 cd "$(
   cd "$(dirname "${BASH_SOURCE[0]}")"
   pwd -P
@@ -51,44 +61,9 @@ function format_problem() {
 problem_storage_root="$(realpath "$1")"
 recent_notifs_file=$(mktemp)
 
-problem_notify "$(formatted_time): Watching ${problem_storage_root}, notifying judges **$(formatted_judges)**"
+# problem_notify "$(formatted_time): Watching ${problem_storage_root}, notifying judges **$(formatted_judges)**"
 
-function format_notification() {
-  local line="$1"
-  local judges="$2"
-  local results="$3"
-  # judges and results are arrays with the same length, so we can use the same index for both as they correspond to
-  # each (judge, result) pair
-
-  local message=""
-  # print out the FULL aray of judges and results
-  for x in "${judges[@]}"; do
-    echo "judge: $x"
-  done
-
-  for y in "${results[@]}"; do
-    echo "result: $y"
-  done
-
-  for i in "${!results[@]}"; do
-    local judge="${judges[$i]}"
-    local result="${results[$i]}"
-    message+="\n-# **$judge** | $result"
-  done
-
-  if [ "$(echo "$line" | cut -d' ' -f2)" = "DELETE" ]; then
-    problem_notify "-# $(formatted_time): Deleted $problem on  **$(formatted_judges)** | __**$n_problems**__
-        problems in share"
-  elif [ "$(echo "$line" | cut -d' ' -f2)" = "CREATE" ]; then
-    problem_notify "-# $(formatted_time): Created $(format_problem "$problem") on  **$(formatted_judges)** |
-        __**$n_problems**__ problems in share $message"
-  else # Must be a UPDATE (move)
-    problem_notify "-# $(formatted_time): Updated $(format_problem "$problem") on  **$(formatted_judges)** |
-        __**$n_problems**__ problems in share $message"
-  fi
-}
-
-inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read -r line; do
+inotifywait -rm "${problem_storage_root}" -e move,create -q | while read -r line; do
   if [ "$(echo "$line" | cut -d' ' -f3)" != "init.yml" ]; then
     continue
   fi
@@ -99,12 +74,12 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
   # shellcheck disable=SC2012
   n_problems=$(ls -1 "$problem_storage_root" | wc -l)
 
-  # Check if this directory has been notified recently
-  # if ! grep -q "^${problem}:" "$recent_notifs_file"; then
-    # echo "${problem}:$(date +%s)" >>"$recent_notifs_file"
-  # else
-    # continue
-  # fi
+   # Check if this directory has been notified recently
+   if ! grep -q "^${problem}:" "$recent_notifs_file"; then
+    echo "${problem}:$(date +%s)" >>"$recent_notifs_file"
+   else
+   continue
+   fi
   # If curl_container doesnt exist, create it
   if ! docker ps -a --format "{{.Names}}" | grep -q "curl_container"; then
     docker run -d --rm --network wlmoj_judge --name curl_container curlimages/curl sleep infinity
@@ -112,7 +87,7 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
 
   judges_raw="$(get_judges Name)" # a string with all the judges separated by spaces
   # split judges into an array
-  IFS=' ' read -r -a judges <<< "$judges_raw" # A proper array
+  IFS=' ' read -r -a judges <<<"$judges_raw" # A proper array
 
   declare -a judge_results=()
   for judge in "${judges[@]}"; do
@@ -121,9 +96,23 @@ inotifywait -rm "${problem_storage_root}" -e move,create,delete -q | while read 
     judge_results+=("$(docker exec curl_container curl -4 -s -X POST "$judge_url")")
     echo "${judge_results[-1]}" # print the last element of the array
   done
+  message=""
 
-  format_notification "$line" "${judges[@]}" "${judge_results[@]}"
+  for i in "${!judge_results[@]}"; do
+    judge="${judges[$i]}"
+    result="${judge_results[$i]}"
+    message+="\n-# **$judge** | $result"
+  done
 
+  echo "message: $message"
+
+  if [ "$(echo "$line" | cut -d' ' -f2)" = "DELETE" ]; then
+    problem_notify "-# $(formatted_time): Deleted $problem on **$(formatted_judges)** | __**$n_problems**__ problems in share"
+  elif [ "$(echo "$line" | cut -d' ' -f2)" = "CREATE" ]; then
+    problem_notify "-# $(formatted_time): Created $(format_problem "$problem") on **$(formatted_judges)** | __**$n_problems**__ problems in share $message"
+  else # Must be a UPDATE (move)
+    problem_notify "-# $(formatted_time): Updated $(format_problem "$problem") on **$(formatted_judges)** | __**$n_problems**__ problems in share $message"
+  fi
   # Clean up old entries (older than 10 seconds)
   current_time=$(date +%s)
   temp_file_content=$(awk -v now="$current_time" '{split($0,a,":"); if (now - a[2] <= 10) print $0}' "$recent_notifs_file")
