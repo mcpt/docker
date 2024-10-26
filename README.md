@@ -95,7 +95,6 @@ server {
 
     add_header X-UA-Compatible "IE=Edge,chrome=1";
     add_header X-Content-Type-Options nosniff;
-    add_header X-XSS-Protection "1; mode=block";
 
     location / {
         proxy_http_version 1.1;
