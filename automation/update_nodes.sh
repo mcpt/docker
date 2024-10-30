@@ -11,4 +11,4 @@ cd "$(
   pwd -P
 )" || exit 1 # cd to the directory of the script to ensure relative paths work
 
-ansible-playbook -i inventory.ini playbooks/update.yml
+ansible-playbook -i inventory.ini --ask-vault-pass playbooks/update.yml

@@ -3,6 +3,9 @@
   become: yes # Use privilege escalation (e.g., sudo)
   gather_facts: true
   tasks:
+    - name: Update SSH keys
+      ansible.builtin.include_tasks: "tasks/users.yml"
+
     - name: Update each WLMOJ repository
       environment:
         GIT_TERMINAL_PROMPT: 0
@@ -38,13 +41,13 @@
     - name: Remove outdated docker artifacts
       ansible.builtin.include_tasks: "tasks/cleanup.yml"
 
-    #    - name: Update docker stack
-    #      docker_stack:
-    #        state: present
-    #        name: wlmoj
-    #        compose:
-    #          - /home/judge/docker/dmoj/docker-stack.yml
-    #      when: ansible_hostname == "general"
+    #        - name: Update docker stack
+    #          docker_stack:
+    #            state: present
+    #            name: wlmoj
+    #            compose:
+    #              - /home/judge/docker/dmoj/docker-stack.yml
+    #          when: ansible_hostname == "general"
 
     - name: Update packages
       apt:
