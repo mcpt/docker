@@ -158,7 +158,7 @@ services:
         constraints: [ node.hostname == general ]
 
   sentinel:
-    image: ghcr.io/mcpt/sentinel
+    image: ghcr.io/mcpt/sentinel:main
     volumes:
       - /var/share/:/var/share/:ro
       - /var/share/configs/backups/config.toml:/config.toml:ro
