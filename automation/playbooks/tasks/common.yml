@@ -1,0 +1,7 @@
+- name: Add crontab to clear old docker cache
+  ansible.builtin.cron:
+    name: clear docker cache
+    minute: 0
+    hour: 2
+    job: docker system prune -f
+    user: root

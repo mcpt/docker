@@ -5,6 +5,8 @@
   tasks:
     - name: Update SSH keys
       ansible.builtin.include_tasks: "tasks/users.yml"
+    - name: Run common tasks
+      ansible.builtin.include_tasks: "tasks/common.yml"
 
     - name: Update each WLMOJ repository
       environment:
