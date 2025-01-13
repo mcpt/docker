@@ -7,6 +7,12 @@ on:
       - 'dmoj/**'
   pull_request:
   workflow_dispatch:
+    inputs:
+      push_base:
+        description: 'Run with flag'
+        required: false
+        default: false
+        type: boolean
   schedule:
     - cron: '0 0 * * *' # Every day at midnight
 
@@ -41,6 +47,11 @@ jobs:
         run: docker buildx bake --file docker-build.yml --file ../docker-build-cache.json
         working-directory: dmoj
 
+      - name: Push base
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.run_with_flag == true
+        run: |
+          docker push ghcr.io/mcpt/wlmoj-base:latest
+
       - name: Test images
         id: test
         run: |
@@ -60,7 +71,6 @@ jobs:
         run: |
           docker compose -f docker-build.yml logs
         working-directory: dmoj
-
 
       - name: Push images to GHCR
         if: (github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/master'
