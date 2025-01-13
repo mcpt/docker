@@ -1,4 +1,8 @@
 #!/bin/bash
+
+echo "Copying static files..."
+echo "$COMPOSE_FLAGS"
+
 if [ -z "$CI" ]; then  # Not running in CI
          bash /scripts/make_style.sh && \
          cd /site && \

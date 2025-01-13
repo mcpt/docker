@@ -68,7 +68,7 @@ jobs:
           docker ps -a 
           sleep 15
           export COMPOSE_EXEC_FLAGS="-T"
-          export COMPOSE_FLAGS="-f docker-build.yml"
+          export COMPOSE_FLAGS="-f ./docker-build.yml"
           echo "Static files"
           ./scripts/copy_static
           echo "Migrate"
