@@ -19,7 +19,7 @@ HOST = os.environ.get('HOST', 'mcpt.ca')
 
 # You must do this once you set DEBUG to False.
 ALLOWED_HOSTS = [HOST]
-CSRF_TRUSTED_ORIGINS = [HOST]
+CSRF_TRUSTED_ORIGINS = ["https://" + HOST]
 
 # Optional apps that DMOJ can make use of.
 INSTALLED_APPS += ("discord_integration",)
