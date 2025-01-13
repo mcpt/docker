@@ -48,15 +48,15 @@ jobs:
         working-directory: dmoj
 
       - name: Push base then re-run workflow
-        if: github.event.inputs.push_base
+        if: github.event.inputs.push_base == 'true'
         run: |
           docker push ghcr.io/mcpt/wlmoj-base:latest && \
-           curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ github.workflow }}/dispatches \
-            -d '{"ref": "${{ github.ref_name }}"}' && \
-            exit 0 
+          curl -X POST \
+           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+           -H "Accept: application/vnd.github.v3+json" \
+           https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ github.workflow }}/dispatches \
+           -d '{"ref": "${{ github.ref_name }}"}' && \
+           exit 0 
           
 
       - name: Test images
