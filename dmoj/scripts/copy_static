@@ -1,7 +1,6 @@
 #!/bin/bash
 
-echo "Copying static files..."
-echo "$COMPOSE_FLAGS"
+echo pwd
 
 if [ -z "$CI" ]; then  # Not running in CI
          bash /scripts/make_style.sh && \
@@ -16,9 +15,8 @@ if [ -z "$CI" ]; then  # Not running in CI
          cp 502.html /assets/ && \
          cp logo.png /assets/ && \
          cp robots.txt /assets/
-
 else # in CI
-  docker compose "$COMPOSE_FLAGS" exec "$COMPOSE_EXEC_FLAGS" site /bin/bash -c "\
+  docker compose -f ./docker-build.yml exec "$COMPOSE_EXEC_FLAGS" site /bin/bash -c "\
       bash make_style.sh && \
       mkdir ./assets && \
       python3 manage.py collectstatic --noinput && \
@@ -31,5 +29,4 @@ else # in CI
       cp 502.html ./assets/ && \
       cp logo.png ./assets/ && \
       cp robots.txt ./assets/"
-
 fi
