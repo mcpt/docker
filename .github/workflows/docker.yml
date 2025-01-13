@@ -11,7 +11,6 @@ on:
       push_base:
         description: 'Push the base image to GHCR before tests'
         required: false
-        default: false
         type: boolean
   schedule:
     - cron: '0 0 * * *' # Every day at midnight
@@ -48,15 +47,16 @@ jobs:
         run: docker buildx bake --file docker-build.yml --file ../docker-build-cache.json
         working-directory: dmoj
 
-      - name: Push base
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.push_base == true
+      - name: Push base then re-run workflow
+        if: github.event.inputs.push_base
         run: |
           docker push ghcr.io/mcpt/wlmoj-base:latest && \
            curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ github.workflow }}/dispatches \
-            -d '{"ref": "${{ github.ref_name }}"}'
+            -d '{"ref": "${{ github.ref_name }}"}' && \
+            exit 0 
           
 
       - name: Test images
