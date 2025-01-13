@@ -1,0 +1,7 @@
+[submodule "repos/wlmoj"]
+	path = repos/wlmoj
+	url = git@github.com:mcpt/wlmoj.git
+	
+[submodule "repos/judge"]
+	path = repos/judge
+	url = git@github.com:mcpt/wlmoj-judge.git
