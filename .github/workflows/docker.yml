@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       push_base:
-        description: 'Run with flag'
+        description: 'Push the base image to GHCR before tests'
         required: false
         default: false
         type: boolean
