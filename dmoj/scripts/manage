@@ -1,4 +1,5 @@
 #!/bin/bash
 cd $(dirname $(dirname $0)) || exit
 
-docker compose "$COMPOSE_FLAGS" exec "$COMPOSE_EXEC_FLAGS" site python3 manage.py $@
+# shellcheck disable=SC2086
+docker compose $COMPOSE_FLAGS exec "$COMPOSE_EXEC_FLAGS" site python3 manage.py $@
