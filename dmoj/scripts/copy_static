@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo pwd
+pwd
 
 if [ -z "$CI" ]; then  # Not running in CI
          bash /scripts/make_style.sh && \
