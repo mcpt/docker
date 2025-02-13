@@ -38,7 +38,7 @@
     - name: Trigger Discord webhook on successful updates
       community.general.discord:
         webhook_id: 1265698136480022741
-        webhook_token: {{ discord_webhook }}
+        webhook_token: "{{ discord_webhook }}"
         content: '-# WLMOJ repositories updated successfully on **{{ ansible_hostname }}**. [[View Commit @ {{repo_clone.after|truncate(8, False, "", 0)}}]](<https://github.com/mcpt/wlmoj/commit/{{ repo_clone.after }}>)'
       when: repo_clone.before != repo_clone.after
       failed_when: false # Don't fail if the webhook fails
