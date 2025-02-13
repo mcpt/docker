@@ -2,6 +2,10 @@
 
 pwd
 
+echo "$CI" # Debugging
+
+
+
 if [ -z "$CI" ]; then  # Not running in CI
          bash /scripts/make_style.sh && \
          cd /site && \
