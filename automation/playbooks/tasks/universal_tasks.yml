@@ -1,13 +1,14 @@
-- name: create the homeshare group
-  group:
+---
+- name: Create the homeshare group
+  ansible.builtin.group:
     name: homeshare
     state: present
-    system: yes
+    system: true
     gid: 9889
   failed_when: false # Ignore failure if the group already exists
 
-- name: add root to the homeshare group
-  user:
+- name: Add root to the homeshare group
+  ansible.builtin.user:
     name: root
     groups: homeshare
-    append: yes
+    append: true

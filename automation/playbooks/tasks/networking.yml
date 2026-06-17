@@ -1,69 +1,66 @@
+---
 - name: Allow TCP port 22 (SSH) on IPv4
-  ufw:
+  community.general.ufw:
     rule: allow
     port: 22
     proto: tcp
 
 - name: Allow TCP port 2376 (Docker Swarm manager communication) on IPv4
-  ufw:
+  community.general.ufw:
     rule: allow
     port: 2376
     proto: tcp
 
 - name: Allow TCP port 2377 (Docker Swarm manager communication) on IPv4
-  ufw:
+  community.general.ufw:
     rule: allow
     port: 2377
     proto: tcp
 
 - name: Allow TCP/UDP port 7946 (Overlay network discovery) on IPv4 (TCP)
-  ufw:
+  community.general.ufw:
     rule: allow
     port: 7946
     proto: tcp
 
 - name: Allow TCP/UDP port 7946 (Overlay network discovery) on IPv4 (UDP)
-  ufw:
+  community.general.ufw:
     rule: allow
     port: 7946
     proto: udp
 
-
 - name: Allow UDP port 4789 (Overlay network traffic) on IPv4
-  ufw:
+  community.general.ufw:
     rule: allow
     port: 4789
     proto: udp
-    to: '{{ overlay_network_range }}'
-    from: '{{ overlay_network_range }}'
-
+    to: "{{ overlay_network_range }}"
+    from: "{{ overlay_network_range }}"
 
 - name: Allow IP protocol 50 (IPSec ESP) for encrypted overlay networks (optional) on IPv4
-  ufw:
+  community.general.ufw:
     rule: allow
     proto: esp
-    to: '{{ overlay_network_range }}'
-    from: '{{ overlay_network_range }}'
-
+    to: "{{ overlay_network_range }}"
+    from: "{{ overlay_network_range }}"
 
 - name: Allow internal network communication (optional) on IPv4
-  ufw:
+  community.general.ufw:
     rule: allow
-    to: '{{ overlay_network_range }}'
-    from: '{{ overlay_network_range }}'
+    to: "{{ overlay_network_range }}"
+    from: "{{ overlay_network_range }}"
 
 - name: UFW - enable and by default drop
-  ufw:
+  community.general.ufw:
     state: enabled
     default: deny
 
-
 - name: Set TCP keepalive parameters
-  ansible.builtin.sysctl:
+  ansible.posix.sysctl:
     name: "{{ item.name }}"
     value: "{{ item.value }}"
     state: present
-    reload: yes
+    reload: true
   loop:
     - { name: "net.ipv4.tcp_keepalive_time", value: "600" }
     - { name: "net.ipv4.tcp_keepalive_intvl", value: "30" }

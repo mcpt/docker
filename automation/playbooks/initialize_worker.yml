@@ -1,4 +1,6 @@
-- hosts: "workers" # todo: change to only passed in IP
+---
+- name: "Initialize Worker"
+  hosts: "workers" # todo: change to only passed in IP
   become: true
   become_user: root
   strategy: linear
@@ -6,7 +8,7 @@
   vars:
     ansible_ssh_private_key_file: ~/.ssh/id_ed25519
     ansible_python_interpreter: /usr/bin/python3
-    docker_edition: 'ce'
+    docker_edition: "ce"
     docker_package_state: present
     overlay_network_range: "10.137.0.0/16"
 
@@ -14,65 +16,60 @@
     - name: Run basic tasks (perms)
       ansible.builtin.include_tasks: "tasks/universal_tasks.yml"
 
-
     - name: Ensure Locks Are Released
-      shell:
+      ansible.builtin.shell:
         cmd: |
           while fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock >/dev/null 2>&1; do
             sleep 2
           done
       register: locks_released
-      until: locks_released.rc == 0
-      retries: 10
-      delay: 5
+      changed_when: false
 
     - name: Update apt
       become: true
-      apt:
-        update_cache: yes
-        upgrade: yes
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: true
 
-    - name: 'Add Judge Users'
+    - name: "Add Judge Users"
       ansible.builtin.include_tasks: "tasks/users.yml"
 
-    - name: 'Check if WLMOJ repo exists'
-      stat:
+    - name: "Check if WLMOJ repo exists"
+      ansible.builtin.stat:
         path: /site
       register: wlmoj_repo
 
-
-    - name: 'Get WLMOJ Repo'
+    - name: "Get WLMOJ Repo" # noqa: latest
       environment:
-        GIT_TERMINAL_PROMPT: 0
+        GIT_TERMINAL_PROMPT: "0"
       ansible.builtin.git:
-        repo: 'https://github.com/mcpt/wlmoj.git'
+        repo: "https://github.com/mcpt/wlmoj.git"
         clone: true
         recursive: true
-        dest: '/site'
-      when: wlmoj_repo.stat.exists == false
+        dest: "/site"
+      when: not wlmoj_repo.stat.exists
 
-    - name: 'Disable password for root'
-      shell: passwd -d root
+    - name: "Disable password for root"
+      ansible.builtin.command: passwd -d root
       run_once: true
+      changed_when: false
 
     - name: Ensure Locks Are Released
-      shell:
+      ansible.builtin.shell:
         cmd: |
           while fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock >/dev/null 2>&1; do
             sleep 2
           done
       register: locks_released
-      until: locks_released.rc == 0
-      retries: 10
-      delay: 5
+      changed_when: false
 
     - name: Install Docker
       run_once: true
-      include_role:
+      ansible.builtin.include_role:
         name: jsoncameron.docker
 
-    - name: 'Install nfs, pip & ufw'
-      apt:
+    - name: "Install nfs, pip & ufw"
+      ansible.builtin.apt:
         pkg:
           - nfs-common
           - python3-pip
@@ -81,41 +78,41 @@
     - name: "Run network tasks"
       ansible.builtin.include_tasks: "tasks/networking.yml"
 
-    - name: 'Mount nfs share'
+    - name: "Mount nfs share"
       run_once: true
       ansible.posix.mount:
         path: /var/share
         src: 10.137.0.5:/var/share
         state: mounted
         fstype: nfs4
-        opts: 'auto,nofail,noatime,nolock,intr,tcp,actimeo=1800,nfsvers=4.2,rw'
+        opts: "auto,nofail,noatime,nolock,intr,tcp,actimeo=1800,nfsvers=4.2,rw"
 
     - name: Ensure /var/share and its subdirectories exist with correct permissions
-      shell: |
-        sudo chown -R 1000:homeshare /var/share 
+      ansible.builtin.shell: |
+        sudo chown -R 1000:homeshare /var/share
         sudo chmod -R 2770 /var/share
-    # 2770  is equivalent to rwxrws---
-
+      # 2770  is equivalent to rwxrws---
+      changed_when: false
     - name: Ensure Docker group exists
-      group:
+      ansible.builtin.group:
         name: docker
         state: present
 
     - name: Add judge user to Docker group
-      user:
+      ansible.builtin.user:
         name: judge
         groups: docker
-        append: yes
+        append: true
 
-    - name: 'Change timezone to Toronto time'
-      shell: timedatectl set-timezone America/Toronto
-
+    - name: "Change timezone to Toronto time"
+      ansible.builtin.command: timedatectl set-timezone America/Toronto
+      changed_when: false
     - name: "Install updated docker bindings"
-      pip:
+      ansible.builtin.pip:
         name: docker>=7.1.0
 
     - name: "Install common utils"
-      apt:
+      ansible.builtin.apt:
         pkg:
           - vim
           - btop
@@ -124,33 +121,32 @@
           - curl
 
     - name: Ensure /etc/docker directory exists
-      file:
+      ansible.builtin.file:
         path: /etc/docker
         state: directory
-        mode: '0755'
+        mode: "0755"
 
     - name: Configure Docker daemon
-      copy:
+      ansible.builtin.copy:
         content: |
           {
             "dns": ["8.8.8.8", "8.8.4.4"]
           }
         dest: /etc/docker/daemon.json
+        owner: root
+        group: root
+        mode: "0644"
       register: daemon_config
-
-    - name: Restart Docker service
-      systemd:
-        name: docker
-        state: restarted
-      when: daemon_config.changed
+      notify: Restart Docker service
 
     - name: Get Swarm join token from manager (current host)
-      local_action:
-        module: ansible.builtin.shell
+      ansible.builtin.command:
         cmd: "docker swarm join-token worker -q"
+      delegate_to: localhost
       register: join_token
+      changed_when: false
     # this works docker swarm join --token TOKLENNNNNNNNN 10.137.0.5:2377
-    - name: 'Join the Swarm as a worker'
+    - name: "Join the Swarm as a worker"
       run_once: true
       community.docker.docker_swarm:
         state: join
@@ -168,25 +164,29 @@
     #      when: inventory_hostname in groups['managers']
 
     - name: Ensure Locks Are Released
-      shell:
+      ansible.builtin.shell:
         cmd: |
           while fuser /var/lib/apt/lists/lock /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock >/dev/null 2>&1; do
             sleep 2
           done
       register: locks_released
-      until: locks_released.rc == 0
-      retries: 10
-      delay: 5
+      changed_when: false
 
-    - name: 'Install Unattended Upgrades'
-      include_role:
+    - name: "Install Unattended Upgrades"
+      ansible.builtin.include_role:
         name: hifis.unattended_upgrades
 
     - name: Check if reboot required
-      stat:
+      ansible.builtin.stat:
         path: /var/run/reboot-required
       register: reboot_required_file
 
-    - name: 'Reboot server'
-      reboot:
-      when: reboot_required_file.stat.exists == true
+    - name: "Reboot server"
+      ansible.builtin.reboot:
+      when: reboot_required_file.stat.exists
+
+  handlers:
+    - name: Restart Docker service
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
