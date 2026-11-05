@@ -10,7 +10,7 @@
     ansible_python_interpreter: /usr/bin/python3
     docker_edition: "ce"
     docker_package_state: present
-    overlay_network_range: "10.137.0.0/16"
+    overlay_network_range: "10.118.0.0/20"
 
   tasks:
     - name: Run basic tasks (perms)
@@ -82,7 +82,7 @@
       run_once: true
       ansible.posix.mount:
         path: /var/share
-        src: 10.137.0.5:/var/share
+        src: 10.118.0.3:/var/share
         state: mounted
         fstype: nfs4
         opts: "auto,nofail,noatime,nolock,intr,tcp,actimeo=1800,nfsvers=4.2,rw"

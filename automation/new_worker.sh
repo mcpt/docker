@@ -12,9 +12,9 @@ cd "$(
 
 # grab a argument of --size
 if [[ $* == *--large* ]]; then
-  SIZE="s-2vcpu-2gb"
+  SIZE="s-2vcpu-2gb-intel"
 else
-  SIZE="s-1vcpu-1gb"
+  SIZE="s-1vcpu-1gb-intel"
 fi
 
 . ../dmoj/scripts/utils/notify
@@ -31,7 +31,7 @@ if doctl compute droplet list --format Name | grep -i "$1"; then
   exit 1
 fi
 
-SSH_KEYS=$(doctl compute ssh-key list --no-header --format ID)
+SSH_KEYS=$(doctl compute ssh-key list --no-header --format ID | paste -sd, -)
 
 echo "Provisioning new droplet $1..."
 echo "SSH keys: $(doctl compute ssh-key list --no-header --format Name | tr '\n' ', ')"
