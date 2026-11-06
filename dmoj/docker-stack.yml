@@ -189,7 +189,7 @@ services:
       - /var/share/cache/texoid/:/texoid/
       - /var/share/cache/mathoid/:/mathoid
       - /var/share/media/:/media/
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /etc/ssl/mcpt-origin:/etc/letsencrypt/live/mcpt.ca:ro
     networks:
       - site
     deploy:
@@ -202,20 +202,6 @@ services:
         condition: on-failure
       placement:
         constraints: [ node.role == manager ]
-
-  certbot:
-    image: certbot/dns-cloudflare
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - /var/lib/letsencrypt:/var/lib/letsencrypt
-      - /var/log/letsencrypt/letsencrypt.log:/var/log/letsencrypt/letsencrypt.log
-      - /var/share/configs/certbot/cloudflare.ini:/root/.secrets/certbot/cloudflare.ini:ro
-    command: certonly -v --non-interactive --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini --dns-cloudflare-propagation-seconds=50 --email dns@mcpt.ca --agree-tos --no-eff-email -d mcpt.ca -d mcpt.ca
-    deploy:
-      placement:
-        constraints: [ node.role == manager ]
-      restart_policy:
-        delay: 24h
 
 networks:
   site:
