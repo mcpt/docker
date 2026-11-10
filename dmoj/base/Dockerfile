@@ -7,7 +7,7 @@ RUN apt-get update && \
         mariadb-client libmariadb-dev \
         libjpeg-dev debconf-utils pkg-config \
         uwsgi-plugin-python3 && \
-    curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+    curl -sL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
