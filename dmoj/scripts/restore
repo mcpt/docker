@@ -1,50 +1,35 @@
 #!/bin/bash
-cd $(dirname $(dirname $0)) || exit
+# Restore a dump made by ./backup (.sql.gz or .sql). Run on general (where wlmoj_db lives).
+cd "$(dirname "$0")" || exit 1
 . ./utils/notify
 
-
-set -e
-if [ -z "$1" ]; then
-    echo "Usage: restore <filename.sql>"
-    echo "Example: restore 2024-06-28_15-25-00.sql"
-    exit 1  # Exit with an error code
-fi
-
 BACKUP_FILE="$1"
-DOCKER_ID=$(docker ps -qf "name=db")
-# Verify if the backup file exists
 if [ ! -f "$BACKUP_FILE" ]; then
-    echo "Error: Backup file '$BACKUP_FILE' not found."
-    exit 1  # Exit with an error code
+  echo "Usage: restore <backup.sql.gz|backup.sql>"
+  echo "Example: restore /home/judge/backups/dump_2024-06-28_15-25-00.sql.gz"
+  exit 1
 fi
 
-read -rp "Are you sure you want to restore the database from '$BACKUP_FILE'? This will overwrite the current database. [y/N]: " confirmation
-if [[ ! "$confirmation" =~ ^[Yy]$ ]]; then
-    echo "Restore operation cancelled."
-    exit 0
-fi
+DB=$(docker ps -qf name=wlmoj_db)
+[ -n "$DB" ] || { echo "ERROR: wlmoj_db container is not running on $(hostname)" >&2; exit 1; }
 
-# Delay before starting the restore
-echo "Starting restore in 10 seconds... (Press Ctrl+C to cancel)"
+read -rp "Restore the database from '$BACKUP_FILE'? This DROPS the current database first. [y/N]: " confirmation
+[[ "$confirmation" =~ ^[Yy]$ ]] || { echo "Restore cancelled."; exit 0; }
+echo "Starting restore in 10 seconds... (Ctrl+C to cancel)"
 sleep 10
 
-
 notify "Restore Started"
-echo "Restoring database from $BACKUP_FILE..."
+docker exec "$DB" sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$MYSQL_DATABASE\`; CREATE DATABASE \`$MYSQL_DATABASE\`"' || { echo "ERROR: drop failed" >&2; exit 1; }
+notify "Dropped database, restoring from $BACKUP_FILE..." "true"
 
-set -a
-.  ../environment/mysql.env
-.  ../environment/mysql-admin.env
-
-set +a
-
-# todo: add pv? (pipe viewer) to show progress bar
-# gunzip -c "${BACKUP_FILE}" | docker exec -i DOCKER_ID mariadb --user="$MYSQL_USER
-# drop dmoj database
-docker exec "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" -e "DROP DATABASE IF EXISTS $MYSQL_DATABASE;"
-notify "Dropped database $MYSQL_DATABASE" "true"
-notify "Restoring database $MYSQL_DATABASE...."
-docker exec -i "$DOCKER_ID" mariadb --user=root --password="$MYSQL_ROOT_PASSWORD" < "${BACKUP_FILE}"
+# dumps from ./backup include CREATE DATABASE/USE; default to MYSQL_DATABASE for ones that don't
+case "$BACKUP_FILE" in *.gz) zcat "$BACKUP_FILE" ;; *) cat "$BACKUP_FILE" ;; esac |
+  docker exec -i "$DB" sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" exec mariadb -uroot "$MYSQL_DATABASE"'
+if [ "${PIPESTATUS[1]}" -ne 0 ] || [ "${PIPESTATUS[0]}" -ne 0 ]; then
+  echo "ERROR: restore failed. The database is empty or partial; restore again from a good file." >&2
+  notify "Restore FAILED from $BACKUP_FILE" "true"
+  exit 1
+fi
 
 echo "Restore completed successfully."
 notify "Restore Completed" "true"

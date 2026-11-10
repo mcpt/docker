@@ -102,7 +102,7 @@ services:
     networks: [ site, nginx ]
 
   db:
-    image: mariadb
+    image: mariadb:13.0.2 # pinned: major upgrades need mariadb-upgrade, never pull latest
     restart: always
     volumes:
       - ./scripts/mariadb:/docker-entrypoint-initdb.d/

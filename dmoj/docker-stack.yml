@@ -138,7 +138,7 @@ services:
         constraints: [ node.role == manager ]
 
   db:
-    image: mariadb
+    image: mariadb:13.0.2 # pinned: major upgrades need mariadb-upgrade, never pull latest
     volumes:
       - /home/judge/database/:/var/lib/mysql:Z
       - ./scripts/mariadb:/docker-entrypoint-initdb.d/

@@ -1,33 +1,29 @@
 #!/bin/bash
-
-cd $(dirname $0) || exit
-
-# Set the backup directory (ideally from an environment variable)
-BACKUP_DIR=${BACKUP_DIR:-"/home/judge/backups"} # Default to /home/judge/backups if BACKUP_DIR is not set
-
+# Dump the dmoj database from the swarm db container. Run on general (where wlmoj_db lives).
+# Usage: backup [prefix]   Env: BACKUP_DIR (default /home/judge/backups), KEEP_DAYS (default 14)
+set -o pipefail
+cd "$(dirname "$0")" || exit 1
 . ./utils/notify
 
-if [ -z "$1" ]; then
-  FILE_PREFIX="dump"
-else
-  # Sanitize the user-provided filename prefix (remove invalid characters and path elements)
-  FILE_PREFIX=$(echo "$1" | sed -e 's/[^A-Za-z0-9_-]/_/g' -e 's#/#_#g')
-fi
+BACKUP_DIR=${BACKUP_DIR:-/home/judge/backups}
+KEEP_DAYS=${KEEP_DAYS:-14}
+PREFIX=$(echo "${1:-dump}" | sed 's/[^A-Za-z0-9_-]/_/g')
+BACKUP_FILE="$BACKUP_DIR/${PREFIX}_$(date +%Y-%m-%d_%H-%M-%S).sql.gz"
 
-TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-BACKUP_FILE="$BACKUP_DIR/${FILE_PREFIX}_${TIMESTAMP}.sql.gz"
+fail() {
+  echo "ERROR: $1" >&2
+  rm -f "$BACKUP_FILE"
+  notify "Backup Failed: $1" "true"
+  exit 1
+}
 
-cd "$(dirname "$(dirname "$0")")" || exit
+DB=$(docker ps -qf name=wlmoj_db)
+[ -n "$DB" ] || fail "wlmoj_db container is not running on $(hostname)"
 
-set -a
-.  environment/mysql.env
-set +a
+docker exec "$DB" sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" exec mariadb-dump -uroot --databases "$MYSQL_DATABASE" --single-transaction --triggers' |
+  gzip > "$BACKUP_FILE" || fail "mariadb-dump failed"
+# a dump cut off midway still gunzips fine, so check for the trailer too
+zcat "$BACKUP_FILE" | tail -1 | grep -q "Dump completed" || fail "dump is incomplete"
 
-# Check the exit status of mariadb-dump
-if ! docker compose exec db mariadb-dump --all-databases --single-transaction --ssl="FALSE" --user="$MYSQL_USER" --password="$MYSQL_PASSWORD" | gzip > "$BACKUP_FILE"; then
-    echo "ERROR: mariadb-dump failed. Check logs for details."
-    notify "Backup Failed" "true"
-    exit 1
-fi
-
+find "$BACKUP_DIR" -name "${PREFIX}_*.sql.gz" -mtime +"$KEEP_DAYS" -delete
 echo "Backup created successfully: $BACKUP_FILE"
