@@ -23,7 +23,7 @@ services:
       endpoint_mode: dnsrr
       resources:
         limits:
-          memory: 256M
+          memory: 512M
       placement:
         constraints: [ node.role == worker ]
 
