@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:1.31.8
 
 LABEL org.opencontainers.image.source="https://github.com/mcpt/wlmoj"
 

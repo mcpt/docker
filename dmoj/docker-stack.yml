@@ -158,7 +158,7 @@ services:
         constraints: [ node.hostname == general ]
 
   sentinel:
-    image: ghcr.io/mcpt/sentinel:main
+    image: ghcr.io/mcpt/sentinel@sha256:e488a28b7e2685ca469d800b4fc2df933609bc84fafdbcdbefb2374798b71277 # main as of 2026-11-16
     volumes:
       - /var/share/:/var/share/:ro
       - /var/share/configs/backups/config.toml:/config.toml:ro
@@ -169,7 +169,7 @@ services:
       replicas: 1
 
   redis:
-    image: redis:alpine
+    image: redis:8.10.3-alpine
     networks:
       - db
     deploy:

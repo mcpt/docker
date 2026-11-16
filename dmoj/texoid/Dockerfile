@@ -6,7 +6,7 @@ RUN apt-get update && \
         texlive-pictures texlive-pstricks librsvg2-bin xxd imagemagick dvisvgm git && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/DMOJ/texoid/
+RUN git clone https://github.com/DMOJ/texoid/ && git -C texoid checkout f482221061e0d5e33296e60c77a0ead2c985f649
 WORKDIR /texoid/
 RUN pip3 install -e .
 
