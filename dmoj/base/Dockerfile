@@ -14,7 +14,7 @@ RUN apt-get update && \
 
 RUN npm install -g sass@1.108.1 postcss-cli@12.0.0 postcss@8.5.32 autoprefixer@10.6.2
 RUN pip3 install \
-        pymysql==1.2.4 mysqlclient==2.3.1 websocket-client==1.9.2 uwsgi==2.0.31 django-redis==7.0.0 redis==8.1.0 \
+        pymysql==1.2.4 mysqlclient==2.3.1 websocket-client==1.9.2 uwsgi==2.0.31 django-redis==6.0.0 redis==8.1.0 \
         django-discord-integration==1.3.0 django[argon2,bcrypt]==4.2.30 argon2-cffi==25.1.0 bcrypt==5.0.0
 
 
